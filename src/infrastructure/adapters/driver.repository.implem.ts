@@ -8,7 +8,7 @@ import { LicenseType } from '@domain/types/motorcycle';
 import { DriverRepositoryInterface } from '@application/repositories/DriverRepositoryInterface';
 
 @Injectable()
-export class DriverRepositoryImpl implements DriverRepositoryInterface {
+export class DriverRepositoryImplem implements DriverRepositoryInterface {
   constructor(
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,

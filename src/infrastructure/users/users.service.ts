@@ -1,4 +1,4 @@
-import { DriverRepositoryImpl } from '@infrastructure/adapters/driver.repository.implem';
+import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepositoryImplem } from '../adapters/user.repository.implem';
@@ -32,7 +32,7 @@ export class UsersService {
 
   constructor(
     private readonly userRepository: UserRepositoryImplem,
-    private readonly driverRepository: DriverRepositoryImpl
+    private readonly driverRepository: DriverRepositoryImplem
   ) {
     this.createUserUseCase = new CreateUserUseCase(userRepository);
     this.getAllUsersUseCase = new GetAllUsersUseCase(userRepository);

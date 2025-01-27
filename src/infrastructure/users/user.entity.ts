@@ -1,17 +1,20 @@
+import { Company } from '@infrastructure/companies/company.entity';
+import { Concession } from '@infrastructure/concessions/concession.entity';
+import { Driver } from '@infrastructure/drivers/driver.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty({ description: 'Unique identifier for the driver' })
+  @ApiProperty({ description: 'Unique identifier for the user' })
   id: string;
 
-  @ApiProperty({ description: 'The firstName of the user' })
+  @ApiProperty({ description: 'The first name of the user' })
   @Column()
   firstName: string;
 
-  @ApiProperty({ description: 'The lastName of the user' })
+  @ApiProperty({ description: 'The last name of the user' })
   @Column()
   lastName: string;
 
@@ -34,4 +37,16 @@ export class User {
   @ApiProperty({ description: 'Whether the user is active' })
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => Company, company => company.user)
+  @ApiProperty({ description: 'List of companies associated with the user' })
+  companies: Company[];
+
+  @OneToMany(() => Concession, concession => concession.user)
+  @ApiProperty({ description: 'List of concessions associated with the user' })
+  concessions: Concession[];
+
+  @OneToMany(() => Driver, driver => driver.user)
+  @ApiProperty({ description: 'List of drivers associated with the user' })
+  drivers: Driver[];
 }

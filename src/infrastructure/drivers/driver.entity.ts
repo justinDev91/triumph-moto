@@ -1,9 +1,12 @@
-import { LicenseTypeEnum } from '@infrastructure/types/LicenseTypeEnum';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { LicenseTypeEnum } from '@infrastructure/types/LicenseTypeEnum';
+import { Company } from '@infrastructure/companies/company.entity';
+import { User } from '@infrastructure/users/user.entity';
 
 @Entity()
 export class Driver {
+  
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty({ description: 'Unique identifier for the driver' })
   id: string;
@@ -16,11 +19,11 @@ export class Driver {
   @Column()
   license: string;
 
-  @ApiProperty({ description: 'The type of license of the driver : A | B |C ' })
+  @ApiProperty({ description: 'The type of license of the driver (A, B, C)' })
   @Column({ type: 'enum', enum: LicenseTypeEnum })
-  licenseType: string; 
+  licenseType: LicenseTypeEnum;
 
-  @ApiProperty({ description: 'Years of driving experience of the driver' })
+  @ApiProperty({ description: 'Years of driving experience' })
   @Column()
   yearsOfExperience: number;
 
@@ -32,4 +35,11 @@ export class Driver {
   @Column()
   phone: string;
 
+  @ManyToOne(() => Company, company => company.drivers)
+  @ApiProperty({ description: 'The company to which the driver is associated' })
+  company: Company;
+
+  @ManyToOne(() => User, user => user.drivers )
+  @ApiProperty({ description: 'The user associated with the drivers' })
+  user: User;
 }

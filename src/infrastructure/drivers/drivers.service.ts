@@ -6,7 +6,7 @@ import { UpdateDriverContactInfoUsecase } from '@application/usecases/driver/Upd
 import { UpdateDriverExperienceUsecase } from '@application/usecases/driver/UpdateDriverExperienceUsecase';
 import { DrivingRecord } from '@domain/types/motorcycle';
 import { CreateDriverDto } from './dto/CreateDriverDto';
-import { DriverRepositoryImpl } from '@infrastructure/adapters/driver.repository.implem';
+import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
 
 @Injectable()
 export class DriversService {
@@ -17,7 +17,7 @@ export class DriversService {
   private readonly updateDriverExperienceUsecase: UpdateDriverExperienceUsecase;
 
   constructor(
-    private readonly driverRepository: DriverRepositoryImpl,
+    private readonly driverRepository: DriverRepositoryImplem,
   ) {
     this.addDrivingRecordUsecase = new AddDrivingRecordUsecase(driverRepository);
     this.checkIncidentHistoryUsecase = new CheckIncidentHistoryUsecase(driverRepository);

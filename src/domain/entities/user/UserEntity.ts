@@ -13,7 +13,7 @@ export class UserEntity {
     public readonly createdAt: Date,
     public readonly administrator: boolean, 
     public updatedAt: Date,
-    public isActive: boolean = true,  
+    public isActive: boolean = true, 
   ) {}
 
   public static create(

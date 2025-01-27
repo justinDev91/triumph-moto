@@ -1,5 +1,7 @@
 import { DriverRepositoryInterface } from "@application/repositories/DriverRepositoryInterface";
+import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 import { DriverEntity } from "@domain/entities/driver/DriverEntity";
+import { UserEntity } from "@domain/entities/user/UserEntity";
 import { LicenseType } from "@domain/types/motorcycle";
 
 export class CreateDriverUsecase {
@@ -13,6 +15,8 @@ export class CreateDriverUsecase {
     yearsOfExperience: number,
     email: string,
     phone: string,
+    company: CompanyEntity | null = null,
+    user: UserEntity | null = null
   ): Promise<void | Error> {
     const driver = DriverEntity.create(
       id,
@@ -22,6 +26,8 @@ export class CreateDriverUsecase {
       yearsOfExperience,
       email,
       phone,
+      company,
+      user
     );
 
     if(driver instanceof Error) return driver

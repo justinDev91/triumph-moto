@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from '@domain/entities/user/UserEntity';
+import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 
 @ApiTags('users')
 @Controller('users')
@@ -63,5 +64,29 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Deactivate the user' })
   async deactivateUser(@Param('id') id: string): Promise<UserEntity | Error> {
     return this.usersService.deactivateUser(id);
+  }
+
+  @Post(':id/drivers')
+  @ApiResponse({ status: 201, description: 'Add a driver to a user' })
+  async addDriverToUser(
+    @Param('id') userId: string,
+    @Body() driver: DriverEntity
+  ): Promise<void | Error> {
+    return this.usersService.addDriverToUser(userId, driver);
+  }
+
+  @Get(':id/drivers')
+  @ApiResponse({ status: 200, description: 'Get all drivers for a user', type: [DriverEntity] })
+  async getDriversForUser(@Param('id') userId: string): Promise<DriverEntity[] | Error> {
+    return this.usersService.getDriversForUser(userId);
+  }
+
+  @Delete(':id/drivers/:driverId')
+  @ApiResponse({ status: 200, description: 'Remove a driver from a user' })
+  async removeDriverFromUser(
+    @Param('id') userId: string,
+    @Param('driverId') driverId: string
+  ): Promise<void | Error> {
+    return this.usersService.removeDriverFromUser(userId, driverId);
   }
 }

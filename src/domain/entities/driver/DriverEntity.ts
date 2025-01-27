@@ -7,6 +7,8 @@ import { DriveLicense } from "@domain/values/driver/DriverLicense";
 import { DriveName } from "@domain/values/driver/DriverName";
 import { DriverPhone } from "@domain/values/driver/DriverPhone";
 import { DriveYearsOfExperience } from "@domain/values/driver/DriverYearsOfExperience";
+import { CompanyEntity } from "../company/CompanyEntity";
+import { UserEntity } from "../user/UserEntity";
 
 
 export class DriverEntity {
@@ -21,6 +23,8 @@ export class DriverEntity {
     public yearsOfExperience: DriveYearsOfExperience,
     public email: DriverEmail,
     public phone: DriverPhone,
+    public company: CompanyEntity | null = null ,
+    public user: UserEntity | null = null
   ) {}
 
   public static create(
@@ -31,6 +35,8 @@ export class DriverEntity {
     yearsOfExperienceValue: number,
     emailValue: string,
     phoneValue: string,
+    company: CompanyEntity | null = null,
+    user: UserEntity | null = null
   ): DriverEntity | Error {
 
     const name = DriveName.from(nameValue);
@@ -56,6 +62,8 @@ export class DriverEntity {
       yearsOfExperience,
       email,
       phone,
+      company,
+      user
     );
   }
 
@@ -93,5 +101,24 @@ export class DriverEntity {
     return this.drivingHistory.some((record) => record.type === 'Incident');
   }
 
- 
+  public assignToCompany(company: CompanyEntity): void {
+    this.company = company;
+  }
+
+  public removeFromCompany(): void {
+    this.company = null;
+  }
+
+  public getCompanyDetails(): object | null {
+    if (!this.company) {
+      return null;
+    }
+
+    return {
+      identifier: this.company.id,
+      name: this.company.name.value,
+      user: this.company.user,
+    };
+  }
+
 }
