@@ -2,7 +2,14 @@ import { Company } from '@infrastructure/companies/company.entity';
 import { Concession } from '@infrastructure/concessions/concession.entity';
 import { Driver } from '@infrastructure/drivers/driver.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { 
+  Column, 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  OneToMany, 
+  CreateDateColumn, 
+  UpdateDateColumn 
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -18,12 +25,16 @@ export class User {
   @Column()
   lastName: string;
 
+  @ApiProperty({ description: 'The email of the user' })
+  @Column({ unique: true })  
+  email: string;
+
   @ApiProperty({ description: 'The password of the user' })
   @Column()
-  password: string; 
+  password: string;
 
   @ApiProperty({ description: 'The createdAt timestamp of the user' })
-  @Column()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @ApiProperty({ description: 'The administrator flag of the user' })
@@ -31,11 +42,11 @@ export class User {
   administrator: boolean;
 
   @ApiProperty({ description: 'The updatedAt timestamp of the user' })
-  @Column()
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @ApiProperty({ description: 'Whether the user is active' })
-  @Column({ default: true })
+  @Column({ default: true, nullable: true })
   isActive: boolean;
 
   @OneToMany(() => Company, company => company.user)

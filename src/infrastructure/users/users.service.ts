@@ -49,29 +49,21 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity | Error> {
     const { 
-      id, 
       firstName, 
-      lastName, 
+      lastName,
+      email, 
       password, 
-      createdAt,
-      updatedAt,
-      administrator, 
-      isActive 
     } = createUserDto;
-
+  
     return await this.createUserUseCase.execute(
-      id, 
       firstName, 
       lastName, 
-      password, 
-      createdAt,
-      updatedAt,
-      administrator, 
-      isActive
+      password,    
+      email,      
     );
   }
 
-  async findAll(): Promise<UserEntity[]> {
+  async findAll(): Promise<UserEntity[] | Error> {
     return this.getAllUsersUseCase.execute();
   }
 

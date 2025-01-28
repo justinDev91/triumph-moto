@@ -12,6 +12,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from '@domain/entities/user/UserEntity';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
+import { UserDto } from './dto/response-user.dto';
+import { toUserDto } from './dto/to-user-dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -26,14 +28,20 @@ export class UsersController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Get all users', type: [UserEntity] })
-  findAll(): Promise<UserEntity[]> {
+  findAll(): Promise<UserEntity[] | Error> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Get user by ID', type: UserEntity })
-  async findOne(@Param('id') id: string): Promise<UserEntity | Error> {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<UserDto | Error> {
+      const user = await this.usersService.findOne(id);
+  
+      if (user instanceof Error) return user;
+      
+      const userDto = toUserDto(user);
+  
+      return userDto;
   }
 
   @Delete(':id')

@@ -7,25 +7,22 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(
-    id: string,
     firstName: string,
     lastName: string,
     password: string,
-    createdAt: Date,
-    updatedAt: Date,
-    administrator: boolean,
-    isActive: boolean = true,
+    email: string,
   ): Promise<UserEntity | Error> { 
 
     const user = UserEntity.create(
-      id,
+      null,
       firstName,
       lastName,
+      email,
       password,
-      createdAt,
-      administrator,  
-      updatedAt,
-      isActive, 
+      null,
+      null,
+      null,
+      null
     );
 
     if (user instanceof Error) return user; 

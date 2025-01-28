@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { UserEntity } from '@domain/entities/user/UserEntity';
 import { UserNotFoundError } from '@domain/errors/user/UserNotFoundError';
+import { toDomainUser } from '@infrastructure/helpers/to-domain-user';
+import { toOrmUser } from '@infrastructure/helpers/to-orm-user';
 
 @Injectable()
 export class UserRepositoryImplem implements UserRepositoryInterface {
@@ -14,58 +16,29 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
   ) {}
 
   async update(user: UserEntity): Promise<void> {
-    const userOrmEntity = this.toOrmEntity(user);
+    const userOrmEntity = toOrmUser(user);
     await this.usersRepository.save(userOrmEntity);
   }
 
-  private toDomain(user: User): UserEntity {
-    const userEntity = UserEntity.create(
-      user.id,
-      user.firstName,
-      user.lastName,
-      user.password,
-      user.createdAt,
-      user.administrator,
-      user.updatedAt,
-      user.isActive,
-    );
 
-    if (userEntity instanceof Error) {
-      throw userEntity;
-    }
-
-    return userEntity;
-  }
-
-  private toOrmEntity(user: UserEntity): User {
-    const userOrmEntity = new User();
-    userOrmEntity.firstName = user.firstName.value;
-    userOrmEntity.lastName = user.lastName.value;
-    userOrmEntity.password = user.password.value;
-    userOrmEntity.createdAt = user.createdAt;
-    userOrmEntity.updatedAt = user.updatedAt;
-    userOrmEntity.isActive = user.isActive;
-    userOrmEntity.administrator = user.isAdmin();
-    return userOrmEntity;
-  }
-
-  async create(user: UserEntity): Promise<UserEntity> {
-    const userOrmEntity = this.toOrmEntity(user);
+    async create(user: UserEntity): Promise<UserEntity | Error> {
+    const userOrmEntity = toOrmUser(user);
+    
     const savedUser = await this.usersRepository.save(userOrmEntity);
-    return this.toDomain(savedUser);
+    return toDomainUser(savedUser);
   }
 
-  async findAll(): Promise<UserEntity[]> {
+  async findAll(): Promise<UserEntity[] | Error> {
     const users = await this.usersRepository.find();
-    return users.map(this.toDomain);
+    return users.map(toDomainUser)  as UserEntity[];
   }
 
-  async findOne(id: string): Promise<UserEntity | UserNotFoundError> {
+  async findOne(id: string): Promise<UserEntity | Error> {
     const user = await this.usersRepository.findOne({ where: { id } });
     
     if(!user) return new UserNotFoundError();
 
-    return this.toDomain(user);
+    return toDomainUser(user);
   }
 
   async remove(id: string): Promise<void> {

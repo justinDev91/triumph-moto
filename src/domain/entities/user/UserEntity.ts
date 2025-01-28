@@ -1,6 +1,7 @@
 import { Password } from "@domain/values/user/Password";
 import { Username } from "@domain/values/user/Username";
 import { DriverEntity } from "@domain/entities/driver/DriverEntity";
+import { Email } from "@domain/values/user/Email";
 
 export class UserEntity {
   private drivers: DriverEntity[] = [];
@@ -9,17 +10,19 @@ export class UserEntity {
     public id: string,
     public firstName: Username,
     public lastName: Username,
+    public email: Email,  
     public password: Password,
     public readonly createdAt: Date,
     public readonly administrator: boolean, 
     public updatedAt: Date,
     public isActive: boolean = true, 
   ) {}
-
+  
   public static create(
     id: string,
     firstName: string,
     lastName: string,
+    email: string,
     password: string,
     createdAt: Date,
     administrator: boolean,
@@ -33,6 +36,9 @@ export class UserEntity {
     const lastNameValue = Username.from(lastName); 
     if (lastNameValue instanceof Error) return lastNameValue; 
 
+    const emailValue = Email.from(email);  
+    if (emailValue instanceof Error) return emailValue;
+
     const passwordValue = Password.from(password); 
     if (passwordValue instanceof Error) return passwordValue; 
 
@@ -40,6 +46,7 @@ export class UserEntity {
       id,
       firstNameValue,
       lastNameValue,
+      emailValue,
       passwordValue,
       createdAt,
       administrator,  

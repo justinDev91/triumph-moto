@@ -6,7 +6,7 @@ export class GetAllUsersUseCase {
     private readonly userRepository: UserRepositoryInterface, 
   ) {}
 
-  async execute(): Promise<UserEntity[]> {
+  async execute(): Promise<UserEntity[] | Error> {
     return this.userRepository.findAll();
   }
 }

@@ -1,6 +1,7 @@
 import { Driver } from '@infrastructure/drivers/driver.entity';
 import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { User } from '@infrastructure/users/user.entity';
+import { Concession } from '@infrastructure/concessions/concession.entity'; 
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 
@@ -25,6 +26,10 @@ export class Company {
   @OneToMany(() => Motorcycle, motorcycle => motorcycle.company)
   @ApiProperty({ description: 'The list of motorcycles associated with the company' })
   motorcycles: Motorcycle[];
+
+  @OneToMany(() => Concession, concession => concession.company) 
+  @ApiProperty({ description: 'The list of concessions associated with the company' })
+  concessions: Concession[];
 
   @Column()
   @ApiProperty({ description: 'The creation date of the company' })

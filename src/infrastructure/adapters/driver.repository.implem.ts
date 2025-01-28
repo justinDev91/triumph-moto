@@ -1,11 +1,12 @@
+import { toDomainDriver } from './../helpers/to-domain-driver';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 import { DriverNotFoundError } from '@domain/errors/driver/DriverNotFoundError';
 import { Driver } from '@infrastructure/drivers/driver.entity';
-import { LicenseType } from '@domain/types/motorcycle';
 import { DriverRepositoryInterface } from '@application/repositories/DriverRepositoryInterface';
+import { toOrmDriver } from '@infrastructure/helpers/to-orm-driver';
 
 @Injectable()
 export class DriverRepositoryImplem implements DriverRepositoryInterface {
@@ -13,12 +14,9 @@ export class DriverRepositoryImplem implements DriverRepositoryInterface {
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,
   ) {}
-  findAllByUser(id: string): Promise<DriverEntity[] | DriverNotFoundError> {
-    throw new Error('Method not implemented.');
-  }
 
   async save(driver: DriverEntity): Promise<void> {
-    const driverToSave = this.toOrmEntity(driver);
+    const driverToSave = toOrmDriver(driver);
     await this.driverRepository.save(driverToSave);
   }
 
@@ -27,16 +25,18 @@ export class DriverRepositoryImplem implements DriverRepositoryInterface {
 
     if (!foundDriver) return new DriverNotFoundError();
     
-    return this.toDomain(foundDriver);
+    return toDomainDriver(foundDriver);
   }
 
-  // async findAllByUser(userId: string): Promise<DriverEntity[] | DriverNotFoundError> {
-  //   const drivers = await this.driverRepository.find({ where: { userId } });
-
-  //   if (drivers.length) return new DriverNotFoundError();
+  async findAllByUser(userId: string): Promise<DriverEntity[] | DriverNotFoundError> {
+    const drivers = await this.driverRepository.find({
+      where: { user: { id: userId } },
+    });
+  
+    if (!drivers.length) return new DriverNotFoundError();
     
-  //   return drivers.map((driver) => this.toDomain(driver));
-  // }
+    return drivers.map((driver) => toDomainDriver(driver));
+  }
 
   async delete(id: string): Promise<void> {
     await this.driverRepository.delete({ id });
@@ -44,30 +44,7 @@ export class DriverRepositoryImplem implements DriverRepositoryInterface {
 
   async all(): Promise<DriverEntity[]> {
     const allDrivers = await this.driverRepository.find();
-    return allDrivers.map((driver) => this.toDomain(driver));
+    return allDrivers.map((driver) => toDomainDriver(driver));
   }
 
-  private toOrmEntity(domainDriver: DriverEntity): Driver {
-    return {
-      id: domainDriver.id,
-      name: domainDriver.name.value,
-      license: domainDriver.license.value,
-      licenseType: domainDriver.licenseType,
-      yearsOfExperience: domainDriver.yearsOfExperience.value,
-      email: domainDriver.email.value,
-      phone: domainDriver.phone.value,
-    } as Driver;
-  }
-
-  private toDomain(persistenceDriver: Driver): DriverEntity {
-    return DriverEntity.create(
-      persistenceDriver.id,
-      persistenceDriver.name,
-      persistenceDriver.licenseType as LicenseType,
-      persistenceDriver.license,
-      persistenceDriver.yearsOfExperience,
-      persistenceDriver.email,
-      persistenceDriver.phone,
-    ) as DriverEntity;
-  }
 }
