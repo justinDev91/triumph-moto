@@ -1,0 +1,35 @@
+import { Motorcycle } from "@infrastructure/motorcycles/motorcycle.entity";
+import { Repair } from "@infrastructure/repairs/repair.entity";
+import { Warranty } from "@infrastructure/warranties/warranty.entity";
+import { ApiProperty } from "@nestjs/swagger";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
+
+@Entity()
+export class Breakdown {
+  @PrimaryGeneratedColumn("uuid")
+  @ApiProperty({ description: "Unique identifier for the breakdown" })
+  id: string;
+
+  @ManyToOne(() => Motorcycle)
+  @JoinColumn({ name: "motorcycleId" })
+  @ApiProperty({ description: "The motorcycle associated with this breakdown" })
+  motorcycle: Motorcycle;
+
+  @Column({ type: "text" })
+  @ApiProperty({ description: "Description of the breakdown" })
+  description: string;
+
+  @Column({ type: "date" })
+  @ApiProperty({ description: "The date when the breakdown was reported" })
+  reportedDate: Date;
+
+  @ManyToOne(() => Warranty)
+  @JoinColumn({ name: "warrantyId" })
+  @ApiProperty({ description: "The warranty associated with this breakdown, if any" })
+  warranty: Warranty| null;
+
+  @OneToMany(() => Repair, (repair) => repair.breakdown)
+  @ApiProperty({ description: "The repairs associated with this breakdown" })
+  repairs: Repair[] = [];
+
+}

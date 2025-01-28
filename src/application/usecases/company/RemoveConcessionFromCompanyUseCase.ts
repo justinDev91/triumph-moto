@@ -9,7 +9,6 @@ export class RemoveConcessionFromCompanyUseCase {
     const company = await this.companyRepository.findById(companyId);
     if (company instanceof Error)  return company
     
-
     company.removeConcession(concessionId);
 
     await this.companyRepository.save(company);
