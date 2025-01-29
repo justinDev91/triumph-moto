@@ -8,10 +8,12 @@ import {
   Param,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateDriverDto } from './dto/CreateDriverDto';
+import { CreateDriverDto } from './dto/create-driver.dto';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
-import { DrivingRecord } from '@domain/types/motorcycle';
 import { DriversService } from './drivers.service';
+import { DrivingRecordDto } from './dto/driving-record.dto';
+import { UpdateContactInfoDto } from './dto/update-contact-info.dto';
+import { UpdateExperienceDto } from './dto/update-experience.dto';
 
 @ApiTags('drivers')
 @Controller('drivers')
@@ -20,15 +22,34 @@ export class DriversController {
 
   @Post()
   @ApiResponse({ status: 201, description: 'Driver created successfully', type: DriverEntity })
-  async create(@Body() createDriverDto: CreateDriverDto): Promise<void | Error> {
+  async create(@Body() createDriverDto: CreateDriverDto): Promise<DriverEntity | Error> {
     return this.driversService.create(createDriverDto);
+  }
+
+  @Get()
+  @ApiResponse({ status: 200, description: 'Get all drivers', type: [DriverEntity] })
+  async findAll(): Promise<DriverEntity[] | Error> {
+    return await this.driversService.findAll();;
+
+  }
+
+ @Get(':id')
+  @ApiResponse({ status: 200, description: 'Get driver by ID', type: DriverEntity })
+  async findOne(@Param('id') id: string): Promise<DriverEntity | Error> {
+     return await this.driversService.findOne(id);
+  }
+
+  @Delete(':id')
+  @ApiResponse({ status: 200, description: 'Delete driver by ID' })
+  remove(@Param('id') id: string): Promise<void> {
+    return this.driversService.remove(id);
   }
 
   @Put(':id/add-record')
   @ApiResponse({ status: 200, description: 'Add a driving record to the driver' })
   async addDrivingRecord(
+    @Body() record: DrivingRecordDto,
     @Param('id') driverId: string,
-    @Body() record: DrivingRecord,
   ): Promise<void | Error> {
     return this.driversService.addDrivingRecord(driverId, record);
   }
@@ -43,7 +64,7 @@ export class DriversController {
   @ApiResponse({ status: 200, description: 'Update the driver’s contact information' })
   async updateContactInfo(
     @Param('id') driverId: string,
-    @Body() updateContactInfoDto: { email: string; phone: string },
+    @Body() updateContactInfoDto: UpdateContactInfoDto,
   ): Promise<void | Error> {
     const { email, phone } = updateContactInfoDto;
     return this.driversService.updateContactInfo(driverId, email, phone);
@@ -53,7 +74,7 @@ export class DriversController {
   @ApiResponse({ status: 200, description: 'Update the driver’s years of experience' })
   async updateExperience(
     @Param('id') driverId: string,
-    @Body() updateExperienceDto: { years: number },
+    @Body() updateExperienceDto: UpdateExperienceDto,
   ): Promise<void | Error> {
     const { years } = updateExperienceDto;
     return this.driversService.updateExperience(driverId, years);

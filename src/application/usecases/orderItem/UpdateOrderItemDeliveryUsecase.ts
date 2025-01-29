@@ -1,8 +1,8 @@
-import { OrderItemRepository } from "@application/repositories/OrderItemRepositoryInterface";
+import { OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface";
 
 export class UpdateOrderItemDeliveryUsecase {
   constructor(
-    private readonly orderItemRepository: OrderItemRepository,
+    private readonly orderItemRepository: OrderItemRepositoryInterface,
   ) {}
 
   public async execute(

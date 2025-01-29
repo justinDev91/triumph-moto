@@ -1,10 +1,10 @@
 import { WarrantyEntity } from "@domain/entities/warranty/WarrantyEntity";
-import { WarrantyNotFoundError } from "@domain/errors/warranty/WarrantyNotFoundError";
 
 export interface WarrantyRepositoryInterface {
-  save(warranty: WarrantyEntity): Promise<void>;
-  findById(id: string): Promise<WarrantyEntity | WarrantyNotFoundError>;
-  findByMotorcycleId(motorcycleId: string): Promise<WarrantyEntity | WarrantyNotFoundError>;
+  save(warranty: WarrantyEntity): Promise<WarrantyEntity | Error>;
+  findById(id: string): Promise<WarrantyEntity | Error>;
+  findAll(): Promise<WarrantyEntity[] | Error>;
+  findByMotorcycleId(motorcycleId: string): Promise<WarrantyEntity | Error>;
   update(warranty: WarrantyEntity): Promise<void>;
-  deleteById(id: string): Promise<void>;
+  remove(id: string): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { toDomainDriver } from './../helpers/to-domain-driver';
+import { toDomainDriver } from '../helpers/driver/to-domain-driver';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,7 +6,7 @@ import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 import { DriverNotFoundError } from '@domain/errors/driver/DriverNotFoundError';
 import { Driver } from '@infrastructure/drivers/driver.entity';
 import { DriverRepositoryInterface } from '@application/repositories/DriverRepositoryInterface';
-import { toOrmDriver } from '@infrastructure/helpers/to-orm-driver';
+import { toOrmDriver } from '@infrastructure/helpers/driver/to-orm-driver';
 
 @Injectable()
 export class DriverRepositoryImplem implements DriverRepositoryInterface {
@@ -14,9 +14,18 @@ export class DriverRepositoryImplem implements DriverRepositoryInterface {
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,
   ) {}
+ 
+  async create(driver: DriverEntity): Promise<DriverEntity | Error> {
+    const driverToSave = toOrmDriver(driver);
+    
+    await this.driverRepository.save(driverToSave);
+
+    return toDomainDriver(driverToSave);
+  }
 
   async save(driver: DriverEntity): Promise<void> {
     const driverToSave = toOrmDriver(driver);
+
     await this.driverRepository.save(driverToSave);
   }
 
@@ -42,7 +51,7 @@ export class DriverRepositoryImplem implements DriverRepositoryInterface {
     await this.driverRepository.delete({ id });
   }
 
-  async all(): Promise<DriverEntity[]> {
+  async findAll(): Promise<DriverEntity[]> {
     const allDrivers = await this.driverRepository.find();
     return allDrivers.map((driver) => toDomainDriver(driver));
   }

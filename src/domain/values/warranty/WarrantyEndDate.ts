@@ -1,4 +1,4 @@
-import { WarrantyEndDateError } from "../../errors/warranty/WarrantyEndDateError";
+import { WarrantyEndDateError } from "../../errors/warranty/WarrantyEndDateError"; 
 import { Value } from "../Value";
 
 export class WarrantyEndDate implements Value<Date> {
@@ -8,14 +8,20 @@ export class WarrantyEndDate implements Value<Date> {
     this.value = value;
   }
 
-  public static from(value: Date, startDate: Date): WarrantyEndDate | Error {
-    if (value < new Date()) {
+  public static from(value: Date | string, startDate: Date | string): WarrantyEndDate | Error {
+    const endDate = value instanceof Date ? value : new Date(value);
+    const warrantyStartDate = startDate instanceof Date ? startDate : new Date(startDate);
+
+    if (endDate < new Date()) {
       return new WarrantyEndDateError();
     }
-    if ((value.getTime() - startDate.getTime()) > 365 * 24 * 60 * 60 * 1000) {
+
+
+    if ((endDate.getTime() - warrantyStartDate.getTime()) > 365 * 24 * 60 * 60 * 1000) {
       return new WarrantyEndDateError();
     }
-    return new WarrantyEndDate(value);
+
+    return new WarrantyEndDate(endDate);
   }
 
   public is(item: Value<Date>): boolean {

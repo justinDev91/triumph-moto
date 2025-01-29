@@ -11,7 +11,7 @@ export class AssignMotorcycleToConcessionUsecase {
     motorcycleId: string,
     concessionId: string
   ): Promise<void | Error> {
-    const motorcycle = await this.motorcycleRepository.findOneById(motorcycleId);
+    const motorcycle = await this.motorcycleRepository.findById(motorcycleId);
     if (motorcycle instanceof Error) return motorcycle;
 
     const concession = await this.concessionRepository.findById(concessionId);

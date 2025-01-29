@@ -18,13 +18,12 @@ export class SparePartEntity {
   ) {}
 
   public static create(
+    id: string,
     nameValue: string,
     quantityInStockValue: number,
     criticalLevelValue: number,
     costValue: number
   ): SparePartEntity | Error {
-
-    const id = crypto.randomUUID();
 
     const name = SparePartName.from(nameValue);
     if (name instanceof Error) return name;

@@ -1,7 +1,8 @@
 import { UserEntity } from "@domain/entities/user/UserEntity";
-import { UserDto } from "./response-user.dto";
+import { ResponseUserDto } from "./response-user.dto";
 
-export const toUserDto = (user: UserEntity): UserDto => ({
+export const toResponseUserDto = (user: UserEntity): ResponseUserDto => ({
+    id: user.id, 
     firstName: user.firstName.value,
     lastName: user.lastName.value,
     email: user.email.value,
@@ -9,4 +10,4 @@ export const toUserDto = (user: UserEntity): UserDto => ({
     administrator: user.administrator,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
-  });
+});

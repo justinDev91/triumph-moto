@@ -23,6 +23,8 @@ export class DriverEntity {
     public yearsOfExperience: DriveYearsOfExperience,
     public email: DriverEmail,
     public phone: DriverPhone,
+    public readonly createdAt: Date,
+    public updatedAt: Date,
     public company: CompanyEntity | null = null ,
     public user: UserEntity | null = null
   ) {}
@@ -35,6 +37,8 @@ export class DriverEntity {
     yearsOfExperienceValue: number,
     emailValue: string,
     phoneValue: string,
+    createdAt: Date,
+    updatedAt: Date,
     company: CompanyEntity | null = null,
     user: UserEntity | null = null
   ): DriverEntity | Error {
@@ -62,6 +66,8 @@ export class DriverEntity {
       yearsOfExperience,
       email,
       phone,
+      createdAt,
+      updatedAt,
       company,
       user
     );

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { LicenseTypeEnum } from '@infrastructure/types/LicenseTypeEnum';
 import { Company } from '@infrastructure/companies/company.entity';
 import { User } from '@infrastructure/users/user.entity';
@@ -42,4 +42,12 @@ export class Driver {
   @ManyToOne(() => User, user => user.drivers )
   @ApiProperty({ description: 'The user associated with the drivers' })
   user: User;
+
+  @ApiProperty({ description: 'The createdAt timestamp of the user' })
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+  
+  @ApiProperty({ description: 'The updatedAt timestamp of the user' })
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }

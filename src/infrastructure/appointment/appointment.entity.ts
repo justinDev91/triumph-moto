@@ -1,4 +1,5 @@
 import { Company } from "@infrastructure/companies/company.entity";
+import { Location } from "@infrastructure/locations/location.entity";
 import { Maintenance } from "@infrastructure/maintenances/maintenance.entity";
 import { MotorcycleTrial } from "@infrastructure/motorcycle-trials/motorcycle-trial.entity";
 import { Repair } from "@infrastructure/repairs/repair.entity";

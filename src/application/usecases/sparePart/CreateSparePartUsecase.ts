@@ -13,6 +13,7 @@ export class CreateSparePartUsecase {
     costValue: number,
   ): Promise<void | Error> {
     const sparePart = SparePartEntity.create(
+      null,
       nameValue,
       quantityInStockValue,
       criticalLevelValue,

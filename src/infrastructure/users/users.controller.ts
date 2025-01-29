@@ -12,8 +12,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from '@domain/entities/user/UserEntity';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
-import { UserDto } from './dto/response-user.dto';
-import { toUserDto } from './dto/to-user-dto';
+import { ResponseUserDto } from './dto/response-user.dto';
+import { toResponseUserDto } from './dto/to-user-dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -22,26 +22,27 @@ export class UsersController {
 
   @Post()
   @ApiResponse({ status: 201, description: 'User created successfully', type: UserEntity })
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity | Error> {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<ResponseUserDto | Error> {
+    const user = await this.usersService.create(createUserDto);
+    if (user instanceof Error) return user;
+    return toResponseUserDto(user);
   }
 
   @Get()
   @ApiResponse({ status: 200, description: 'Get all users', type: [UserEntity] })
-  findAll(): Promise<UserEntity[] | Error> {
-    return this.usersService.findAll();
+  async findAll(): Promise<ResponseUserDto[] | Error> {
+    const users = await this.usersService.findAll();;
+    if (users instanceof Error) return users;
+
+    return users.map(toResponseUserDto);
   }
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Get user by ID', type: UserEntity })
-  async findOne(@Param('id') id: string): Promise<UserDto | Error> {
+  async findOne(@Param('id') id: string): Promise<ResponseUserDto | Error> {
       const user = await this.usersService.findOne(id);
-  
       if (user instanceof Error) return user;
-      
-      const userDto = toUserDto(user);
-  
-      return userDto;
+      return toResponseUserDto(user);
   }
 
   @Delete(':id')
@@ -64,14 +65,18 @@ export class UsersController {
 
   @Put(':id/activate')
   @ApiResponse({ status: 200, description: 'Activate the user' })
-  async activateUser(@Param('id') id: string): Promise<UserEntity | Error> {
-    return this.usersService.activateUser(id);
+  async activateUser(@Param('id') id: string): Promise<ResponseUserDto | Error> {
+    const user = await this.usersService.activateUser(id);;
+    if (user instanceof Error) return user;
+    return toResponseUserDto(user);
   }
 
   @Put(':id/deactivate')
   @ApiResponse({ status: 200, description: 'Deactivate the user' })
-  async deactivateUser(@Param('id') id: string): Promise<UserEntity | Error> {
-    return this.usersService.deactivateUser(id);
+  async deactivateUser(@Param('id') id: string): Promise<ResponseUserDto | Error> {
+    const user = await this.usersService.deactivateUser(id);
+    if (user instanceof Error) return user;
+    return toResponseUserDto(user);
   }
 
   @Post(':id/drivers')

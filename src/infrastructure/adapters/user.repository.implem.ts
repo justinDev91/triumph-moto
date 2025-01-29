@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { UserEntity } from '@domain/entities/user/UserEntity';
 import { UserNotFoundError } from '@domain/errors/user/UserNotFoundError';
-import { toDomainUser } from '@infrastructure/helpers/to-domain-user';
-import { toOrmUser } from '@infrastructure/helpers/to-orm-user';
+import { toDomainUser } from '@infrastructure/helpers/user/to-domain-user';
+import { toOrmUser } from '@infrastructure/helpers/user/to-orm-user';
 
 @Injectable()
 export class UserRepositoryImplem implements UserRepositoryInterface {
@@ -16,14 +16,12 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
   ) {}
 
   async update(user: UserEntity): Promise<void> {
-    const userOrmEntity = toOrmUser(user);
-    await this.usersRepository.save(userOrmEntity);
+    await this.usersRepository.update(user.id, { isActive: false });
   }
-
 
     async create(user: UserEntity): Promise<UserEntity | Error> {
     const userOrmEntity = toOrmUser(user);
-    
+
     const savedUser = await this.usersRepository.save(userOrmEntity);
     return toDomainUser(savedUser);
   }

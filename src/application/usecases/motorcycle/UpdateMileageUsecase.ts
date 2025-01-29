@@ -4,7 +4,7 @@ export class UpdateMileageUsecase {
   constructor(private readonly motorcycleRepository: MotorcycleRepositoryInterface) {}
 
   public async execute(id: string, newMileage: number): Promise<void | Error> {
-    const motorcycle = await this.motorcycleRepository.findOneById(id);
+    const motorcycle = await this.motorcycleRepository.findById(id);
 
     if(motorcycle instanceof Error) return motorcycle
 

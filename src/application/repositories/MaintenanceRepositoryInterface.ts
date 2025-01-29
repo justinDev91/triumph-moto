@@ -9,4 +9,5 @@ export interface MaintenanceRepositoryInterface {
   findByMotorcycleId(motorcycleId: string): Promise<MaintenanceEntity[] | MaintenanceNotFoundError>;
   findByConcessionId(concessionId: string): Promise<MaintenanceEntity[] | MaintenanceNotFoundError>;
   findOverdue(): Promise<MaintenanceEntity[]>;
+  update(maintenance: MaintenanceEntity): Promise<void>;
 }

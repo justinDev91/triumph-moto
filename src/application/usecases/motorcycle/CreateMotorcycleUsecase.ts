@@ -7,7 +7,6 @@ export class CreateMotorcycleUsecase {
   constructor(private readonly motorcycleRepository: MotorcycleRepositoryInterface) {}
 
   public async execute(
-    id: string,
     brand: string,
     model: string,
     year: number,
@@ -22,7 +21,7 @@ export class CreateMotorcycleUsecase {
   ): Promise<void | Error> {
 
     const motorcycle = MotorcycleEntity.create(
-      id,
+      null,
       brand,
       model,
       year,

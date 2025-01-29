@@ -12,7 +12,7 @@ export class CalculateLocationCostUsecase {
         const calculateResult = location.calculateCost();
         if (calculateResult instanceof Error) return calculateResult;
   
-        await this.locationRepository.update(locationId, { cost: location.cost });
+        await this.locationRepository.update(calculateResult);
         return location.cost;
       } catch (error) {
         return new UnexpectedError(error instanceof Error ? error.message : String(error));

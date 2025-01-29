@@ -1,3 +1,4 @@
+import { GetDriverByIdUseCase } from './../../application/usecases/driver/GetDriverByIdUseCase';
 import { Injectable } from '@nestjs/common';
 import { AddDrivingRecordUsecase } from '@application/usecases/driver/AddDrivingRecordUsecase';
 import { CheckIncidentHistoryUsecase } from '@application/usecases/driver/CheckIncidentHistoryUsecase';
@@ -8,9 +9,12 @@ import { GetCompanyDetailsUseCase } from '@application/usecases/driver/GetCompan
 import { RemoveDriverFromCompanyUseCase } from '@application/usecases/driver/RemoveDriverFromCompanyUseCase';
 import { AssignDriverToCompanyUseCase } from '@application/usecases/driver/AssignDriverToCompanyUseCase'; 
 import { DrivingRecord } from '@domain/types/motorcycle';
-import { CreateDriverDto } from './dto/CreateDriverDto';
+import { CreateDriverDto } from './dto/create-driver.dto';
 import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
 import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.repository.implem'; 
+import { DriverEntity } from '@domain/entities/driver/DriverEntity';
+import { GetAllDriversUsecase } from '@application/usecases/driver/GetAllDriversUsecase';
+import { DeleteDriverUseCase } from '@application/usecases/driver/DeleteDriverUseCase';
 
 @Injectable()
 export class DriversService {
@@ -22,12 +26,18 @@ export class DriversService {
   private readonly getCompanyDetailsUseCase: GetCompanyDetailsUseCase;
   private readonly removeDriverFromCompanyUseCase: RemoveDriverFromCompanyUseCase;
   private readonly assignDriverToCompanyUseCase: AssignDriverToCompanyUseCase;
+  private readonly getAllDriversUsecase: GetAllDriversUsecase;
+  private readonly deleteDriverUseCase: DeleteDriverUseCase;
+  private readonly getDriverByIdUseCase: GetDriverByIdUseCase;
 
   constructor(
     private readonly driverRepository: DriverRepositoryImplem,
     private readonly companyRepository: CompanyRepositoryImplem,
   ) {
     this.addDrivingRecordUsecase = new AddDrivingRecordUsecase(driverRepository);
+    this.getAllDriversUsecase = new GetAllDriversUsecase(driverRepository);
+    this.deleteDriverUseCase = new DeleteDriverUseCase(driverRepository);
+    this.getDriverByIdUseCase = new GetDriverByIdUseCase(driverRepository);
     this.checkIncidentHistoryUsecase = new CheckIncidentHistoryUsecase(driverRepository);
     this.createDriverUsecase = new CreateDriverUsecase(driverRepository);
     this.updateDriverContactInfoUsecase = new UpdateDriverContactInfoUsecase(driverRepository);
@@ -37,9 +47,8 @@ export class DriversService {
     this.assignDriverToCompanyUseCase = new AssignDriverToCompanyUseCase(driverRepository, companyRepository); // Initialize use case
   }
 
-  async create(createDriverDto: CreateDriverDto): Promise<void | Error> {
+  async create(createDriverDto: CreateDriverDto): Promise<DriverEntity | Error> {
     const {
-      id,
       name,
       licenseType,
       license,
@@ -49,7 +58,6 @@ export class DriversService {
     } = createDriverDto;
 
     return await this.createDriverUsecase.execute(
-      id,
       name,
       licenseType,
       license,
@@ -57,6 +65,18 @@ export class DriversService {
       email,
       phone,
     );
+  }
+
+  async findAll(): Promise<DriverEntity[] | Error> {
+      return this.getAllDriversUsecase.execute();
+  }
+
+  async findOne(id: string): Promise<DriverEntity | Error> {
+    return this.getDriverByIdUseCase.execute(id);
+  }
+  
+  async remove(id: string): Promise<void> {
+    return this.deleteDriverUseCase.execute(id);
   }
 
   async addDrivingRecord(driverId: string, record: DrivingRecord): Promise<void | Error> {

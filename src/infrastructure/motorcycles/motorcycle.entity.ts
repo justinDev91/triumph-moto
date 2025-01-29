@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { MotorStatusEnum } from '@infrastructure/types/MotorStatusEnum';
 import { Company } from '@infrastructure/companies/company.entity';
 import { Concession } from '@infrastructure/concessions/concession.entity';
@@ -46,12 +46,12 @@ export class Motorcycle {
   @Column()
   nextServiceMileage: number;
 
-  @ApiProperty({ description: 'Date when the motorcycle was created' })
-  @Column()
+  @ApiProperty({ description: 'The createdAt timestamp of the user' })
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @ApiProperty({ description: 'Date when the motorcycle details were last updated' })
-  @Column()
+  @ApiProperty({ description: 'The updatedAt timestamp of the user' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToOne(() => Company, company => company.motorcycles)

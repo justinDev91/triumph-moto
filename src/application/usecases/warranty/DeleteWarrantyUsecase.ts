@@ -9,6 +9,6 @@ export class DeleteWarrantyUsecase {
     if (warranty instanceof Error) return warranty
      
 
-    await this.warrantyRepository.deleteById(id);
+    await this.warrantyRepository.remove(id);
   }
 }

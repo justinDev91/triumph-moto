@@ -6,9 +6,9 @@ import { Company } from '@infrastructure/companies/company.entity';
 import { CompanyEntity } from '@domain/entities/company/CompanyEntity';
 import { CompanyNotFoundError } from '@domain/errors/company/CompanyNotFoundError';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
-import { toOrmCompany } from '@infrastructure/helpers/to-orm-company';
-import { toOrmConcession } from '@infrastructure/helpers/to-orm-concession';
-import { toDomainCompany } from '@infrastructure/helpers/to-domain-company';
+import { toOrmCompany } from '@infrastructure/helpers/company/to-orm-company';
+import { toOrmConcession } from '@infrastructure/helpers/concession/to-orm-concession';
+import { toDomainCompany } from '@infrastructure/helpers/company/to-domain-company';
 
 @Injectable()
 export class CompanyRepositoryImplem implements CompanyRepositoryInterface {

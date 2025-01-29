@@ -10,7 +10,7 @@ export class Warranty {
 
   @ManyToOne(() => Motorcycle)
   @ApiProperty({ description: "The motorcycle associated with this warranty" })
-  motorcycle: Motorcycle;
+  motorcycle?: Motorcycle;
 
   @Column()
   @ApiProperty({ description: "The start date of the warranty"})

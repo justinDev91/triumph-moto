@@ -1,9 +1,9 @@
-import { OrderItemRepository } from "@application/repositories/OrderItemRepositoryInterface";
+import {OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface";
 import { OrderItemEntity } from "@domain/entities/order/OrderItemEntity";
 
 export class GetOrderItemByIdUsecase {
   constructor(
-    private readonly orderItemRepository: OrderItemRepository,
+    private readonly orderItemRepository: OrderItemRepositoryInterface,
   ) {}
 
   public async execute(orderItemId: string): Promise<OrderItemEntity | Error> {

@@ -13,7 +13,7 @@ export class CancelLocationUsecase {
         const cancelResult = location.cancelLocation();
         if (cancelResult instanceof Error) return cancelResult;
   
-        return await this.locationRepository.update(locationId, { status: location.status, endDate: null });
+        return await this.locationRepository.update({ status: location.status, endDate: null });
       } catch (error) {
         return new UnexpectedError(error instanceof Error ? error.message : String(error));
       }

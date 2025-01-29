@@ -3,11 +3,22 @@ import { MotorcycleController } from './motorcycle.controller';
 import { MotorcycleService } from './motorcycle.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Motorcycle } from './motorcycle.entity';
+import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
+import { CompanyModule } from '@infrastructure/companies/company.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Motorcycle])],
-  providers: [MotorcycleService],
+  imports: [
+    TypeOrmModule.forFeature([Motorcycle]),
+    CompanyModule
+  ],
+  providers: [
+    MotorcycleService,
+    MotorcycleRepositoryImplem,
+  ],
   controllers: [MotorcycleController],
-  exports: [MotorcycleService]
+  exports: [
+    MotorcycleService,
+    MotorcycleRepositoryImplem
+  ]
 })
 export class MotorcycleModule {}

@@ -1,10 +1,10 @@
-import { OrderItemRepository } from "@application/repositories/OrderItemRepositoryInterface";
+import { OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface";
 import { OrderItemEntity } from "@domain/entities/order/OrderItemEntity";
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 
 export class CreateOrderItemUsecase {
   constructor(
-    private readonly orderItemRepository: OrderItemRepository,
+    private readonly orderItemRepository: OrderItemRepositoryInterface,
   ) {}
 
   public async execute(

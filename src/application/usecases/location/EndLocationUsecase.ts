@@ -13,7 +13,7 @@ export class EndLocationUsecase {
         const endResult = location.endLocation(endDate);
         if (endResult instanceof Error) return endResult;
   
-        return await this.locationRepository.update(locationId, { endDate: location.endDate, status: location.status });
+        return await this.locationRepository.update({ endDate: location.endDate, status: location.status });
       } catch (error) {
         return new UnexpectedError(error instanceof Error ? error.message : String(error));
       }

@@ -8,7 +8,6 @@ export class CreateDriverUsecase {
   constructor(private readonly driverRepository: DriverRepositoryInterface) {}
 
   public async execute(
-    id: string,
     name: string,
     licenseType: LicenseType,
     license: string,
@@ -17,21 +16,23 @@ export class CreateDriverUsecase {
     phone: string,
     company: CompanyEntity | null = null,
     user: UserEntity | null = null
-  ): Promise<void | Error> {
+  ): Promise<DriverEntity | Error> {
     const driver = DriverEntity.create(
-      id,
+      null,
       name,
       licenseType,
       license,
       yearsOfExperience,
       email,
       phone,
+      null,
+      null,
       company,
       user
     );
 
     if(driver instanceof Error) return driver
 
-    await this.driverRepository.save(driver);
+    return await this.driverRepository.create(driver);
   }
 }

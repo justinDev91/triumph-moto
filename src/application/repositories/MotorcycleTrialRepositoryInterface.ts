@@ -1,9 +1,9 @@
 import { MotorcycleTrialEntity } from "@domain/entities/motorcycle/MotorcycleTrialEntity";
-import { MotorcycleTrialNotFoundError } from "@domain/errors/motorcycle/MotorcycleTrialNotFoundError";
 
 export interface MotorcycleTrialRepositoryInterface {
   save(motorcycleTry: MotorcycleTrialEntity): Promise<void>;
-  findOneById(id: string): Promise<MotorcycleTrialEntity | MotorcycleTrialNotFoundError>;
+  findById(id: string): Promise<MotorcycleTrialEntity | Error>;
   delete(id: string): Promise<void>;
-  all(): Promise<MotorcycleTrialEntity[] | MotorcycleTrialNotFoundError>;
+  findAll(): Promise<MotorcycleTrialEntity[] | Error>;
+  update(motorcycleTry: MotorcycleTrialEntity): Promise<void>;
 }
