@@ -9,7 +9,7 @@ import { toDomainMaintenance } from '@infrastructure/helpers/maintenance/to-doma
 import { toOrmMaintenance } from '@infrastructure/helpers/maintenance/to-orm-maintenance';
 
 @Injectable()
-export class MaintenanceRepositoryImplementation implements MaintenanceRepositoryInterface {
+export class MaintenanceRepositoryImpleme implements MaintenanceRepositoryInterface {
   constructor(
     @InjectRepository(Maintenance)
     private readonly maintenanceRepository: Repository<Maintenance>,

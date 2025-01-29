@@ -5,7 +5,6 @@ import { OrderItemRepositoryInterface } from "@application/repositories/OrderIte
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { OrderItem } from "@infrastructure/order-items/order-item.entity";
-import { SparePartRepositoryInterface } from "@application/repositories/SparePartRepositoryInterface"; 
 import { OrderNotFoundError } from "@domain/errors/order/OrderNotFoundError";
 
 export class OrderRepositoryImplem implements OrderRepositoryInterface {
@@ -17,7 +16,6 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
     private readonly orderItemRepository: Repository<OrderItem>,
 
     private readonly orderItemRepositoryInterface: OrderItemRepositoryInterface,
-    private readonly sparePartRepositoryInterface: SparePartRepositoryInterface,
   ) {}
     findByDateRange(startDate: Date, endDate: Date): Promise<OrderEntity[] | Error> {
         throw new Error("Method not implemented.");

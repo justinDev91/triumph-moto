@@ -17,12 +17,9 @@ export class WarrantyRepositoryImplem implements WarrantyRepositoryInterface {
     @InjectRepository(Warranty)
     private readonly warrantyRepository: Repository<Warranty>,
 
-    // @InjectRepository(Motorcycle)
-    // private readonly motorcycleRepository: Repository<Motorcycle>, 
+    @InjectRepository(Motorcycle)
+    private readonly motorcycleRepository: Repository<Motorcycle>, 
   ) {}
-  save(warranty: WarrantyEntity): Promise<WarrantyEntity | Error> {
-    throw new Error('Method not implemented.');
-  }
 
   async findAll(): Promise<WarrantyEntity[] | Error> {
     const allWarranties = await this.warrantyRepository.find();
@@ -30,19 +27,19 @@ export class WarrantyRepositoryImplem implements WarrantyRepositoryInterface {
     return allWarranties.map(toDomainWarranty)  as WarrantyEntity[];
   }
 
-  // async save(warranty: WarrantyEntity): Promise<WarrantyEntity | Error> {
-  //   const savedMotorcycle = await this.motorcycleRepository.save(toOrmMotorcycle(warranty.motorcycle));
+  async save(warranty: WarrantyEntity): Promise<WarrantyEntity | Error> {
+    const savedMotorcycle = await this.motorcycleRepository.save(toOrmMotorcycle(warranty.motorcycle));
   
-  //   const warrantyOrm = toOrmWarranty(warranty);
+    const warrantyOrm = toOrmWarranty(warranty);
     
-  //   warrantyOrm.motorcycle = savedMotorcycle; 
+    warrantyOrm.motorcycle = savedMotorcycle; 
   
-  //   const savedWarranty = await this.warrantyRepository.save(warrantyOrm);
+    const savedWarranty = await this.warrantyRepository.save(warrantyOrm);
   
-  //   console.log("savedWarranty", savedWarranty);
+    console.log("savedWarranty", savedWarranty);
   
-  //   return toDomainWarranty(savedWarranty);
-  // }
+    return toDomainWarranty(savedWarranty);
+  }
   
 
   async findById(id: string): Promise<WarrantyEntity | Error> {

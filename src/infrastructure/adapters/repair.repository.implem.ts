@@ -6,10 +6,12 @@ import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { toOrmRepair } from "@infrastructure/helpers/repair/to-orm-repair";
 import { toDomainRepair } from "@infrastructure/helpers/repair/to-domain-repair";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
-export class RepairRepositoryImplementation implements RepairRepositoryInterface {
+export class RepairRepositoryImplem implements RepairRepositoryInterface {
   constructor(
+    @InjectRepository(Repair)
     private readonly repairRepository: Repository<Repair>
   ) {}
 

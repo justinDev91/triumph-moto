@@ -7,10 +7,12 @@ import { Injectable } from "@nestjs/common";
 import { toOrmLocation } from "@infrastructure/helpers/location/to-orm-location";
 import { toDomainLocation } from "@infrastructure/helpers/location/to-domain-location";
 import { Location } from "@infrastructure/locations/location.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
-export class LocationRepositoryImplementation implements LocationRepositoryInterface {
+export class LocationRepositoryImplem implements LocationRepositoryInterface {
   constructor(
+    @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>
   ) {}
 
