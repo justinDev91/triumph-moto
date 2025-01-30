@@ -1,4 +1,84 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Delete, Put } from '@nestjs/common';
+import { RepairEntity } from '@domain/entities/repair/RepairEntity';
+import { CommonRepairAction } from '@domain/types/motorcycle';
+import { BreakdownEntity } from '@domain/entities/breakdown/BreakdownEntity';
+import { RepairService } from './repair.service';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('repair') 
 @Controller('repair')
-export class RepairController {}
+export class RepairController {
+  constructor(private readonly repairService: RepairService) {}
+
+  @Post()
+  @ApiResponse({ status: 201, description: 'Repair created successfully', type: RepairEntity })
+  async createRepair(
+    @Body() body: { 
+      id: string;
+      breakdown: BreakdownEntity;
+      repairDate: Date;
+      actions: CommonRepairAction[];
+      cost: number;
+    }): Promise<RepairEntity | Error> {
+    const { id, breakdown, repairDate, actions, cost } = body;
+    return this.repairService.createRepair(id, breakdown, repairDate, actions, cost);
+  }
+
+  @Get(':id')
+  @ApiResponse({ status: 200, description: 'Get repair by ID', type: RepairEntity })
+  async getRepairById(@Param('id') id: string): Promise<RepairEntity | Error> {
+    return this.repairService.getRepairById(id);
+  }
+
+  @Get('breakdown/:breakdownId')
+  @ApiResponse({ status: 200, description: 'Get repairs by breakdown ID', type: [RepairEntity] })
+  async getRepairsByBreakdownId(@Param('breakdownId') breakdownId: string): Promise<RepairEntity[] | Error> {
+    return this.repairService.getRepairsByBreakdownId(breakdownId);
+  }
+
+  @Delete(':id')
+  @ApiResponse({ status: 200, description: 'Delete repair by ID' })
+  async deleteRepair(@Param('id') id: string): Promise<void | Error> {
+    return this.repairService.deleteRepair(id);
+  }
+
+  @Post(':repairId/motorcycle')
+  @ApiResponse({ status: 200, description: 'Associate repair with motorcycle' })
+  async associateRepairWithMotorcycle(@Param('repairId') repairId: string): Promise<void | Error> {
+    return this.repairService.associateRepairWithMotorcycle(repairId);
+  }
+
+  @Post(':repairId/high-cost/:threshold')
+  @ApiResponse({ status: 200, description: 'Check if the repair cost is above a threshold', type: Boolean })
+  async checkHighCostRepair(
+    @Param('repairId') repairId: string,
+    @Param('threshold') threshold: number
+  ): Promise<boolean | Error> {
+    return this.repairService.checkHighCostRepair(repairId, threshold);
+  }
+
+  @Post(':repairId/warranty')
+  @ApiResponse({ status: 200, description: 'Check warranty coverage for repair', type: Boolean })
+  async checkRepairWarrantyCoverage(@Param('repairId') repairId: string): Promise<boolean | Error> {
+    return this.repairService.checkRepairWarrantyCoverage(repairId);
+  }
+
+  @Put(':repairId/actions')
+  @ApiResponse({ status: 200, description: 'Update repair actions' })
+  async updateRepairActions(
+    @Param('repairId') repairId: string,
+    @Body() newActions: CommonRepairAction[]
+  ): Promise<void | Error> {
+    return this.repairService.updateRepairActions(repairId, newActions);
+  }
+
+  @Put(':repairId')
+  @ApiResponse({ status: 200, description: 'Update repair', type: RepairEntity })
+  async updateRepair(
+    @Param('repairId') repairId: string,
+    @Body() repair: RepairEntity
+  ): Promise<RepairEntity | Error> {
+    repair.id = repairId;
+    return this.repairService.updateRepair(repair);
+  }
+}

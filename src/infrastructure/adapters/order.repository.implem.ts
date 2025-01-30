@@ -1,11 +1,12 @@
 import { OrderRepositoryInterface } from "@application/repositories/OrderRepositoryInterface";
 import { OrderEntity } from "@domain/entities/order/OrderEntity";
-import { Order } from "@infrastructure/orders/order.entity"; // ORM Order model
-import { OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface"; 
+import { Order } from "@infrastructure/orders/order.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { OrderItem } from "@infrastructure/order-items/order-item.entity";
 import { OrderNotFoundError } from "@domain/errors/order/OrderNotFoundError";
+import { toDomainSparePart } from "@infrastructure/helpers/sparPart/to-domain-spare-part";
+import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 
 export class OrderRepositoryImplem implements OrderRepositoryInterface {
   constructor(
@@ -14,8 +15,6 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
     
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
-
-    private readonly orderItemRepositoryInterface: OrderItemRepositoryInterface,
   ) {}
     findByDateRange(startDate: Date, endDate: Date): Promise<OrderEntity[] | Error> {
         throw new Error("Method not implemented.");
@@ -57,7 +56,7 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
       if (!order) return new OrderNotFoundError();
 
       const items = await Promise.all(order.items.map(item => 
-        this.orderItemRepositoryInterface.findById(item.id)
+        this.orderItemRepository.findOne({ where :{id: item.id}})
       ));
 
       const orderEntity = OrderEntity.create(
@@ -70,7 +69,11 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
 
       items.forEach((item) => {
         if (item instanceof Error) return;
-        orderEntity.addItem(item.getId(), item.sparePart, item.quantityOrdered.value, item.costPerUnit.value);
+        const domainSparePart = toDomainSparePart(item.sparePart)
+        orderEntity.addItem(
+          item.id, domainSparePart as SparePartEntity, 
+          item.quantityOrdered, 
+          item.costPerUnit);
       });
 
       return orderEntity;

@@ -8,8 +8,12 @@ export class AddMotorcycleToCompanyUsecase {
     private readonly companyRepository: CompanyRepositoryInterface
   ) {}
 
-  public async execute(company: CompanyEntity, motorcycle: MotorcycleEntity): Promise<CompanyEntity | Error> {
+  public async execute(companyId: string, motorcycle: MotorcycleEntity): Promise<CompanyEntity | Error> {
     try {
+      const company = await this.companyRepository.findById(companyId);
+
+      if (company instanceof Error) return company
+      
       company.addMotorcycle(motorcycle);
       await this.companyRepository.update(company);  
 

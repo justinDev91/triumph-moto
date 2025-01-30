@@ -1,5 +1,5 @@
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
-import { SparePart } from "@infrastructure/spart-parts/spart-part.entity";
+import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 
 export const toOrmSpartPart = (sparePartEntity: SparePartEntity): SparePart => {
     const sparePart = new SparePart();

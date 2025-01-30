@@ -5,8 +5,11 @@ import { UnexpectedError } from '@domain/errors/user/UnexpectedError';
 export class RemoveDriverFromCompanyUsecase {
     public constructor(private readonly companyRepository: CompanyRepositoryInterface) {}
   
-    public async execute(company: CompanyEntity, driverId: string): Promise<CompanyEntity | Error> {
+    public async execute(companyId: string, driverId: string): Promise<CompanyEntity | Error> {
       try {
+        const company = await this.companyRepository.findById(companyId);
+        if (company instanceof Error)  return company
+        
         company.removeDriver(driverId);
         await this.companyRepository.update(company);
   

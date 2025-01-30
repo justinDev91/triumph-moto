@@ -7,7 +7,7 @@ import { MotorcycleModule } from '@infrastructure/motorcycles/motorcycle.module'
 import { ConcessionModule } from '@infrastructure/concessions/concession.module';
 import { LocationModule } from '@infrastructure/locations/location.module';
 import { WarrantyModule } from '@infrastructure/warranties/warranty.module';
-import { SpartPartModule } from '@infrastructure/spart-parts/spart-part.module';
+import { SpartPartModule } from '@infrastructure/spare-parts/spare-part.module';
 import { OrderItemModule } from '@infrastructure/order-items/order-item.module';
 import { OrderModule } from '@infrastructure/orders/order.module';
 import { MaintenanceModule } from '@infrastructure/maintenances/maintenance.module';

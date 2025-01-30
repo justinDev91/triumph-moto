@@ -6,8 +6,12 @@ import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
 export class AddDriverToCompanyUsecase {
   public constructor(private readonly companyRepository: CompanyRepositoryInterface) {}
 
-  public async execute(company: CompanyEntity, driver: DriverEntity): Promise<CompanyEntity | Error> {
+  public async execute(companyId: string, driver: DriverEntity): Promise<CompanyEntity | Error> {
     try {
+      const company = await this.companyRepository.findById(companyId);
+
+      if (company instanceof Error) return company
+
       company.addDriver(driver);
       await this.companyRepository.update(company);
 

@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
-import { SpartPartController } from './spart-part.controller';
-import { SpartPartService } from './spart-part.service';
+import { SparePartController } from './spare-part.controller';
+import { SparePartService } from './spare-part.service';
 import { SparePartRepositoryImplem } from '@infrastructure/adapters/spare.part.repository.implem';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SparePart } from './spart-part.entity';
+import { SparePart } from './spare-part.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SparePart])],
-  controllers: [SpartPartController],
+  controllers: [SparePartController],
   providers: [
-    SpartPartService,
+    SparePartService,
     SparePartRepositoryImplem
   ],
   exports: [
-    SpartPartService, 
+    SparePartService, 
     SparePartRepositoryImplem,
   ]
 })

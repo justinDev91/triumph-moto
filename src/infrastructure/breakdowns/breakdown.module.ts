@@ -9,20 +9,20 @@ import { Repair } from '@infrastructure/repairs/repair.entity';
 import { BreakdownRepositoryImplem } from '@infrastructure/adapters/breakdown.repository.implem';
 
 @Module({
-//  imports: [TypeOrmModule.forFeature([
-//   Breakdown, 
-//   Motorcycle, 
-//   Warranty,
-//   Repair
-// ])],
+  imports: [TypeOrmModule.forFeature([
+    Breakdown, 
+    Motorcycle, 
+    Warranty,
+    Repair
+  ])],
   controllers: [BreakdownController],
   providers: [
     BreakdownService,
-    // BreakdownRepositoryImplem
+    BreakdownRepositoryImplem
   ],
   exports: [
     BreakdownService,
-    // BreakdownRepositoryImplem
+    BreakdownRepositoryImplem
   ]
 })
 export class BreakdownModule {}

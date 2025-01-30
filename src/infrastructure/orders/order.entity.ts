@@ -11,8 +11,8 @@ import {
 export class Order {
   @ApiProperty({ description: "Unique identifier for the order" })
   @PrimaryGeneratedColumn("uuid")
-
   id: string;
+  
   @ApiProperty({ description: "The date when the order was created" })
   @Column()
   orderDate: Date;

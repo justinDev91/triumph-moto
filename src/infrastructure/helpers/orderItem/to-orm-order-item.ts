@@ -1,6 +1,6 @@
 import { OrderItemEntity } from "@domain/entities/order/OrderItemEntity";
 import { OrderItem } from "@infrastructure/order-items/order-item.entity";
-import { SparePart } from "@infrastructure/spart-parts/spart-part.entity";
+import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 
 export const toOrmOrderItem = (domainOrderItem: OrderItemEntity, sparePart: SparePart): OrderItem => {
     return {

@@ -7,6 +7,7 @@ import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.
 import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { User } from '@infrastructure/users/user.entity';
 import { Company } from '@infrastructure/companies/company.entity';
+import { CompanyModule } from '@infrastructure/companies/company.module';
 
 @Module({
     controllers: [ConcessionController],
@@ -15,7 +16,9 @@ import { Company } from '@infrastructure/companies/company.entity';
         Motorcycle,
         User,
         Company
-    ])],
+    ]),
+    CompanyModule
+    ],
     providers: [
         ConcessionService,
         ConcessionRepositoryImplem

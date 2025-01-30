@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface";
 import { OrderItem } from "@infrastructure/order-items/order-item.entity";
-import { SparePart } from "@infrastructure/spart-parts/spart-part.entity";
+import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 import { OrderItemEntity } from "@domain/entities/order/OrderItemEntity";
 import { toDomainOrderItem } from "@infrastructure/helpers/orderItem/to-domain-order-item";
 import { toOrmOrderItem } from '@infrastructure/helpers/orderItem/to-orm-order-item';

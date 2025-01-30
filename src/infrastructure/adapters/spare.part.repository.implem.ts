@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { SparePartRepositoryInterface } from "@application/repositories/SparePartRepositoryInterface";
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { SparePart } from "@infrastructure/spart-parts/spart-part.entity";
+import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 import { toDomainSparePart } from "@infrastructure/helpers/sparPart/to-domain-spare-part";
 import { toOrmSpartPart } from "@infrastructure/helpers/sparPart/to-orm-spart-part";
 

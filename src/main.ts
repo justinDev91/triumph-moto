@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('Thiumph-motocycle')
     .setDescription('Thiumph clean archi api')
     .setVersion('1.0')
-    .addTag('thiumph-moto')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

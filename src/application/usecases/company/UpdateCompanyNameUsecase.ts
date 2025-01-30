@@ -7,9 +7,14 @@ export class UpdateCompanyNameUsecase {
     private readonly companyRepository: CompanyRepositoryInterface
   ) {}
 
-  public async execute(company: CompanyEntity, newName: string): Promise<CompanyEntity | Error> {
+  public async execute(companyId: string, newName: string): Promise<CompanyEntity | Error> {
     try {
+      const company = await this.companyRepository.findById(companyId);
+
+      if (company instanceof Error) return company
+
       const error = company.updateName(newName);
+
       if (error instanceof Error) return error;
 
       await this.companyRepository.update(company);  

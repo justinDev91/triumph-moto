@@ -1,4 +1,173 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post, Body, Param, Put, Delete, Get } from '@nestjs/common';
+import { BreakdownEntity } from '@domain/entities/breakdown/BreakdownEntity';
+import { RepairEntity } from '@domain/entities/repair/RepairEntity';
+import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
+import { WarrantyEntity } from '@domain/entities/warranty/WarrantyEntity';
+import { BreakdownService } from './breakdown.service';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 
-@Controller('breakdown')
-export class BreakdownController {}
+@ApiTags('breakdowns') 
+@Controller('breakdowns')
+export class BreakdownController {
+  constructor(private readonly breakdownService: BreakdownService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new breakdown report' })
+  @ApiResponse({
+    status: 201,
+    description: 'Successfully created a breakdown report',
+    type: BreakdownEntity,
+  })
+  @ApiBody({
+    description: 'Breakdown report data to create a new breakdown',
+    type: Object,
+  })
+  public async createBreakdown(
+    @Body() body: {
+      id: string;
+      motorcycle: MotorcycleEntity;
+      description: string;
+      reportedDate: Date;
+      warranty: WarrantyEntity | null;
+    }
+  ): Promise<BreakdownEntity | Error> {
+    const { id, motorcycle, description, reportedDate, warranty } = body;
+    return await this.breakdownService.createBreakdown(
+      id,
+      motorcycle,
+      description,
+      reportedDate,
+      warranty
+    );
+  }
+
+  @Put(':id/description')
+  @ApiOperation({ summary: 'Update the description of a breakdown' })
+  @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully updated the breakdown description',
+  })
+  @ApiBody({
+    description: 'New description for the breakdown',
+    type: String,
+  })
+  public async updateBreakdownDescription(
+    @Param('id') breakdownId: string,
+    @Body('description') newDescription: string
+  ): Promise<void | Error> {
+    return await this.breakdownService.updateBreakdownDescription(breakdownId, newDescription);
+  }
+
+  @Post(':id/repair')
+  @ApiOperation({ summary: 'Add a repair to a breakdown report' })
+  @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully added a repair to the breakdown',
+  })
+  @ApiBody({
+    description: 'Repair data to be added to the breakdown report',
+    type: RepairEntity,
+  })
+  public async addRepairToBreakdown(
+    @Param('id') breakdownId: string,
+    @Body() repair: RepairEntity
+  ): Promise<void | Error> {
+    return await this.breakdownService.addRepairToBreakdown(breakdownId, repair);
+  }
+
+  @Delete(':id/repair/:repairId')
+  @ApiOperation({ summary: 'Remove a repair from a breakdown report' })
+  @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
+  @ApiParam({ name: 'repairId', description: 'The ID of the repair' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully removed the repair from the breakdown',
+  })
+  public async removeRepairFromBreakdown(
+    @Param('id') breakdownId: string,
+    @Param('repairId') repairId: string
+  ): Promise<void | Error> {
+    return await this.breakdownService.removeRepairFromBreakdown(breakdownId, repairId);
+  }
+
+  @Get(':id/warranty')
+  @ApiOperation({ summary: 'Check warranty coverage for a breakdown' })
+  @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
+  @ApiBody({
+    description: 'The date to check the warranty coverage against',
+    type: Date,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully checked warranty coverage',
+    type: Boolean,
+  })
+  public async checkWarrantyCoverage(
+    @Param('id') breakdownId: string,
+    @Body('checkDate') checkDate: Date
+  ): Promise<boolean | Error> {
+    return await this.breakdownService.checkWarrantyCoverage(breakdownId, checkDate);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get breakdown report by ID' })
+  @ApiParam({ name: 'id', description: 'The ID of the breakdown report' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched the breakdown report',
+    type: BreakdownEntity,
+  })
+  public async findBreakdownById(@Param('id') breakdownId: string): Promise<BreakdownEntity | Error> {
+    return await this.breakdownService.findBreakdownById(breakdownId);
+  }
+
+  @Get('motorcycle/:motorcycleId')
+  @ApiOperation({ summary: 'Get all breakdowns for a motorcycle' })
+  @ApiParam({ name: 'motorcycleId', description: 'The ID of the motorcycle' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched breakdowns for the motorcycle',
+    type: [BreakdownEntity],
+  })
+  public async getBreakdownsByMotorcycleId(
+    @Param('motorcycleId') motorcycleId: string
+  ): Promise<BreakdownEntity[] | Error> {
+    return await this.breakdownService.getBreakdownsByMotorcycleId(motorcycleId);
+  }
+
+  @Get(':id/repair-history')
+  @ApiOperation({ summary: 'Get repair history for a breakdown' })
+  @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched the repair history for the breakdown',
+    type: [RepairEntity],
+  })
+  public async getBreakdownRepairHistory(@Param('id') breakdownId: string): Promise<RepairEntity[] | Error> {
+    return await this.breakdownService.getBreakdownRepairHistory(breakdownId);
+  }
+
+  @Post('report')
+  @ApiOperation({ summary: 'Report a new breakdown' })
+  @ApiResponse({
+    status: 201,
+    description: 'Successfully reported a new breakdown',
+  })
+  @ApiBody({
+    description: 'Breakdown report data to report a new breakdown',
+    type: Object,
+  })
+  public async reportBreakdown(
+    @Body() body: {
+      motorcycle: MotorcycleEntity;
+      description: string;
+      reportedDate: Date;
+      warranty: WarrantyEntity | null;
+    }
+  ): Promise<void | Error> {
+    const { motorcycle, description, reportedDate, warranty } = body;
+    return await this.breakdownService.reportBreakdown(motorcycle, description, reportedDate, warranty);
+  }
+}

@@ -12,7 +12,7 @@ export const toDomainRepair = (repairOrm: Repair, breakdownEntity: BreakdownEnti
     breakdownEntity || null, 
     repairOrm.repairDate,
     actions,
-    repairOrm.cost.value
+    repairOrm.cost
   );
 
   return repairEntity;

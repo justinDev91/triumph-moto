@@ -1,9 +1,15 @@
+import { ConcessionRepositoryInterface } from "@application/repositories/ConcessionRepositoryInterface";
 import { ConcessionEntity } from "@domain/entities/concession/ConcessionEntity";
 
 export class GetConcessionDetailsUseCase {
-  constructor(private readonly concession: ConcessionEntity) {}
+  public constructor(
+    private readonly concessionRepository: ConcessionRepositoryInterface
+  ) {}
 
-  execute() {
-    return this.concession.getDetails();
+  async execute(id: string): Promise<ConcessionEntity | Error> {
+    const concession = await this.concessionRepository.findById(id);
+    if (concession instanceof Error) return concession;
+
+    return concession.getDetails() as unknown as ConcessionEntity
   }
 }

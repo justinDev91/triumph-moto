@@ -13,6 +13,8 @@ import { MotorStatus } from '@domain/types/motorcycle';
 import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
 import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.repository.implem';
 import { CreateMotorcycleDto } from './dto/create-motorcycle.dto';
+import { AssignMotorcycleToConcessionUsecase } from '@application/usecases/motorcycle/AssignMotorcycleToConcessionUsecase';
+import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.repository.implem';
 
 @Injectable()
 export class MotorcycleService {
@@ -23,7 +25,7 @@ export class MotorcycleService {
   private readonly getMotorcycleCompanyDetailsUsecase: GetMotorcycleCompanyDetailsUsecase;
   private readonly getMotorcycleConcessionDetailsUsecase: GetMotorcycleConcessionDetailsUsecase;
   private readonly assignMotorcycleToCompanyUsecase: AssignMotorcycleToCompanyUsecase;
-//   private readonly assignMotorcycleToConcessionUsecase: AssignMotorcycleToConcessionUsecase;
+  private readonly assignMotorcycleToConcessionUsecase: AssignMotorcycleToConcessionUsecase;
   private readonly removeMotorcycleFromCompanyUsecase: RemoveMotorcycleFromCompanyUsecase;
   private readonly removeMotorcycleFromConcessionUsecase: RemoveMotorcycleFromConcessionUsecase;
   private readonly checkServiceStatusUsecase: CheckServiceStatusUsecase;
@@ -31,6 +33,7 @@ export class MotorcycleService {
   constructor(
     private readonly motorcycleRepository: MotorcycleRepositoryImplem,
     private readonly companyRepository: CompanyRepositoryImplem,
+    private readonly concessionRepository: ConcessionRepositoryImplem,
   ) {
     this.createMotorcycleUsecase = new CreateMotorcycleUsecase(motorcycleRepository);
     this.updateMileageUsecase = new UpdateMileageUsecase(motorcycleRepository);
@@ -42,6 +45,7 @@ export class MotorcycleService {
     this.removeMotorcycleFromCompanyUsecase = new RemoveMotorcycleFromCompanyUsecase(motorcycleRepository);
     this.removeMotorcycleFromConcessionUsecase = new RemoveMotorcycleFromConcessionUsecase(motorcycleRepository);
     this.checkServiceStatusUsecase = new CheckServiceStatusUsecase(motorcycleRepository);
+    this.assignMotorcycleToConcessionUsecase = new AssignMotorcycleToConcessionUsecase(motorcycleRepository, concessionRepository)
   }
 
   async create(createMotorcycleDto: CreateMotorcycleDto): Promise<void | Error> {
@@ -105,12 +109,12 @@ export class MotorcycleService {
     return await this.assignMotorcycleToCompanyUsecase.execute(motorcycleId, companyId);
   }
 
-//   async assignMotorcycleToConcession(
-//     motorcycleId: string,
-//     concessionId: string,
-//   ): Promise<void | Error> {
-//     return await this.assignMotorcycleToConcessionUsecase.execute(motorcycleId, concessionId);
-//   }
+  async assignMotorcycleToConcession(
+    motorcycleId: string,
+    concessionId: string,
+  ): Promise<void | Error> {
+    return await this.assignMotorcycleToConcessionUsecase.execute(motorcycleId, concessionId);
+  }
 
   async removeMotorcycleFromCompany(motorcycleId: string): Promise<void | Error> {
     return await this.removeMotorcycleFromCompanyUsecase.execute(motorcycleId);

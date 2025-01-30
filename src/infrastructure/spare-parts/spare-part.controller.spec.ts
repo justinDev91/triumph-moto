@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SpartPartController } from './spart-part.controller';
+import { SpartPartController } from './spare-part.controller';
 
 describe('SpartPartController', () => {
   let controller: SpartPartController;

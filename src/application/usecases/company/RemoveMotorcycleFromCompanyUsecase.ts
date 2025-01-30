@@ -7,8 +7,11 @@ export class RemoveMotorcycleFromCompanyUsecase {
     private readonly companyRepository: CompanyRepositoryInterface
   ) {}
 
-  public async execute(company: CompanyEntity, motorcycleId: string): Promise<CompanyEntity | Error> {
+  public async execute(companyId: string, motorcycleId: string): Promise<CompanyEntity | Error> {
     try {
+      const company = await this.companyRepository.findById(companyId);
+      if (company instanceof Error)  return company
+      
       company.removeMotorcycle(motorcycleId);
       await this.companyRepository.update(company); 
 

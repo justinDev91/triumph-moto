@@ -7,7 +7,7 @@ export const toOrmRepair = (repair: RepairEntity): Repair =>{
     repairOrm.id = repair.id;
     repairOrm.repairDate = repair.repairDate.value;
     repairOrm.actions = repair.actions.map(action => CommonRepairActionEnum[action]);
-    repairOrm.cost = repair.cost;
+    repairOrm.cost = repair.cost.value;
   
     return repairOrm;
 }

@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Motorcycle } from './motorcycle.entity';
 import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
 import { CompanyModule } from '@infrastructure/companies/company.module';
+import { ConcessionModule } from '@infrastructure/concessions/concession.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Motorcycle]),
-    CompanyModule
+    CompanyModule,
+    ConcessionModule
   ],
   providers: [
     MotorcycleService,

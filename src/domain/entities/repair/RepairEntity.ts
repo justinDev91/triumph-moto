@@ -5,7 +5,7 @@ import { RepairCost } from "@domain/values/repair/RepairCost";
 
 export class RepairEntity {
   private constructor(
-    public readonly id: string,
+    public id: string,
     public readonly breakdown: BreakdownEntity,
     public readonly repairDate: RepairDate,
     public actions: CommonRepairAction[],

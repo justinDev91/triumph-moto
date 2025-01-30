@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
-import { SparePart } from "@infrastructure/spart-parts/spart-part.entity";
+import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 
 @Entity()
 export class OrderItem {

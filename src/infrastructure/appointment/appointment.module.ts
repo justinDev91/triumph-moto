@@ -6,15 +6,15 @@ import { Appointment } from './appointment.entity';
 import { AppointmentRepositoryImplem } from '@infrastructure/adapters/appointment.repository.implem';
 
 @Module({
-  // imports: [TypeOrmModule.forFeature([Appointment])],
+  imports: [TypeOrmModule.forFeature([Appointment])],
   controllers: [AppointmentController],
   providers: [
     AppointmentService,
-    // AppointmentRepositoryImplem
+    AppointmentRepositoryImplem
   ],
   exports: [
     AppointmentService,
-    // AppointmentRepositoryImplem
+    AppointmentRepositoryImplem
   ]
 })
 export class AppointmentModule {}
