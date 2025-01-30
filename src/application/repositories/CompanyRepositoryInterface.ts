@@ -8,4 +8,5 @@ export interface CompanyRepositoryInterface {
   findByName(name: string): Promise<CompanyEntity | Error>;
   addConcessionToCompany(companyId: string, concession: ConcessionEntity): Promise<void | Error>;
   removeConcessionFromCompany(companyId: string, concessionId: string): Promise<void | Error>;
+  findAll(): Promise<CompanyEntity[] | Error>;
 }

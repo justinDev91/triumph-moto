@@ -1,26 +1,30 @@
 import { CompanyRepositoryInterface } from "@application/repositories/CompanyRepositoryInterface";
+import { UserRepositoryInterface } from "@application/repositories/UserRepositoryInterface"; 
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
-import { UserEntity } from "@domain/entities/user/UserEntity";
 import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
 
 export class CreateCompanyUsecase {
   public constructor(
-    private readonly companyRepository: CompanyRepositoryInterface
+    private readonly companyRepository: CompanyRepositoryInterface,
+    private readonly userRepository: UserRepositoryInterface 
   ) {}
 
   public async execute(
-    id: string,
     name: string,
-    user: UserEntity,
-    createdAt: Date,
-    updatedAt: Date
-  ): Promise<CompanyEntity | Error> {
+    userId: string 
+  ): Promise<void | Error> {
     try {
-      const company = CompanyEntity.create(id, name, user, createdAt, updatedAt);
-      if (company instanceof Error) return company;
 
-      await this.companyRepository.save(company);  
-      return company;
+      const user = await this.userRepository.findOne(userId); 
+      if (user instanceof Error) return user; 
+      
+
+      const company = CompanyEntity.create(null, name, user, new Date(), new Date());
+      if (company instanceof Error) return company; 
+      
+
+      await this.companyRepository.save(company);
+      
     } catch (error) {
       return new UnexpectedError(error instanceof Error ? error.message : String(error));
     }

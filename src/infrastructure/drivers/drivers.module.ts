@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Driver } from './driver.entity';
 import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
 import { CompanyModule } from '@infrastructure/companies/company.module';
+import { User } from '@infrastructure/users/user.entity';
 
 @Module({
   controllers: [DriversController],
   imports: [
-    TypeOrmModule.forFeature([Driver]),
+    TypeOrmModule.forFeature([Driver, User]),
     CompanyModule
   ],
   providers: [DriverRepositoryImplem, DriversService],

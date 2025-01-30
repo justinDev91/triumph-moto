@@ -5,8 +5,9 @@ import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { CompanyService } from './company.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { CreateCompanyDto } from './dto/create-user-dto';
 
-@ApiTags('companies') // Group all company-related routes under 'companies' in Swagger UI
+@ApiTags('companies') 
 @Controller('companies')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
@@ -18,23 +19,22 @@ export class CompanyController {
     description: 'Successfully created a company',
     type: CompanyEntity,
   })
-  @ApiBody({
-    description: 'Company data to create a new company',
-    type: Object,
-  })
   public async createCompany(
-    @Body() body: {
-      id: string;
-      name: string;
-      user: string; 
-      createdAt: Date;
-      updatedAt: Date;
-    }
-  ): Promise<CompanyEntity | Error> {
-    const { id, name, user, createdAt, updatedAt } = body;
-    return await this.companyService.createCompany(id, name, null, createdAt, updatedAt);
+    @Body() createCompanyDto: CreateCompanyDto): Promise<void | Error> {
+    await this.companyService.createCompany(createCompanyDto);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all companies' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched all companies',
+    type: [CompanyEntity],
+  })
+  public async getAllCompanies(): Promise<CompanyEntity[] | Error> {
+    return await this.companyService.getAllCompanies();
+  }
+  
   @Put(':id/name')
   @ApiOperation({ summary: 'Update the name of a company' })
   @ApiParam({ name: 'id', description: 'The ID of the company' })

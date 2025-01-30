@@ -79,13 +79,13 @@ export class UsersController {
     return toResponseUserDto(user);
   }
 
-  @Post(':id/drivers')
+  @Post(':id/drivers/:driverId')
   @ApiResponse({ status: 201, description: 'Add a driver to a user' })
   async addDriverToUser(
     @Param('id') userId: string,
-    @Body() driver: DriverEntity
+    @Param('driverId') driverId: string,
   ): Promise<void | Error> {
-    return this.usersService.addDriverToUser(userId, driver);
+    return this.usersService.addDriverToUser(userId, driverId);
   }
 
   @Get(':id/drivers')

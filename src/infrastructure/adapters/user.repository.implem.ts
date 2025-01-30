@@ -16,12 +16,18 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
   ) {}
 
   async update(user: UserEntity): Promise<void> {
-    await this.usersRepository.update(user.id, { isActive: false });
+    const ormUser = toOrmUser(user);
+    console.log("Updating User:", ormUser);
+  
+    const existingUser = await this.usersRepository.findOne({ where: { id: user.id } });
+    if (!existingUser) throw new Error("User not found");
+  
+    await this.usersRepository.save(ormUser);
   }
 
     async create(user: UserEntity): Promise<UserEntity | Error> {
     const userOrmEntity = toOrmUser(user);
-
+    
     const savedUser = await this.usersRepository.save(userOrmEntity);
     return toDomainUser(savedUser);
   }

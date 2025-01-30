@@ -34,6 +34,17 @@ export class CompanyRepositoryImplem implements CompanyRepositoryInterface {
     await this.companyRepo.save(companyOrmEntity);
   }
 
+  async findAll(): Promise<CompanyEntity[] | Error> {
+    const companiesOrm = await this.companyRepo.find({ relations: ['concessions', 'user'] });
+    if (!companiesOrm.length) return new CompanyNotFoundError();
+
+    const companies = companiesOrm.map(companyOrm => toDomainCompany(companyOrm));
+
+    if(companies instanceof Error) return companies
+
+    return companies as CompanyEntity[];
+  }
+  
   async findById(identifier: string): Promise<CompanyEntity | Error> {
     const companyOrm = await this.companyRepo.findOne({ where: { id: identifier } });
     if (!companyOrm) return new CompanyNotFoundError();

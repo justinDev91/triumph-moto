@@ -91,8 +91,8 @@ export class UsersService {
     return this.userDeactivateUseCase.execute(userId);
   }
 
-  async addDriverToUser(userId: string, driver: DriverEntity): Promise<void | Error> {
-    return this.addDriverToUserUsecase.execute(userId, driver);
+  async addDriverToUser(userId: string, driverId: string): Promise<void | Error> {
+    return this.addDriverToUserUsecase.execute(userId, driverId);
   }
 
   async getDriversForUser(userId: string): Promise<DriverEntity[] | Error> {

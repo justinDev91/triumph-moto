@@ -8,4 +8,6 @@ export interface DriverRepositoryInterface {
   findAllByUser(id: string): Promise<DriverEntity[] | DriverNotFoundError >;
   delete(id: string): Promise<void>;
   findAll(): Promise<DriverEntity[]>;
+  update(driver): Promise<DriverEntity | Error>
+  updateExperience(id, year): Promise<DriverEntity | Error>
 }

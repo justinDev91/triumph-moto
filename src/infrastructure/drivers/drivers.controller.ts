@@ -75,7 +75,7 @@ export class DriversController {
   async updateExperience(
     @Param('id') driverId: string,
     @Body() updateExperienceDto: UpdateExperienceDto,
-  ): Promise<void | Error> {
+  ): Promise<DriverEntity | Error> {
     const { years } = updateExperienceDto;
     return this.driversService.updateExperience(driverId, years);
   }

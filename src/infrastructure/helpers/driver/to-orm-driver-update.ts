@@ -3,8 +3,9 @@ import { Driver } from "@infrastructure/drivers/driver.entity";
 import { toOrmUser } from "../user/to-orm-user";
 import { toOrmCompany } from "../company/to-orm-company";
 
-export const toOrmDriver = (driver: DriverEntity): Driver => {
+export const toOrmDriverUpdate = (driver: DriverEntity, id: string): Driver => {
   return {
+    id,
     name: driver.name.value,
     license: driver.license.value,
     licenseType: driver.licenseType,

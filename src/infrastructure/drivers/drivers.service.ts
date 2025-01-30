@@ -91,8 +91,8 @@ export class DriversService {
     return this.updateDriverContactInfoUsecase.execute(driverId, email, phone);
   }
 
-  async updateExperience(driverId: string, years: number): Promise<void | Error> {
-    return this.updateDriverExperienceUsecase.execute(driverId, years);
+  async updateExperience(driverId: string, years: number): Promise<DriverEntity | Error> {
+    return await this.updateDriverExperienceUsecase.execute(driverId, years);
   }
 
   async getCompanyDetails(driverId: string): Promise<object | Error> {

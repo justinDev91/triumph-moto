@@ -14,6 +14,9 @@ import { UserEntity } from '@domain/entities/user/UserEntity';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
+import { GetAllCompaniesUsecase } from '@application/usecases/company/GetAllCompaniesUsecase';
+import { CreateCompanyDto } from './dto/create-user-dto';
+import { UserRepositoryImplem } from '@infrastructure/adapters/user.repository.implem';
 
 @Injectable()
 export class CompanyService {
@@ -26,23 +29,31 @@ export class CompanyService {
   public readonly removeDriverFromCompanyUsecase: RemoveDriverFromCompanyUsecase;
   public readonly removeMotorcycleFromCompanyUsecase: RemoveMotorcycleFromCompanyUsecase;
   public readonly updateCompanyNameUsecase: UpdateCompanyNameUsecase;
+  private readonly getAllCompaniesUsecase: GetAllCompaniesUsecase
 
   constructor(
-    private readonly companyRepository: CompanyRepositoryImplem
+    private readonly companyRepository: CompanyRepositoryImplem,
+    private readonly userRepository: UserRepositoryImplem,
   ) {
     this.addConcessionToCompanyUseCase = new AddConcessionToCompanyUseCase(companyRepository);
     this.addDriverToCompanyUsecase = new AddDriverToCompanyUsecase(companyRepository);
     this.addMotorcycleToCompanyUsecase = new AddMotorcycleToCompanyUsecase(companyRepository);
-    this.createCompanyUsecase = new CreateCompanyUsecase(companyRepository);
+    this.createCompanyUsecase = new CreateCompanyUsecase(companyRepository, userRepository);
     this.getCompanyDriversUsecase = new GetCompanyDriversUsecase(companyRepository);
     this.removeConcessionFromCompanyUseCase = new RemoveConcessionFromCompanyUseCase(companyRepository);
     this.removeDriverFromCompanyUsecase = new RemoveDriverFromCompanyUsecase(companyRepository);
     this.removeMotorcycleFromCompanyUsecase = new RemoveMotorcycleFromCompanyUsecase(companyRepository);
     this.updateCompanyNameUsecase = new UpdateCompanyNameUsecase(companyRepository);
+    this.getAllCompaniesUsecase =  new GetAllCompaniesUsecase(companyRepository)
   }
 
-  async createCompany(id: string, name: string, user: UserEntity, createdAt: Date, updatedAt: Date): Promise<CompanyEntity | Error> {
-    return await this.createCompanyUsecase.execute(id, name, user, createdAt, updatedAt);
+  async createCompany(createCompanyDto: CreateCompanyDto): Promise<void | Error> {
+    const { userId, name } = createCompanyDto;
+    await this.createCompanyUsecase.execute(name, userId);
+  }
+
+  public async getAllCompanies(): Promise<CompanyEntity[] | Error> {
+    return await this.getAllCompaniesUsecase.execute();
   }
 
   async addConcessionToCompany(concession: ConcessionEntity, companyId: string): Promise<void | Error> {

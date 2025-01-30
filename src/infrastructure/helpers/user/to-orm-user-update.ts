@@ -2,11 +2,11 @@ import { UserEntity } from "@domain/entities/user/UserEntity";
 import { User } from "@infrastructure/users/user.entity";
 import { toOrmDriver } from "../driver/to-orm-driver";
 
-export const toOrmUser = (user: UserEntity): User => {
-    console.log("user...", user)
+export const toOrmUserUpdate = (user: UserEntity, id: string): User => {
     const ormDrivers = user.getDrivers ? user.getDrivers().map(toOrmDriver) : null;
 
     const userOrm = new User();
+    userOrm.id = id;
     userOrm.firstName = user.firstName.value;
     userOrm.lastName = user.lastName.value;
     userOrm.email = user.email.value;
