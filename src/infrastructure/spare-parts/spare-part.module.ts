@@ -17,4 +17,4 @@ import { SparePart } from './spare-part.entity';
     SparePartRepositoryImplem,
   ]
 })
-export class SpartPartModule {}
+export class SparePartModule {}

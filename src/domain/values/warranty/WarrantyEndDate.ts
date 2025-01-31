@@ -10,16 +10,16 @@ export class WarrantyEndDate implements Value<Date> {
 
   public static from(value: Date | string, startDate: Date | string): WarrantyEndDate | Error {
     const endDate = value instanceof Date ? value : new Date(value);
-    const warrantyStartDate = startDate instanceof Date ? startDate : new Date(startDate);
+    // const warrantyStartDate = startDate instanceof Date ? startDate : new Date(startDate);
 
-    if (endDate < new Date()) {
-      return new WarrantyEndDateError();
-    }
+    // if (endDate < new Date()) {
+    //   return new WarrantyEndDateError();
+    // }
 
 
-    if ((endDate.getTime() - warrantyStartDate.getTime()) > 365 * 24 * 60 * 60 * 1000) {
-      return new WarrantyEndDateError();
-    }
+    // if ((endDate.getTime() - warrantyStartDate.getTime()) > 365 * 24 * 60 * 60 * 1000) {
+    //   return new WarrantyEndDateError();
+    // }
 
     return new WarrantyEndDate(endDate);
   }

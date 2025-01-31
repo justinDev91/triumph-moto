@@ -2,10 +2,11 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface";
 import { OrderItem } from "@infrastructure/order-items/order-item.entity";
-import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 import { OrderItemEntity } from "@domain/entities/order/OrderItemEntity";
 import { toDomainOrderItem } from "@infrastructure/helpers/orderItem/to-domain-order-item";
 import { toOrmOrderItem } from '@infrastructure/helpers/orderItem/to-orm-order-item';
+import { OrderItemNotFoundError } from "@domain/errors/orderItem/OrderItemNotFoundError";
+import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
 
 export class OrderItemRepositoryImplem implements OrderItemRepositoryInterface {
   constructor(
@@ -16,40 +17,42 @@ export class OrderItemRepositoryImplem implements OrderItemRepositoryInterface {
     private readonly sparePartRepository: Repository<SparePart>
   ) {}
 
-    findByOrderId(orderId: string): Promise<OrderItemEntity[] | Error> {
-        throw new Error('Method not implemented.');
-    }
 
     async save(orderItem: OrderItemEntity): Promise<OrderItemEntity | Error> {
-        try {
-            const sparePart = await this.sparePartRepository.findOne({ where: { id: orderItem.sparePart.id } });
-            if (!sparePart) return new Error("Spare part not found");
-    
-            const orderItemToSave = toOrmOrderItem(orderItem, sparePart);
-    
-            await this.orderItemRepository.save(orderItemToSave);
-            return toDomainOrderItem(orderItemToSave, this.sparePartRepository);
-        } catch (error) {
-            return new Error("Failed to save order item");
+      
+      const orderItemToSave = toOrmOrderItem(orderItem);
+      
+      await this.orderItemRepository.save({
+        ...orderItemToSave,
+        sparePart: {
+          id: orderItem.sparePart.id,
+          name:orderItem.sparePart.name.value,
+          quantityInStock:orderItem.sparePart.quantityInStock.value,
+          cost:orderItem.sparePart.cost.value,
+          totalUsage:orderItem.sparePart.getTotalUsage(),
+          reservedStock:orderItem.sparePart.getReservedStock()
         }
+      });
+      
+      return toDomainOrderItem(orderItemToSave);
    }
 
   async findById(orderItemId: string): Promise<OrderItemEntity | Error> {
     const orderItem = await this.orderItemRepository.findOne({ where: { id: orderItemId } });
     if (!orderItem) return new Error("Order item not found");
 
-    return toDomainOrderItem(orderItem, this.sparePartRepository);
+    return toDomainOrderItem(orderItem);
   }
 
-//   async findByOrderId(orderId: string): Promise<OrderItemEntity[] | Error> {
-//     const orderItems = await this.orderItemRepository.find({
-//         where: { Order: { id } },
-//       });
-//     if (!orderItems.length) return new Error("No order items found for this order");
+  async findByOrderId(orderId: string): Promise<OrderItemEntity[] | Error> {
+    const orderItems = await this.orderItemRepository.find({
+        where:  { id: orderId  },
+      });
+    if (!orderItems.length) return new OrderItemNotFoundError()
 
-//     const mappedOrderItems = await Promise.all(orderItems.map(toDomainOrderItem.bind(this)));
-//     return mappedOrderItems.filter(item => !(item instanceof Error)) as OrderItemEntity[];
-//   }
+    const mappedOrderItems = await Promise.all(orderItems.map(toDomainOrderItem.bind(this)));
+    return mappedOrderItems.filter(item => !(item instanceof Error)) as OrderItemEntity[];
+  }
 
   async findAll(): Promise<OrderItemEntity[] | Error> {
     const orderItems = await this.orderItemRepository.find();

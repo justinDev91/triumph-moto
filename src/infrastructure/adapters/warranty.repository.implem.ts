@@ -22,7 +22,9 @@ export class WarrantyRepositoryImplem implements WarrantyRepositoryInterface {
   ) {}
 
   async findAll(): Promise<WarrantyEntity[] | Error> {
-    const allWarranties = await this.warrantyRepository.find();
+    const allWarranties = await this.warrantyRepository.find(
+      {relations: ['motorcycle']}
+    );
     
     return allWarranties.map(toDomainWarranty)  as WarrantyEntity[];
   }

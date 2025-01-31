@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { OrderItemEntity } from '@domain/entities/order/OrderItemEntity';
-import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
 import { CreateOrderItemUsecase } from '@application/usecases/orderItem/CreateOrderItemUsecase';
 import { DeleteOrderItemUsecase } from '@application/usecases/orderItem/DeleteOrderItemUsecase';
 import { GetAllOrderItemsUsecase } from '@application/usecases/orderItem/GetAllOrderItemsUsecase';
@@ -10,9 +9,10 @@ import { GetRemainingQuantityUsecase } from '@application/usecases/orderItem/Get
 import { GetTotalCostUsecase } from '@application/usecases/orderItem/GetTotalCostUsecase';
 import { IsFullyDeliveredUsecase } from '@application/usecases/orderItem/IsFullyDeliveredUsecase';
 import { UpdateOrderItemDeliveryUsecase } from '@application/usecases/order/UpdateOrderItemDeliveryUsecase';
-import { UpdateOrderItemUsecase } from '@application/usecases/orderItem/UpdateOrderItemUsecase';
-import { OrderItemRepositoryImplem } from '@infrastructure/adapters/order.item.repository.implem';
 import { OrderRepositoryImplem } from '@infrastructure/adapters/order.repository.implem';
+import { CreateOrderItemDto } from './tdo/create-order-item.dto';
+import { SparePartRepositoryImplem } from '@infrastructure/adapters/spare.part.repository.implem';
+import { OrderItemRepositoryImplem } from '@infrastructure/adapters/order.item.repository.implem';
 
 @Injectable()
 export class OrderItemService {
@@ -25,13 +25,14 @@ export class OrderItemService {
     public readonly getTotalCostUsecase: GetTotalCostUsecase;
     public readonly isFullyDeliveredUsecase: IsFullyDeliveredUsecase;
     public readonly updateOrderItemDeliveryUsecase: UpdateOrderItemDeliveryUsecase;
-    public readonly updateOrderItemUsecase: UpdateOrderItemUsecase;
   
     constructor(
         private readonly orderItemRepository: OrderItemRepositoryImplem,
         private readonly orderRepository: OrderRepositoryImplem,
+        private readonly sparePartRepository: SparePartRepositoryImplem
+        
       ) {
-      this.createOrderItemUsecase = new CreateOrderItemUsecase(orderItemRepository);
+      this.createOrderItemUsecase = new CreateOrderItemUsecase(orderItemRepository, sparePartRepository);
       this.deleteOrderItemUsecase = new DeleteOrderItemUsecase(orderItemRepository);
       this.getAllOrderItemsUsecase = new GetAllOrderItemsUsecase(orderItemRepository);
       this.getDeliveredQuantityUsecase = new GetDeliveredQuantityUsecase(orderItemRepository);
@@ -40,22 +41,16 @@ export class OrderItemService {
       this.getTotalCostUsecase = new GetTotalCostUsecase(orderItemRepository);
       this.isFullyDeliveredUsecase = new IsFullyDeliveredUsecase(orderItemRepository);
       this.updateOrderItemDeliveryUsecase = new UpdateOrderItemDeliveryUsecase(orderRepository);
-      this.updateOrderItemUsecase = new UpdateOrderItemUsecase(orderItemRepository);
     }
 
-  async createOrderItem(
-    id: string,
-    sparePart: SparePartEntity,
-    quantityOrderedValue: number,
-    costPerUnitValue: number,
-    deliveredQuantityValue: number = 0
-  ): Promise<void | Error> {
+  async createOrderItem(createOrderItemDto : CreateOrderItemDto): Promise<void | Error> {
+    const {sparePartId, quantityOrdered, costPerUnit, deliveredQuantity} = createOrderItemDto
+   
     return await this.createOrderItemUsecase.execute(
-      id,
-      sparePart,
-      quantityOrderedValue,
-      costPerUnitValue,
-      deliveredQuantityValue
+      sparePartId,
+      quantityOrdered,
+      costPerUnit,
+      deliveredQuantity
     );
   }
 
@@ -93,9 +88,5 @@ export class OrderItemService {
     deliveredQty: number
   ): Promise<void | Error> {
     return await this.updateOrderItemDeliveryUsecase.execute(orderItemId, sparePartId, deliveredQty);
-  }
-
-  async updateOrderItem(orderItem: OrderItemEntity): Promise<void | Error> {
-    return await this.updateOrderItemUsecase.execute(orderItem);
   }
 }

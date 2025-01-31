@@ -48,7 +48,6 @@ export class SparePartEntity {
 
     const newQuantityInStock = SparePartQuantityInStock.from(newQuantity);
     if (newQuantityInStock instanceof Error) return newQuantityInStock;
-
     this.quantityInStock = newQuantityInStock;
   }
 
@@ -95,5 +94,9 @@ export class SparePartEntity {
 
   getReservedStock(): number {
     return this.reservedStock;
+  }
+
+  getQuantityInStock() : number {
+    return this.quantityInStock.value
   }
 }

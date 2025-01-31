@@ -10,6 +10,10 @@ export class ReserveSparePartUsecase {
     
     if(sparePart instanceof Error) return sparePart
 
-    return sparePart.reserve(quantity);
+    sparePart.reserve(quantity);
+
+    await this.sparePartRepository.reserve(id, sparePart.getReservedStock())
+
+    return true
   }
 }

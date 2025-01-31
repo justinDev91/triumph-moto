@@ -1,10 +1,11 @@
 import { Controller, Post, Body, Get, Param, Delete, Put } from '@nestjs/common';
 import { OrderItemEntity } from '@domain/entities/order/OrderItemEntity';
-import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
 import { OrderItemService } from './order-item.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateOrderItemDto } from './tdo/create-order-item.dto';
+import { UpdateOrderItemQuantityDto } from './tdo/update-quantity-order-item.dto copy';
 
-@ApiTags('order-items') // Grouping the controller under the "order-items" tag in Swagger UI
+@ApiTags('order-items')
 @Controller('order-items')
 export class OrderItemController {
   constructor(private readonly orderItemService: OrderItemService) {}
@@ -12,21 +13,9 @@ export class OrderItemController {
   @Post()
   @ApiResponse({ status: 201, description: 'Order item created successfully', type: OrderItemEntity })
   async createOrderItem(
-    @Body() createOrderItemDto: {
-      id: string;
-      sparePart: SparePartEntity;
-      quantityOrderedValue: number;
-      costPerUnitValue: number;
-      deliveredQuantityValue?: number;
-    }
+    @Body() createOrderItemDto: CreateOrderItemDto
   ): Promise<void | Error> {
-    return await this.orderItemService.createOrderItem(
-      createOrderItemDto.id,
-      createOrderItemDto.sparePart,
-      createOrderItemDto.quantityOrderedValue,
-      createOrderItemDto.costPerUnitValue,
-      createOrderItemDto.deliveredQuantityValue
-    );
+    return await this.orderItemService.createOrderItem(createOrderItemDto);
   }
 
   @Delete(':id')
@@ -69,15 +58,6 @@ export class OrderItemController {
   @ApiResponse({ status: 200, description: 'Check if the order item is fully delivered', type: Boolean })
   async isFullyDelivered(@Param('id') orderItemId: string): Promise<boolean | Error> {
     return await this.orderItemService.isFullyDelivered(orderItemId);
-  }
-
-  @Put(':id')
-  @ApiResponse({ status: 200, description: 'Update order item', type: OrderItemEntity })
-  async updateOrderItem(
-    @Param('id') id: string,
-    @Body() updateOrderItemDto: OrderItemEntity
-  ): Promise<void | Error> {
-    return await this.orderItemService.updateOrderItem(updateOrderItemDto);
   }
 
   @Put(':orderItemId/delivery')

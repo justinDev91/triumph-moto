@@ -1,29 +1,32 @@
 import { OrderItemRepositoryInterface } from "@application/repositories/OrderItemRepositoryInterface";
+import { SparePartRepositoryInterface } from "@application/repositories/SparePartRepositoryInterface";
 import { OrderItemEntity } from "@domain/entities/order/OrderItemEntity";
-import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 
 export class CreateOrderItemUsecase {
   constructor(
     private readonly orderItemRepository: OrderItemRepositoryInterface,
+    private readonly sparePartRepository: SparePartRepositoryInterface
   ) {}
 
   public async execute(
-    id: string,
-    sparePart: SparePartEntity,
-    quantityOrderedValue: number,
-    costPerUnitValue: number,
-    deliveredQuantityValue: number = 0,
+    sparePartId: string,
+    quantityOrdered: number,
+    costPerUnit: number,
+    deliveredQuantity: number = 0
   ): Promise<void | Error> {
+    const sparePart = await this.sparePartRepository.findById(sparePartId);
+    
+    if (sparePart instanceof Error) return sparePart;
+    
     const orderItem = OrderItemEntity.create(
-      id,
+      null,
       sparePart,
-      quantityOrderedValue,
-      costPerUnitValue,
-      deliveredQuantityValue
+      quantityOrdered,
+      costPerUnit,
+      deliveredQuantity
     );
 
-    if(orderItem instanceof Error) return orderItem
-
+    if (orderItem instanceof Error) return orderItem;
     await this.orderItemRepository.save(orderItem);
   }
 }

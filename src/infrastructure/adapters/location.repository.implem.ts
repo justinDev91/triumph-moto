@@ -28,7 +28,6 @@ export class LocationRepositoryImplem implements LocationRepositoryInterface {
   ) {}
 
   public async create(location: LocationEntity): Promise<void | Error> {
-    console.log("location...", location);
 
     try {
       const motorcycle = await this.motorcycleRepository.findOne({
@@ -50,7 +49,6 @@ export class LocationRepositoryImplem implements LocationRepositoryInterface {
         endDate: location.endDate,
         cost: location.cost,
       } as DeepPartial<Location>);
-      console.log("locationToSave", locationToSave);
       
       await this.locationRepository.save(locationToSave);
     } catch (error) {

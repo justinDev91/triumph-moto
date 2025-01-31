@@ -6,6 +6,9 @@ import { RestockSparePartUsecase } from "@application/usecases/sparePart/Restock
 import { UseSparePartUsecase } from "@application/usecases/sparePart/UseSparePartUsecase";
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 import { SparePartRepositoryImplem } from "@infrastructure/adapters/spare.part.repository.implem";
+import { CreateSparePartDto } from "./dto/create-spare-part.dto";
+import { GetAllSparePartsUsecase } from "@application/usecases/sparePart/GetAllSparePartsUsecase";
+import { DeleteSparePartUsecase } from "@application/usecases/sparePart/DeleteSparePartUsecase";
 
 @Injectable()
 export class SparePartService {
@@ -14,6 +17,8 @@ export class SparePartService {
   private readonly reserveSparePartUsecase: ReserveSparePartUsecase;
   private readonly restockSparePartUsecase: RestockSparePartUsecase;
   private readonly useSparePartUsecase: UseSparePartUsecase;
+  private readonly getAllSparePartsUsecase: GetAllSparePartsUsecase;
+  private readonly removeSparePartUsecase: DeleteSparePartUsecase;
 
   constructor(private readonly sparePartRepository: SparePartRepositoryImplem) {
     this.createSparePartUsecase = new CreateSparePartUsecase(sparePartRepository);
@@ -21,14 +26,12 @@ export class SparePartService {
     this.reserveSparePartUsecase = new ReserveSparePartUsecase(sparePartRepository);
     this.restockSparePartUsecase = new RestockSparePartUsecase(sparePartRepository);
     this.useSparePartUsecase = new UseSparePartUsecase(sparePartRepository);
+    this.getAllSparePartsUsecase = new GetAllSparePartsUsecase(sparePartRepository);
+    this.removeSparePartUsecase = new DeleteSparePartUsecase(sparePartRepository);
   }
 
-  async createSparePart(
-    name: string,
-    quantityInStock: number,
-    criticalLevel: number,
-    cost: number
-  ): Promise<void | Error> {
+  async createSparePart(createSparePartDto: CreateSparePartDto): Promise<void | Error> {
+    const {name, quantityInStock, criticalLevel, cost} = createSparePartDto;
     return this.createSparePartUsecase.execute(name, quantityInStock, criticalLevel, cost);
   }
 
@@ -46,5 +49,13 @@ export class SparePartService {
 
   async useSparePart(id: string, quantity: number): Promise<boolean | Error> {
     return this.useSparePartUsecase.execute(id, quantity);
+  }
+
+  async getAllSpareParts(): Promise<SparePartEntity[] | Error> {
+    return this.getAllSparePartsUsecase.execute();
+  }
+
+  async removeSparePart(id: string): Promise<void | Error> {
+    return this.removeSparePartUsecase.execute(id);
   }
 }

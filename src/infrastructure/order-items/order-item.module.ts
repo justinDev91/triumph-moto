@@ -6,11 +6,13 @@ import { SparePart } from '@infrastructure/spare-parts/spare-part.entity';
 import { OrderItem } from './order-item.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderModule } from '@infrastructure/orders/order.module';
+import { SparePartModule } from '@infrastructure/spare-parts/spare-part.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderItem, SparePart]),
-    forwardRef(() => OrderModule)
+    forwardRef(() => OrderModule),
+    SparePartModule
   ],
   controllers: [OrderItemController],
   providers: [

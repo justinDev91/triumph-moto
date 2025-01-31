@@ -11,6 +11,6 @@ export class RestockSparePartUsecase {
     if(sparePart instanceof Error) return sparePart
 
     sparePart.restock(quantity);
-    await this.sparePartRepository.save(sparePart);
+    await this.sparePartRepository.restock(id, sparePart.quantityInStock.value);
   }
 }

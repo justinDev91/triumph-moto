@@ -11,9 +11,9 @@ export class WarrantyStartDate implements Value<Date> {
   public static from(value: Date | string): WarrantyStartDate | Error {
     const startDate = value instanceof Date ? value : new Date(value);
 
-    if (startDate > new Date()) {
-      return new WarrantyStartDateError();
-    }
+    // if (startDate > new Date()) {
+    //   return new WarrantyStartDateError();
+    // }
 
     return new WarrantyStartDate(startDate);
   }

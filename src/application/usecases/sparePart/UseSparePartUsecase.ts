@@ -10,6 +10,15 @@ export class UseSparePartUsecase {
     
     if(sparePart instanceof Error) return sparePart
 
-    return sparePart.use(quantity);
+    sparePart.use(quantity)
+
+    await this.sparePartRepository.use(
+      id, 
+      sparePart.quantityInStock.value,
+      sparePart.getTotalUsage(),
+      sparePart.getReservedStock()
+    )
+    return true
+
   }
 }

@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 
 export class CreateWarrantyDto {
   @ApiProperty({ description: 'The motorcycle associated with the warranty' })
-  motorcycle: MotorcycleEntity;
+  motorcycleId: string;
 
   @ApiProperty({ description: 'The start date of the warranty', type: Date })
   startDate: Date;

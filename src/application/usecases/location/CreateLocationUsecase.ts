@@ -24,7 +24,6 @@ export class CreateLocationUsecase {
 
       const user = await this.userRepository.findOne(userId);
       if (user instanceof Error) return user;
-      console.log("user", user)
 
       const locationEntity = LocationEntity.create(
         null,
@@ -37,7 +36,6 @@ export class CreateLocationUsecase {
       );
 
       if (locationEntity instanceof Error) return locationEntity;
-      console.log("locationEntity", locationEntity)
     await this.locationRepository.create(locationEntity);
     } catch (error) {
       return new UnexpectedError(error instanceof Error ? error.message : String(error));

@@ -7,6 +7,6 @@ export const toDomainSparePart = (sparePart: SparePart) :SparePartEntity| Error 
       sparePart.name,
       sparePart.quantityInStock,
       sparePart.criticalLevel,
-      sparePart.cost,      
+      sparePart.cost,     
     );
 }

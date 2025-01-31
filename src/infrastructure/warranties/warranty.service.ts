@@ -27,7 +27,7 @@ export class WarrantyService {
     private readonly motorcycleRepository: MotorcycleRepositoryImplem,
 
   ) {
-    this.createWarrantyUsecase = new CreateWarrantyUsecase(warrantyRepository);
+    this.createWarrantyUsecase = new CreateWarrantyUsecase(warrantyRepository, motorcycleRepository);
     this.deleteWarrantyUsecase = new DeleteWarrantyUsecase(warrantyRepository);
     this.getWarrantyByIdUsecase = new GetWarrantyByIdUsecase(warrantyRepository);
     this.getWarrantyByMotorcycleIdUsecase = new GetWarrantyByMotorcycleIdUsecase(warrantyRepository);
@@ -37,8 +37,8 @@ export class WarrantyService {
   }
 
   async create(createWarrantyDto : CreateWarrantyDto): Promise<WarrantyEntity | Error> {
-    const {motorcycle, startDate, endDate, coverageDetails, isActive} = createWarrantyDto;
-    return await this.createWarrantyUsecase.execute(motorcycle, startDate, endDate, coverageDetails, isActive);
+    const {motorcycleId, startDate, endDate, coverageDetails, isActive} = createWarrantyDto;
+    return await this.createWarrantyUsecase.execute(motorcycleId, startDate, endDate, coverageDetails, isActive);
   }
 
   async delete(id: string): Promise<void | Error> {

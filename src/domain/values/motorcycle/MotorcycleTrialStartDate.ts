@@ -5,10 +5,10 @@ export class StartDate implements Value<Date> {
   constructor(public readonly value: Date) {}
 
   public static from(value: Date): StartDate | MotorcycleTrialStartDateError {
-    const now = new Date();
-    if (value <= now) {
-      return new MotorcycleTrialStartDateError();
-    }
+    // const now = new Date();
+    // if (value <= now) {
+    //   return new MotorcycleTrialStartDateError();
+    // }
     return new StartDate(value);
   }
 
