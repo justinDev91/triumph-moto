@@ -2,41 +2,41 @@ import { Controller, Post, Get, Put, Delete, Param, Body } from '@nestjs/common'
 import { ConcessionService } from './concession.service';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
-import { UserEntity } from '@domain/entities/user/UserEntity';
-import { CompanyEntity } from '@domain/entities/company/CompanyEntity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { CreateConcessionDto } from './dto/create-concession.dto';
+import { UpdateConcessionNameDto } from './dto/update-concession-name.dto';
 
-@ApiTags('concessions') // Group all concession-related routes under 'concessions' in Swagger UI
+@ApiTags('concessions') 
 @Controller('concessions')
 export class ConcessionController {
   constructor(private readonly concessionService: ConcessionService) {}
 
+  
   @Post()
   @ApiOperation({ summary: 'Create a new concession' })
   @ApiResponse({
     status: 201,
     description: 'Successfully created a concession',
-    type: ConcessionEntity,
-  })
-  @ApiBody({
-    description: 'Concession data to create a new concession',
-    type: Object,
+    type: ConcessionEntity,  
   })
   async createConcession(
-    @Body() concessionData: {
-      id: string;
-      name: string;
-      user: UserEntity;
-      company: CompanyEntity;
-      createdAt: Date;
-      updatedAt: Date;
-    }
-  ): Promise<ConcessionEntity | Error> {
-    const { id, name, user, company, createdAt, updatedAt } = concessionData;
-    return this.concessionService.createConcession(id, name, user, company, createdAt, updatedAt);
+    @Body() createConcessionDto: CreateConcessionDto
+  ): Promise<void | Error> {
+    await this.concessionService.createConcession(createConcessionDto);
   }
 
-  @Put(':id/name')
+  @Get()
+  @ApiOperation({ summary: 'Get all concession' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched all concession',
+    type: [ConcessionEntity],
+  })
+  public async getAllConcession(): Promise<ConcessionEntity[] | Error> {
+    return await this.concessionService.getAllConcessions();
+  }
+
+  @Put(':id')
   @ApiOperation({ summary: 'Update the name of a concession' })
   @ApiParam({ name: 'id', description: 'The ID of the concession' })
   @ApiResponse({
@@ -44,15 +44,11 @@ export class ConcessionController {
     description: 'Successfully updated the concession name',
     type: ConcessionEntity,
   })
-  @ApiBody({
-    description: 'New name for the concession',
-    type: Object,
-  })
   async updateConcessionName(
     @Param('id') concessionId: string,
-    @Body() { newName }: { newName: string }
+    @Body() updateConcessionNameDto : UpdateConcessionNameDto
   ): Promise<ConcessionEntity | Error> {
-    return this.concessionService.updateConcessionName(concessionId, newName);
+    return this.concessionService.updateConcessionName(concessionId, updateConcessionNameDto.name);
   }
 
   @Post(':id/motorcycle')
@@ -127,8 +123,8 @@ export class ConcessionController {
     description: 'Successfully fetched the concession details',
     type: ConcessionEntity,
   })
-  async getConcessionDetails(@Param('id') id: string): Promise<ConcessionEntity[] | Error> {
-    return this.concessionService.getConcessionDetails(id) as unknown as ConcessionEntity[];
+  async getConcessionDetails(@Param('id') id: string): Promise<ConcessionEntity | Error> {
+    return this.concessionService.getConcessionDetails(id);
   }
 
   @Put(':id')
@@ -139,14 +135,10 @@ export class ConcessionController {
     description: 'Successfully updated the concession',
     type: ConcessionEntity,
   })
-  @ApiBody({
-    description: 'New name for the concession',
-    type: Object,
-  })
   async updateConcession(
     @Param('id') id: string,
-    @Body() { newName }: { newName: string }
+    @Body() updateConcessionNameDto : UpdateConcessionNameDto
   ): Promise<ConcessionEntity | Error> {
-    return this.concessionService.updateConcession(id, newName);
+    return this.concessionService.updateConcession(id, updateConcessionNameDto.name);
   }
 }

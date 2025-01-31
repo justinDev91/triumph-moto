@@ -8,6 +8,7 @@ import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { User } from '@infrastructure/users/user.entity';
 import { Company } from '@infrastructure/companies/company.entity';
 import { CompanyModule } from '@infrastructure/companies/company.module';
+import { UsersModule } from '@infrastructure/users/users.module';
 
 @Module({
     controllers: [ConcessionController],
@@ -17,7 +18,8 @@ import { CompanyModule } from '@infrastructure/companies/company.module';
         User,
         Company
     ]),
-    CompanyModule
+    CompanyModule,
+    UsersModule
     ],
     providers: [
         ConcessionService,

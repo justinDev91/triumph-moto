@@ -4,8 +4,9 @@ import { LocationEntity } from '@domain/entities/location/LocationEntity';
 import { LocationStatus } from '@domain/types/LocationStatus';
 import { LocationStatusEnum } from '@infrastructure/types/LocationStatusEnum';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { CreateLocationDto } from './dto/create-location.dto';
 
-@ApiTags('locations') // Group all location-related routes under 'locations' in Swagger UI
+@ApiTags('locations')
 @Controller('locations')
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
@@ -17,22 +18,9 @@ export class LocationController {
     description: 'Successfully created a location record',
     type: LocationEntity,
   })
-  @ApiBody({
-    description: 'Location details to create a new record',
-    type: Object,
-  })
   async create(
-    @Body() body: {
-      id: string;
-      motorcycle: any;
-      user: any;
-      startDate: Date;
-      endDate: Date;
-      status: LocationStatus;
-      cost: number;
-    }): Promise<LocationEntity | Error> {
-    const { id, motorcycle, user, startDate, endDate, status, cost } = body;
-    return this.locationService.createLocation(id, motorcycle, user, startDate, endDate, status, cost);
+    @Body() createLocationDto: CreateLocationDto): Promise<void | Error> {
+    await this.locationService.createLocation(createLocationDto);
   }
 
   @Get(':id')

@@ -6,7 +6,7 @@ export class StartDate implements Value<Date> {
 
   public static from(value: Date): StartDate | MotorcycleTrialStartDateError {
     const now = new Date();
-    if (value < now) {
+    if (value <= now) {
       return new MotorcycleTrialStartDateError();
     }
     return new StartDate(value);

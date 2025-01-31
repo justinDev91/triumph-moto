@@ -17,7 +17,6 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
 
   async update(user: UserEntity): Promise<void> {
     const ormUser = toOrmUser(user);
-    console.log("Updating User:", ormUser);
   
     const existingUser = await this.usersRepository.findOne({ where: { id: user.id } });
     if (!existingUser) throw new Error("User not found");

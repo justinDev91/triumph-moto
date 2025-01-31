@@ -7,8 +7,6 @@ export const toDomainWarranty = (warrantyOrm: Warranty): WarrantyEntity | Error 
     const warrantyMotorcycle = toDomainMotorcycle(warrantyOrm.motorcycle)
 
     if(warrantyMotorcycle instanceof Error) return warrantyMotorcycle
-
-    console.log("toDomainWarranty", warrantyOrm)
     
     return WarrantyEntity.create(
       warrantyOrm.id,

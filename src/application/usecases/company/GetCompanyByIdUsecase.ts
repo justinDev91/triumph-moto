@@ -2,23 +2,16 @@ import { CompanyRepositoryInterface } from "@application/repositories/CompanyRep
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
 
-export class UpdateCompanyNameUsecase {
+export class GetCompanyByIdUsecase {
   public constructor(
     private readonly companyRepository: CompanyRepositoryInterface
   ) {}
 
-  public async execute(companyId: string, newName: string): Promise<CompanyEntity | Error> {
+  public async execute(companyId: string): Promise<CompanyEntity | Error> {
     try {
       const company = await this.companyRepository.findById(companyId);
-
-      if (company instanceof Error) return company
-
-      const error = company.updateName(newName);
-
-      if (error instanceof Error) return error;
-
-      await this.companyRepository.update(company);  
-
+      if (company instanceof Error) return company;
+      
       return company;
     } catch (error) {
       return new UnexpectedError(error instanceof Error ? error.message : String(error));

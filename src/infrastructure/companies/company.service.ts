@@ -10,13 +10,13 @@ import { RemoveDriverFromCompanyUsecase } from '@application/usecases/company/Re
 import { RemoveMotorcycleFromCompanyUsecase } from '@application/usecases/company/RemoveMotorcycleFromCompanyUsecase';
 import { UpdateCompanyNameUsecase } from '@application/usecases/company/UpdateCompanyNameUsecase';
 import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.repository.implem';
-import { UserEntity } from '@domain/entities/user/UserEntity';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { GetAllCompaniesUsecase } from '@application/usecases/company/GetAllCompaniesUsecase';
 import { CreateCompanyDto } from './dto/create-user-dto';
 import { UserRepositoryImplem } from '@infrastructure/adapters/user.repository.implem';
+import { GetCompanyByIdUsecase } from '@application/usecases/company/GetCompanyByIdUsecase';
 
 @Injectable()
 export class CompanyService {
@@ -30,6 +30,7 @@ export class CompanyService {
   public readonly removeMotorcycleFromCompanyUsecase: RemoveMotorcycleFromCompanyUsecase;
   public readonly updateCompanyNameUsecase: UpdateCompanyNameUsecase;
   private readonly getAllCompaniesUsecase: GetAllCompaniesUsecase
+  private readonly getCompanyByIdUsecase: GetCompanyByIdUsecase
 
   constructor(
     private readonly companyRepository: CompanyRepositoryImplem,
@@ -44,7 +45,8 @@ export class CompanyService {
     this.removeDriverFromCompanyUsecase = new RemoveDriverFromCompanyUsecase(companyRepository);
     this.removeMotorcycleFromCompanyUsecase = new RemoveMotorcycleFromCompanyUsecase(companyRepository);
     this.updateCompanyNameUsecase = new UpdateCompanyNameUsecase(companyRepository);
-    this.getAllCompaniesUsecase =  new GetAllCompaniesUsecase(companyRepository)
+    this.getAllCompaniesUsecase =  new GetAllCompaniesUsecase(companyRepository);
+    this.getCompanyByIdUsecase = new GetCompanyByIdUsecase(companyRepository)
   }
 
   async createCompany(createCompanyDto: CreateCompanyDto): Promise<void | Error> {
@@ -54,6 +56,10 @@ export class CompanyService {
 
   public async getAllCompanies(): Promise<CompanyEntity[] | Error> {
     return await this.getAllCompaniesUsecase.execute();
+  }
+
+  public async getCompanyById(companyId: string): Promise<CompanyEntity | Error> {
+    return await this.getCompanyByIdUsecase.execute(companyId);
   }
 
   async addConcessionToCompany(concession: ConcessionEntity, companyId: string): Promise<void | Error> {

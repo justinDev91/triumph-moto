@@ -1,29 +1,46 @@
+import { MotorcycleRepositoryInterface } from '@application/repositories/MotorcycleRepositoryInterface';
+import { UserRepositoryInterface } from '@application/repositories/UserRepositoryInterface';
 import { LocationRepositoryInterface } from "@application/repositories/LocationRepositoryInterface";
 import { LocationEntity } from "@domain/entities/location/LocationEntity";
-import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
-import { UserEntity } from "@domain/entities/user/UserEntity";
 import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
-import { LocationStatus } from "@domain/types/LocationStatus";
 
 export class CreateLocationUsecase {
-    constructor(private readonly locationRepository: LocationRepositoryInterface) {}
-  
-    public async execute(
-      id: string,
-      motorcycle: MotorcycleEntity,
-      user: UserEntity,
-      startDate: Date,
-      endDate: Date,
-      status: LocationStatus,
-      cost: number
-    ): Promise<LocationEntity | Error> {
-      try {
-        const location = LocationEntity.create(id, motorcycle, user, startDate, endDate, status, cost);
-        if (location instanceof Error) return location;
-  
-        return await this.locationRepository.create(location);
-      } catch (error) {
-        return new UnexpectedError(error instanceof Error ? error.message : String(error));
-      }
+  constructor(
+    private readonly locationRepository: LocationRepositoryInterface,
+    private readonly motorcycleRepository: MotorcycleRepositoryInterface,
+    private readonly userRepository: UserRepositoryInterface
+  ) {}
+
+  public async execute(
+    motorcycleId: string,
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+    cost: number
+  ): Promise<void | Error> {
+    try {
+      const motorcycle = await this.motorcycleRepository.findById(motorcycleId);
+      if (motorcycle instanceof Error) return motorcycle;
+
+      const user = await this.userRepository.findOne(userId);
+      if (user instanceof Error) return user;
+      console.log("user", user)
+
+      const locationEntity = LocationEntity.create(
+        null,
+        motorcycle,
+        user,
+        startDate,
+        endDate,
+        "in-progress",
+        cost
+      );
+
+      if (locationEntity instanceof Error) return locationEntity;
+      console.log("locationEntity", locationEntity)
+    await this.locationRepository.create(locationEntity);
+    } catch (error) {
+      return new UnexpectedError(error instanceof Error ? error.message : String(error));
     }
   }
+}

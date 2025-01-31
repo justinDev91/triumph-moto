@@ -20,8 +20,8 @@ export class MotorcycleEntity {
     private _nextServiceMileage: number,
     public readonly createdAt: Date,
     public updatedAt: Date,
-    private company: CompanyEntity | null = null,
-    private concession: ConcessionEntity | null = null,
+    public company: CompanyEntity | null = null,
+    public concession: ConcessionEntity | null = null,
   ) {}
 
   public static create(

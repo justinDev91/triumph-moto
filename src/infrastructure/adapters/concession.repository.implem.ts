@@ -33,7 +33,6 @@ export class ConcessionRepositoryImplem implements ConcessionRepositoryInterface
   async save(concession: ConcessionEntity): Promise<void> {
     try {
       const concessionToSave = this.concessionRepository.create({
-        id: concession.id,
         name: concession.name.value,
         user: await this.userRepository.findOne({
           where: { id: concession.user.id },
@@ -41,11 +40,9 @@ export class ConcessionRepositoryImplem implements ConcessionRepositoryInterface
         company: await this.companyRepository.findOne({
           where: { id: concession.company.id },
         }),
-        createdAt: concession.createdAt,
-        updatedAt: concession.updatedAt,
       });
-
       await this.concessionRepository.save(concessionToSave);
+
     } catch (error) {
       throw new Error("Failed to save concession");
     }

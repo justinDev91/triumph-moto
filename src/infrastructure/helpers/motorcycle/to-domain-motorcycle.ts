@@ -1,8 +1,9 @@
 import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
 import { Motorcycle } from "@infrastructure/motorcycles/motorcycle.entity";
+import { toDomainCompany } from "../company/to-domain-company";
+import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 
 export const toDomainMotorcycle = (motorcycleOrm: Motorcycle): MotorcycleEntity | Error => {
-   console.log("toDomainMotorcycle", toDomainMotorcycle)
     return MotorcycleEntity.create(
       motorcycleOrm.id,
       motorcycleOrm.brand,
@@ -15,6 +16,7 @@ export const toDomainMotorcycle = (motorcycleOrm: Motorcycle): MotorcycleEntity 
       motorcycleOrm.nextServiceMileage,
       motorcycleOrm.createdAt,
       motorcycleOrm.updatedAt,
+      motorcycleOrm.company ? toDomainCompany(motorcycleOrm.company) as CompanyEntity: null
     );
   };
   

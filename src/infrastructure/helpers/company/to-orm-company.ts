@@ -5,6 +5,6 @@ import { toOrmUser } from "../user/to-orm-user";
 export const toOrmCompany = (company: CompanyEntity): Company => {
     const companyOrm = new Company();
     companyOrm.name = company.name.value;  
-    companyOrm.user = toOrmUser(company.user); 
+    companyOrm.user =  companyOrm.user  ? toOrmUser(company.user) : null; 
     return companyOrm;
 }

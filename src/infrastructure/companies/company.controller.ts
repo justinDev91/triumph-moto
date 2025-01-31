@@ -6,6 +6,7 @@ import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { CompanyService } from './company.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { CreateCompanyDto } from './dto/create-user-dto';
+import { UpdateCompanyNameDto } from './dto/update-company-name-dto';
 
 @ApiTags('companies') 
 @Controller('companies')
@@ -34,24 +35,31 @@ export class CompanyController {
   public async getAllCompanies(): Promise<CompanyEntity[] | Error> {
     return await this.companyService.getAllCompanies();
   }
-  
-  @Put(':id/name')
-  @ApiOperation({ summary: 'Update the name of a company' })
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a company by ID' })
   @ApiParam({ name: 'id', description: 'The ID of the company' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched the company details',
+    type: CompanyEntity,
+  })
+  public async getCompanyById(@Param('id') companyId: string): Promise<CompanyEntity | Error> {
+    return await this.companyService.getCompanyById(companyId);
+  }
+  
+  @Put(':id')
+  @ApiOperation({ summary: 'Update the name of a company' })
   @ApiResponse({
     status: 200,
     description: 'Successfully updated the company name',
     type: CompanyEntity,
   })
-  @ApiBody({
-    description: 'New name for the company',
-    type: String,
-  })
   public async updateCompanyName(
     @Param('id') companyId: string,
-    @Body('name') newName: string
+    @Body() updateCompanyNameDto : UpdateCompanyNameDto
   ): Promise<CompanyEntity | Error> {
-    return await this.companyService.updateCompanyName(companyId, newName);
+    return await this.companyService.updateCompanyName(companyId, updateCompanyNameDto.name);
   }
 
   @Post(':id/concessions')

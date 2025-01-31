@@ -68,7 +68,7 @@ export class ConcessionEntity {
     name: string;
     user: UserEntity;
     motorcycles?: MotorcycleEntity[] | null;
-    company?: CompanyEntity | null;
+    company: CompanyEntity | null;
   } {
     return {
       id: this.id,

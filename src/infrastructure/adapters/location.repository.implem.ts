@@ -2,25 +2,60 @@ import { LocationRepositoryInterface } from "@application/repositories/LocationR
 import { LocationEntity } from "@domain/entities/location/LocationEntity";
 import { LocationStatusEnum } from "@infrastructure/types/LocationStatusEnum";  
 import { LocationNotFoundError } from "@domain/errors/location/LocationNotFoundError";  
-import { Repository } from "typeorm";
+import { DeepPartial, Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { toOrmLocation } from "@infrastructure/helpers/location/to-orm-location";
 import { toDomainLocation } from "@infrastructure/helpers/location/to-domain-location";
-import { Location } from "@infrastructure/locations/location.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Motorcycle } from "@infrastructure/motorcycles/motorcycle.entity";
+import { User } from "@infrastructure/users/user.entity";
+import { Location } from "@infrastructure/locations/location.entity";
+import { MotorcycleNotFoundError } from "@domain/errors/motorcycle/MotorcycleNotFoundError";
+import { UserNotFoundError } from "@domain/errors/user/UserNotFoundError";
 
 @Injectable()
 export class LocationRepositoryImplem implements LocationRepositoryInterface {
   constructor(
     @InjectRepository(Location)
-    private readonly locationRepository: Repository<Location>
+    private readonly locationRepository: Repository<Location>,
+
+    @InjectRepository(Motorcycle)
+    private readonly motorcycleRepository: Repository<Motorcycle>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
+
   ) {}
 
-  public async create(location: LocationEntity): Promise<LocationEntity> {
-    const locationOrm = toOrmLocation(location);  
+  public async create(location: LocationEntity): Promise<void | Error> {
+    console.log("location...", location);
 
-    const savedLocation = await this.locationRepository.save(locationOrm);
-    return toDomainLocation(savedLocation);  
+    try {
+      const motorcycle = await this.motorcycleRepository.findOne({
+        where: { id: location.motorcycle.id },
+      });
+
+      if (!motorcycle)  return new MotorcycleNotFoundError()
+
+      const user = await this.userRepository.findOne({
+        where: { id: location.user.id },
+      });
+
+      if (!user) return new UserNotFoundError();
+      
+      const locationToSave = this.locationRepository.create({
+        motorcycle,
+        user,
+        startDate: location.startDate,
+        endDate: location.endDate,
+        cost: location.cost,
+      } as DeepPartial<Location>);
+      console.log("locationToSave", locationToSave);
+      
+      await this.locationRepository.save(locationToSave);
+    } catch (error) {
+      return new Error("Failed to save location: " + (error instanceof Error ? error.message : "Unknown error"));
+    }
   }
 
   public async update(updatedData: LocationEntity): Promise<LocationEntity> {

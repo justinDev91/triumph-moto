@@ -9,10 +9,11 @@ import { UpdateConcessionUsecase } from '@application/usecases/concession/Update
 import { UpdateConcessionNameUsecase } from '@application/usecases/concession/UpdateConcessionNameUsecase';
 import { GetConcessionDetailsUseCase } from '@application/usecases/concession/GetConcessionDetailsUsecase';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
-import { UserEntity } from '@domain/entities/user/UserEntity';
-import { CompanyEntity } from '@domain/entities/company/CompanyEntity';
 import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.repository.implem';
 import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.repository.implem';
+import { GetAllConcessionsUsecase } from '@application/usecases/concession/getAllConcessionsUsecase';
+import { CreateConcessionDto } from './dto/create-concession.dto';
+import { UserRepositoryImplem } from '@infrastructure/adapters/user.repository.implem';
 
 @Injectable()
 export class ConcessionService {
@@ -24,18 +25,27 @@ export class ConcessionService {
   private readonly removeMotorcycleFromConcessionUsecase: RemoveMotorcycleFromConcessionUsecase;
   private readonly updateConcessionUsecase: UpdateConcessionUsecase;
   private readonly updateConcessionNameUsecase: UpdateConcessionNameUsecase;
+  private readonly getAllConcessionsUsecase: GetAllConcessionsUsecase;
+
 
   constructor(
     private readonly concessionRepository: ConcessionRepositoryImplem,
-    private readonly companyRepository: CompanyRepositoryImplem
+    private readonly companyRepository: CompanyRepositoryImplem,
+        private readonly userRepository: UserRepositoryImplem
   ) {
     this.addMotorcycleToConcessionUsecase = new AddMotorcycleToConcessionUsecase(concessionRepository);
     this.assignConcessionToCompanyUseCase = new AssignConcessionToCompanyUseCase(concessionRepository, companyRepository);
-    this.createConcessionUsecase = new CreateConcessionUsecase(concessionRepository);
+    this.createConcessionUsecase = new CreateConcessionUsecase(concessionRepository, companyRepository,userRepository );
     this.deleteConcessionUsecase = new DeleteConcessionUsecase(concessionRepository);
     this.removeMotorcycleFromConcessionUsecase = new RemoveMotorcycleFromConcessionUsecase(concessionRepository);
     this.updateConcessionUsecase = new UpdateConcessionUsecase(concessionRepository);
     this.updateConcessionNameUsecase = new UpdateConcessionNameUsecase(concessionRepository);
+    this.getAllConcessionsUsecase = new GetAllConcessionsUsecase(concessionRepository)
+    this.getConcessionDetailsUseCase = new GetConcessionDetailsUseCase(concessionRepository)
+  }
+
+  public async getAllConcessions(): Promise<ConcessionEntity[] | Error> {
+    return await this.getAllConcessionsUsecase.execute();
   }
 
   public async addMotorcycleToConcession(concessionId: string, motorcycle: MotorcycleEntity): Promise<ConcessionEntity | Error> {
@@ -46,15 +56,16 @@ export class ConcessionService {
     return this.assignConcessionToCompanyUseCase.execute(concessionId, companyId);
   }
 
-  public async createConcession(id: string, name: string, user: UserEntity, company: CompanyEntity, createdAt: Date, updatedAt: Date): Promise<ConcessionEntity | Error> {
-    return this.createConcessionUsecase.execute(id, name, user, company, createdAt, updatedAt);
+  public async createConcession(createConcessionDto : CreateConcessionDto): Promise<void | Error> {
+    const {name, userId, companyId} = createConcessionDto
+    await this.createConcessionUsecase.execute(name, userId, companyId);
   }
 
   public async deleteConcession(id: string): Promise<void | Error> {
     return this.deleteConcessionUsecase.execute(id);
   }
 
-  public getConcessionDetails(id: string) {
+  public getConcessionDetails(id: string): Promise<ConcessionEntity | Error> {
     return this.getConcessionDetailsUseCase.execute(id);
   }
 

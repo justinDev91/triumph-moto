@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Delete, Put } from '@nestjs/common';
 import { MotorcycleService } from './motorcycle.service';
 import { CreateMotorcycleDto } from './dto/create-motorcycle.dto';
 import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -136,5 +136,37 @@ export class MotorcycleController {
   })
   async checkServiceStatus(@Param('id') motorcycleId: string): Promise<boolean | Error> {
     return await this.motorcycleService.checkServiceStatus(motorcycleId);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get all motorcycles' })
+  @ApiResponse({
+    status: 200,
+    description: 'All motorcycles retrieved successfully',
+    type: [Object],
+  })
+  async getAllMotorcycles(): Promise<any | Error> {
+    return await this.motorcycleService.getAllMotorcycles();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a motorcycle by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Motorcycle retrieved successfully',
+    type: Object,
+  })
+  async getMotorcycleById(@Param('id') id: string): Promise<any | Error> {
+    return await this.motorcycleService.getMotorcycleById(id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a motorcycle by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Motorcycle deleted successfully',
+  })
+  async deleteMotorcycle(@Param('id') id: string): Promise<void | Error> {
+    return await this.motorcycleService.deleteMotorcycle(id);
   }
 }

@@ -15,6 +15,8 @@ import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.reposi
 import { CreateMotorcycleDto } from './dto/create-motorcycle.dto';
 import { AssignMotorcycleToConcessionUsecase } from '@application/usecases/motorcycle/AssignMotorcycleToConcessionUsecase';
 import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.repository.implem';
+import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
+import { GetAllMotorcyclesUsecase } from '@application/usecases/motorcycle/GetAllMotorcyclesUsecase';
 
 @Injectable()
 export class MotorcycleService {
@@ -29,6 +31,7 @@ export class MotorcycleService {
   private readonly removeMotorcycleFromCompanyUsecase: RemoveMotorcycleFromCompanyUsecase;
   private readonly removeMotorcycleFromConcessionUsecase: RemoveMotorcycleFromConcessionUsecase;
   private readonly checkServiceStatusUsecase: CheckServiceStatusUsecase;
+  private readonly getAllMotorcyclesUsecase : GetAllMotorcyclesUsecase;
 
   constructor(
     private readonly motorcycleRepository: MotorcycleRepositoryImplem,
@@ -45,7 +48,8 @@ export class MotorcycleService {
     this.removeMotorcycleFromCompanyUsecase = new RemoveMotorcycleFromCompanyUsecase(motorcycleRepository);
     this.removeMotorcycleFromConcessionUsecase = new RemoveMotorcycleFromConcessionUsecase(motorcycleRepository);
     this.checkServiceStatusUsecase = new CheckServiceStatusUsecase(motorcycleRepository);
-    this.assignMotorcycleToConcessionUsecase = new AssignMotorcycleToConcessionUsecase(motorcycleRepository, concessionRepository)
+    this.assignMotorcycleToConcessionUsecase = new AssignMotorcycleToConcessionUsecase(motorcycleRepository, concessionRepository);
+    this.getAllMotorcyclesUsecase = new GetAllMotorcyclesUsecase(motorcycleRepository)
   }
 
   async create(createMotorcycleDto: CreateMotorcycleDto): Promise<void | Error> {
@@ -58,8 +62,6 @@ export class MotorcycleService {
       purchaseDate,
       lastServiceDate,
       nextServiceMileage,
-      createdAt,
-      updatedAt,
       company
     } = createMotorcycleDto;
 
@@ -72,10 +74,20 @@ export class MotorcycleService {
       purchaseDate,
       lastServiceDate,
       nextServiceMileage,
-      createdAt,
-      updatedAt,
       company
     );
+  }
+
+  async getAllMotorcycles(): Promise<MotorcycleEntity[] | Error> {
+    return await this.getAllMotorcyclesUsecase.execute();
+  }
+
+  async getMotorcycleById(id: string): Promise<MotorcycleEntity | Error> {
+    return await this.motorcycleRepository.findById(id);
+  }
+
+  async deleteMotorcycle(id: string): Promise<void | Error> {
+    return await this.motorcycleRepository.delete(id);
   }
 
   async updateMileage(id: string, newMileage: number): Promise<void | Error> {
@@ -127,5 +139,6 @@ export class MotorcycleService {
   async checkServiceStatus(motorcycleId: string): Promise<boolean | Error> {
     return await this.checkServiceStatusUsecase.execute(motorcycleId);
   }
+  
 
 }

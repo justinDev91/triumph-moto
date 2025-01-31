@@ -2,7 +2,7 @@ import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { User } from '@infrastructure/users/user.entity';
 import { Company } from '@infrastructure/companies/company.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Concession {
@@ -18,19 +18,23 @@ export class Concession {
   @ApiProperty({ description: 'The list of motorcycles associated with the concession' })
   motorcycles: Motorcycle[];
 
-  @ManyToOne(() => Company, company => company.concessions) 
-  @ApiProperty({ description: 'The company associated with the concession' })
-  company: Company;
+  @ManyToOne(() => Company, company => company.concessions, { nullable: true }) 
+  @ApiProperty({ 
+    description: 'The company associated with the concession', 
+    type: Company, 
+    nullable: true, 
+  })
+  company: Company | null; 
 
   @Column()
   @ApiProperty({ description: 'The name of the concession' })
   name: string;
 
-  @Column()
   @ApiProperty({ description: 'The creation date of the concession' })
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @Column()
   @ApiProperty({ description: 'The last updated date of the concession' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }

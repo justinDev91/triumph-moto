@@ -7,9 +7,6 @@ export class GetConcessionDetailsUseCase {
   ) {}
 
   async execute(id: string): Promise<ConcessionEntity | Error> {
-    const concession = await this.concessionRepository.findById(id);
-    if (concession instanceof Error) return concession;
-
-    return concession.getDetails() as unknown as ConcessionEntity
+    return await this.concessionRepository.findById(id);
   }
 }

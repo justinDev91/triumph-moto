@@ -24,13 +24,11 @@ export class CompanyRepositoryImplem implements CompanyRepositoryInterface {
   async update(company: CompanyEntity): Promise<void | Error> {
     const companyOrm = await this.companyRepo.findOne({ where: { id: company.id } });
     if (!companyOrm) return new CompanyNotFoundError();
-
+    
     const companyOrmEntity = toOrmCompany(company);
 
     if(companyOrmEntity instanceof Error) return companyOrmEntity
     
-    companyOrmEntity.createdAt = companyOrm.createdAt;
-
     await this.companyRepo.save(companyOrmEntity);
   }
 

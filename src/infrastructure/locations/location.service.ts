@@ -11,9 +11,10 @@ import { FindLocationsByStatusUsecase } from '@application/usecases/location/Fin
 import { GetAllLocationsUsecase } from '@application/usecases/location/GetAllLocationsUsecase';
 import { GetLocationByIdUsecase } from '@application/usecases/location/GetLocationByIdUsecase';
 import { UpdateLocationUsecase } from '@application/usecases/location/UpdateLocationUsecase';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
-import { UserEntity } from '@domain/entities/user/UserEntity';
 import { LocationRepositoryImplem } from '@infrastructure/adapters/location.repository.implem';
+import { CreateLocationDto } from './dto/create-location.dto';
+import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
+import { UserRepositoryImplem } from '@infrastructure/adapters/user.repository.implem';
 
 @Injectable()
 export class LocationService {
@@ -29,11 +30,13 @@ export class LocationService {
   private readonly updateLocationUsecase: UpdateLocationUsecase;
 
   constructor(
-    private readonly locationRepository: LocationRepositoryImplem
+    private readonly locationRepository: LocationRepositoryImplem,
+    private readonly motorcycleRepository: MotorcycleRepositoryImplem,
+    private readonly userRepository: UserRepositoryImplem
   ) {
     this.calculateLocationCostUsecase = new CalculateLocationCostUsecase(locationRepository);
     this.cancelLocationUsecase = new CancelLocationUsecase(locationRepository);
-    this.createLocationUsecase = new CreateLocationUsecase(locationRepository);
+    this.createLocationUsecase = new CreateLocationUsecase(locationRepository, motorcycleRepository, userRepository);
     this.endLocationUsecase = new EndLocationUsecase(locationRepository);
     this.findLocationByMotorcycleUsecase = new FindLocationByMotorcycleUsecase(locationRepository);
     this.findLocationByUserUsecase = new FindLocationByUserUsecase(locationRepository);
@@ -43,16 +46,9 @@ export class LocationService {
     this.updateLocationUsecase = new UpdateLocationUsecase(locationRepository);
   }
 
-  public async createLocation(
-    id: string,
-    motorcycle: MotorcycleEntity,
-    user: UserEntity,
-    startDate: Date,
-    endDate: Date,
-    status: LocationStatus,
-    cost: number
-  ): Promise<LocationEntity | Error> {
-    return this.createLocationUsecase.execute(id, motorcycle, user, startDate, endDate, status, cost);
+  public async createLocation(createLocationDto: CreateLocationDto): Promise<void | Error> {
+    const {motorcycleId, userId, startDate, endDate, cost} = createLocationDto
+    await this.createLocationUsecase.execute(motorcycleId, userId, startDate, endDate, cost);
   }
 
   public async cancelLocation(locationId: string): Promise<LocationEntity | Error> {

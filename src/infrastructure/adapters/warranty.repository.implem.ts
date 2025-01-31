@@ -35,9 +35,7 @@ export class WarrantyRepositoryImplem implements WarrantyRepositoryInterface {
     warrantyOrm.motorcycle = savedMotorcycle; 
   
     const savedWarranty = await this.warrantyRepository.save(warrantyOrm);
-  
-    console.log("savedWarranty", savedWarranty);
-  
+    
     return toDomainWarranty(savedWarranty);
   }
   

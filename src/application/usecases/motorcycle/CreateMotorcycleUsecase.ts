@@ -15,8 +15,6 @@ export class CreateMotorcycleUsecase {
     purchaseDate: Date,
     lastServiceDate: Date | null,
     nextServiceMileage: number,
-    createdAt: Date,
-    updatedAt: Date,
     company: CompanyEntity | null = null,
   ): Promise<void | Error> {
 
@@ -30,8 +28,8 @@ export class CreateMotorcycleUsecase {
       purchaseDate,
       lastServiceDate,
       nextServiceMileage,
-      createdAt,
-      updatedAt,
+      null,
+      null,
       company,
     );
 
