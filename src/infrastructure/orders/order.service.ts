@@ -10,7 +10,6 @@ import { GetOrdersByDateRangeUsecase } from '@application/usecases/order/GetOrde
 import { GetTotalOrderCostUsecase } from '@application/usecases/order/GetTotalOrderCostUsecase';
 import { GetUndeliveredItemsUsecase } from '@application/usecases/order/GetUndeliveredItemsUsecase';
 import { UpdateItemDeliveryUsecase } from '@application/usecases/order/UpdateItemDeliveryUsecase';
-import { UpdateOrderItemDeliveryUsecase } from '@application/usecases/order/UpdateOrderItemDeliveryUsecase';
 import { OrderEntity } from '@domain/entities/order/OrderEntity';
 import { OrderItemEntity } from '@domain/entities/order/OrderItemEntity';
 import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
@@ -29,7 +28,6 @@ export class OrderService {
   private readonly getTotalOrderCostUsecase: GetTotalOrderCostUsecase;
   private readonly getUndeliveredItemsUsecase: GetUndeliveredItemsUsecase;
   private readonly updateItemDeliveryUsecase: UpdateItemDeliveryUsecase;
-  private readonly updateOrderItemDeliveryUsecase: UpdateOrderItemDeliveryUsecase;
 
   constructor(private readonly orderRepository: OrderRepositoryImplem) {
     this.addItemToOrderUsecase = new AddItemToOrderUsecase(orderRepository);
@@ -43,7 +41,6 @@ export class OrderService {
     this.getTotalOrderCostUsecase = new GetTotalOrderCostUsecase(orderRepository);
     this.getUndeliveredItemsUsecase = new GetUndeliveredItemsUsecase(orderRepository);
     this.updateItemDeliveryUsecase = new UpdateItemDeliveryUsecase(orderRepository);
-    this.updateOrderItemDeliveryUsecase = new UpdateOrderItemDeliveryUsecase(orderRepository);
   }
 
   async createOrder(
@@ -96,13 +93,6 @@ export class OrderService {
     return this.updateItemDeliveryUsecase.execute(orderId, sparePartId, deliveredQty);
   }
 
-  async updateOrderItemDelivery(
-    orderId: string,
-    sparePartId: string,
-    deliveredQty: number
-  ): Promise<void | Error> {
-    return this.updateOrderItemDeliveryUsecase.execute(orderId, sparePartId, deliveredQty);
-  }
 
   async checkIfOrderFullyDelivered(orderId: string): Promise<boolean | Error> {
     return this.checkIfOrderFullyDeliveredUsecase.execute(orderId);

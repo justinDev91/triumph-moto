@@ -8,11 +8,11 @@ import { GetOrderItemByIdUsecase } from '@application/usecases/orderItem/GetOrde
 import { GetRemainingQuantityUsecase } from '@application/usecases/orderItem/GetRemainingQuantityUsecase';
 import { GetTotalCostUsecase } from '@application/usecases/orderItem/GetTotalCostUsecase';
 import { IsFullyDeliveredUsecase } from '@application/usecases/orderItem/IsFullyDeliveredUsecase';
-import { UpdateOrderItemDeliveryUsecase } from '@application/usecases/order/UpdateOrderItemDeliveryUsecase';
 import { OrderRepositoryImplem } from '@infrastructure/adapters/order.repository.implem';
 import { CreateOrderItemDto } from './tdo/create-order-item.dto';
 import { SparePartRepositoryImplem } from '@infrastructure/adapters/spare.part.repository.implem';
 import { OrderItemRepositoryImplem } from '@infrastructure/adapters/order.item.repository.implem';
+import { UpdateOrderItemDeliveryUsecase } from '@application/usecases/orderItem/UpdateOrderItemDeliveryUsecase';
 
 @Injectable()
 export class OrderItemService {
@@ -40,7 +40,7 @@ export class OrderItemService {
       this.getRemainingQuantityUsecase = new GetRemainingQuantityUsecase(orderItemRepository);
       this.getTotalCostUsecase = new GetTotalCostUsecase(orderItemRepository);
       this.isFullyDeliveredUsecase = new IsFullyDeliveredUsecase(orderItemRepository);
-      this.updateOrderItemDeliveryUsecase = new UpdateOrderItemDeliveryUsecase(orderRepository);
+      this.updateOrderItemDeliveryUsecase = new UpdateOrderItemDeliveryUsecase(orderItemRepository);
     }
 
   async createOrderItem(createOrderItemDto : CreateOrderItemDto): Promise<void | Error> {
@@ -84,9 +84,8 @@ export class OrderItemService {
 
   async updateOrderItemDelivery(
     orderItemId: string,
-    sparePartId: string,
-    deliveredQty: number
+    quantityOrdered: number
   ): Promise<void | Error> {
-    return await this.updateOrderItemDeliveryUsecase.execute(orderItemId, sparePartId, deliveredQty);
+    return await this.updateOrderItemDeliveryUsecase.execute(orderItemId, quantityOrdered);
   }
 }

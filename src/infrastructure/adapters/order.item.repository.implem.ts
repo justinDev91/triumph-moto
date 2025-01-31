@@ -17,6 +17,10 @@ export class OrderItemRepositoryImplem implements OrderItemRepositoryInterface {
     private readonly sparePartRepository: Repository<SparePart>
   ) {}
 
+    async updatedeliveredQty(id: string, quantityOrdered: number): Promise<void> {
+      await this.orderItemRepository.update(id, {quantityOrdered});
+    }
+
 
     async save(orderItem: OrderItemEntity): Promise<OrderItemEntity | Error> {
       

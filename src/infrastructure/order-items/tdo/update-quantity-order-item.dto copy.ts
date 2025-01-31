@@ -6,4 +6,5 @@ export class UpdateOrderItemQuantityDto {
     example: 5 
   })
   quantityOrdered: number;
+
 }

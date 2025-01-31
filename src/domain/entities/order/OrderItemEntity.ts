@@ -4,12 +4,13 @@ import { OrderItemQuantityOrdered } from '@domain/values/orderItem/OrderItemQuan
 import { OrderItemCostPerUnit } from '@domain/values/orderItem/OrderItemCostPerUnit';
 import { OrderItemDeliveredQuantity } from '@domain/values/orderItem/OrderItemDeliveredQuantity';
 import { OrderItemQuantityExceedError } from '@domain/errors/orderItem/OrderItemQuantityExceedError';
+import { OrderItemQuantityLessThanDeliveredError } from '@domain/errors/orderItem/OrderItemQuantityLessThanDeliveredError';
 
 export class OrderItemEntity {
   private constructor(
     private readonly id: string,
     public readonly sparePart: SparePartEntity,
-    public readonly quantityOrdered: OrderItemQuantityOrdered,
+    public quantityOrdered: OrderItemQuantityOrdered,
     public readonly costPerUnit: OrderItemCostPerUnit,
     public deliveredQuantity: OrderItemDeliveredQuantity,
   ) {}
@@ -40,6 +41,17 @@ export class OrderItemEntity {
 
   getTotalCost(): number {
     return this.quantityOrdered.value * this.costPerUnit.value;
+  }
+
+  updateQuantityOrdered(newQuantityOrdered: number): void | Error {
+    if (newQuantityOrdered < this.deliveredQuantity.value) {
+      return new OrderItemQuantityLessThanDeliveredError();  
+    }
+
+    const updatedQuantityOrdered = OrderItemQuantityOrdered.from(newQuantityOrdered);
+    if (updatedQuantityOrdered instanceof Error) return updatedQuantityOrdered;
+
+    this.quantityOrdered = updatedQuantityOrdered;
   }
 
   updateDelivery(deliveredQty: number): void | Error {

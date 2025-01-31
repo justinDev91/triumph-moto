@@ -67,14 +67,6 @@ export class OrderController {
     return this.orderService.updateItemDelivery(orderId, sparePartId, deliveredQty);
   }
 
-  @Put(':orderId/items/delivery')
-  async updateOrderItemDelivery(
-    @Param('orderId') orderId: string,
-    @Body('sparePartId') sparePartId: string,
-    @Body('deliveredQty') deliveredQty: number
-  ): Promise<void | Error> {
-    return this.orderService.updateOrderItemDelivery(orderId, sparePartId, deliveredQty);
-  }
 
   @Get(':orderId/fully-delivered')
   async checkIfOrderFullyDelivered(@Param('orderId') orderId: string): Promise<boolean | Error> {

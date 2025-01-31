@@ -60,16 +60,16 @@ export class OrderItemController {
     return await this.orderItemService.isFullyDelivered(orderItemId);
   }
 
-  @Put(':orderItemId/delivery')
-  @ApiResponse({ status: 200, description: 'Update order item delivery details' })
+  @Put(':orderItemId/quantity')
+  @ApiResponse({ status: 200, description: 'Update order item quantity' })
   async updateOrderItemDelivery(
     @Param('orderItemId') orderItemId: string,
-    @Body() updateDeliveryDto: { sparePartId: string; deliveredQty: number }
+    @Body() UpdateOrderItemQuantityDto: UpdateOrderItemQuantityDto
   ): Promise<void | Error> {
     return await this.orderItemService.updateOrderItemDelivery(
       orderItemId,
-      updateDeliveryDto.sparePartId,
-      updateDeliveryDto.deliveredQty
+      UpdateOrderItemQuantityDto.quantityOrdered,
     );
   }
+
 }

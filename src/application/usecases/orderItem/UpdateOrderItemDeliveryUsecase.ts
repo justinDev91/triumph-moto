@@ -7,13 +7,14 @@ export class UpdateOrderItemDeliveryUsecase {
 
   public async execute(
     orderItemId: string,
-    deliveredQty: number,
+    quantityOrdered: number,
   ): Promise<void | Error> {
     const orderItem = await this.orderItemRepository.findById(orderItemId);
 
     if(orderItem instanceof Error) return orderItem
 
-    orderItem.updateDelivery(deliveredQty);
-    await this.orderItemRepository.save(orderItem);
+    orderItem.updateQuantityOrdered(quantityOrdered);
+
+    await this.orderItemRepository.updatedeliveredQty(orderItemId, quantityOrdered);
   }
 }

@@ -7,4 +7,5 @@ export interface OrderItemRepositoryInterface {
   findAll(): Promise<OrderItemEntity[] | Error>;
   update(orderItem: OrderItemEntity): Promise<void>;
   delete(id: string): Promise<void>;
+  updatedeliveredQty(id: string, quantityOrdered: number): Promise<void>
 }
