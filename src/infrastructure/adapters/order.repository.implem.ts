@@ -7,6 +7,8 @@ import { OrderItem } from "@infrastructure/order-items/order-item.entity";
 import { OrderNotFoundError } from "@domain/errors/order/OrderNotFoundError";
 import { toDomainSparePart } from "@infrastructure/helpers/sparPart/to-domain-spare-part";
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
+import { toDomainOrder } from "@infrastructure/helpers/order/to-domain-order";
+import { toOrmSpartPart } from "@infrastructure/helpers/sparPart/to-orm-spart-part";
 
 export class OrderRepositoryImplem implements OrderRepositoryInterface {
   constructor(
@@ -16,34 +18,26 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
   ) {}
+
+    async findAll(): Promise<OrderEntity[] | Error> {
+      const orders = await this.orderRepository.find();
+      
+      const mappedOrders = await Promise.all(orders.map(toDomainOrder.bind(this)));
+      return mappedOrders.filter(item => !(item instanceof Error)) as OrderEntity[];
+    }
+
     findByDateRange(startDate: Date, endDate: Date): Promise<OrderEntity[] | Error> {
         throw new Error("Method not implemented.");
     }
 
   async save(order: OrderEntity): Promise<void> {
-    try {
       const orderToSave = this.orderRepository.create({
         orderDate: order.getOrderDate(),
         estimatedDeliveryDate: order.getEstimatedDeliveryDate(),
         totalCost: order.getTotalCost(),
         items: [], 
       });
-
       await this.orderRepository.save(orderToSave);
-
-      for (const item of order.getItems()) {
-        const orderItemToSave = this.orderItemRepository.create({
-          id: item.sparePart.id,
-          quantityOrdered: item.quantityOrdered.value,
-          costPerUnit: item.costPerUnit.value,
-          deliveredQuantity: item.deliveredQuantity.value,
-        });
-
-        await this.orderItemRepository.save(orderItemToSave);
-      }
-    } catch (error) {
-      throw new Error("Failed to save the order");
-    }
   }
 
   async findById(orderId: string): Promise<OrderEntity | Error> {
@@ -51,10 +45,8 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
       const order = await this.orderRepository.findOne({
         where: { id: orderId },
         relations: ["items"], 
-      });
-
+      }); 
       if (!order) return new OrderNotFoundError();
-
       const items = await Promise.all(order.items.map(item => 
         this.orderItemRepository.findOne({ where :{id: item.id}})
       ));
@@ -84,24 +76,34 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
 
   async update(order: OrderEntity): Promise<void> {
     try {
-      const orderToUpdate = await this.orderRepository.findOne({ where: { id: order.id } });
+  
+      const orderToUpdate = await this.orderRepository.findOne({
+        where: { id: order.id },
+        relations: ["items"],
+      });
+  
       if (!orderToUpdate) throw new Error("Order not found");
-
+  
       orderToUpdate.orderDate = order.getOrderDate();
       orderToUpdate.estimatedDeliveryDate = order.getEstimatedDeliveryDate();
       orderToUpdate.totalCost = order.getTotalCost();
-
-      await this.orderRepository.save(orderToUpdate);
-
-      for (const item of order.getItems()) {
-        await this.orderItemRepository.update(item.getId(), {
+  
+      const itemsToOrm = order.getItems().map((item) => 
+        this.orderItemRepository.create({
+          id: item.getId(),
+          sparePart: toOrmSpartPart(item.sparePart), 
           quantityOrdered: item.quantityOrdered.value,
           costPerUnit: item.costPerUnit.value,
           deliveredQuantity: item.deliveredQuantity.value,
-        });
-      }
+        })
+      );
+  
+      orderToUpdate.items = itemsToOrm;
+  
+      await this.orderRepository.save(orderToUpdate);
     } catch (error) {
       throw new Error("Failed to update order");
     }
   }
+  
 }

@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { SparePart } from "@infrastructure/spare-parts/spare-part.entity";
+import { Order } from "@infrastructure/orders/order.entity";
 
 @Entity()
 export class OrderItem {
@@ -24,4 +25,10 @@ export class OrderItem {
   @Column({ type: "int", default: 0 })
   @ApiProperty({ description: "The quantity of the spare part that has been delivered"})
   deliveredQuantity: number;
+
+  @ManyToOne(() => Order, (order) => order.items, { nullable: true, onDelete: "SET NULL" })
+  @JoinColumn({ name: "orderId" })
+  @ApiProperty({ description: "The order associated with this item (nullable)" })
+  order?: Order;
+
 }

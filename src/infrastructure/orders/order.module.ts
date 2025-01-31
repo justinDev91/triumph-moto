@@ -6,11 +6,13 @@ import { Order } from './order.entity';
 import { OrderRepositoryImplem } from '@infrastructure/adapters/order.repository.implem';
 import { OrderItem } from '@infrastructure/order-items/order-item.entity';
 import { OrderItemModule } from '@infrastructure/order-items/order-item.module';
+import { SparePartModule } from '@infrastructure/spare-parts/spare-part.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem]),
-    forwardRef(() => OrderItemModule)
+    forwardRef(() => OrderItemModule),
+    SparePartModule
   ],
   controllers: [OrderController],
   providers: [

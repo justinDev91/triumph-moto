@@ -21,7 +21,7 @@ export class Order {
   @Column({ type: "date" })
   estimatedDeliveryDate: Date;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem)
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
   @ApiProperty({ description: "List of items associated with the order" })
   items: OrderItem[];
 

@@ -30,3 +30,8 @@ const createLocation = {
     "endDate": "2025-03-01T00:00:00Z",
     "cost": 100.5
 }
+
+const order = {
+    "orderDateValue": "2025-01-01T00:00:00Z",
+    "estimatedDeliveryDateValue": "2025-02-01T00:00:00Z"
+}

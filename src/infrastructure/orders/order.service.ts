@@ -14,6 +14,10 @@ import { OrderEntity } from '@domain/entities/order/OrderEntity';
 import { OrderItemEntity } from '@domain/entities/order/OrderItemEntity';
 import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
 import { OrderRepositoryImplem } from '@infrastructure/adapters/order.repository.implem';
+import { CreateOrderDto } from './tdo/create-order-dto';
+import { GetAllOrdersUsecase } from '@application/usecases/order/GetAllOrdersUsecase';
+import { AddItemToOrderDto } from './tdo/add-item-to-order.dto';
+import { SparePartRepositoryImplem } from '@infrastructure/adapters/spare.part.repository.implem';
 
 @Injectable()
 export class OrderService {
@@ -28,9 +32,13 @@ export class OrderService {
   private readonly getTotalOrderCostUsecase: GetTotalOrderCostUsecase;
   private readonly getUndeliveredItemsUsecase: GetUndeliveredItemsUsecase;
   private readonly updateItemDeliveryUsecase: UpdateItemDeliveryUsecase;
+  private readonly getAllOrdersUsecase : GetAllOrdersUsecase;
 
-  constructor(private readonly orderRepository: OrderRepositoryImplem) {
-    this.addItemToOrderUsecase = new AddItemToOrderUsecase(orderRepository);
+  constructor(
+    private readonly orderRepository: OrderRepositoryImplem,
+    private readonly sparePartRepository: SparePartRepositoryImplem
+  ) {
+    this.addItemToOrderUsecase = new AddItemToOrderUsecase(orderRepository, sparePartRepository);
     this.checkIfOrderFullyDeliveredUsecase = new CheckIfOrderFullyDeliveredUsecase(orderRepository);
     this.createOrderUsecase = new CreateOrderUsecase(orderRepository);
     this.getEstimatedDeliveryDateUsecase = new GetEstimatedDeliveryDateUsecase(orderRepository);
@@ -41,14 +49,15 @@ export class OrderService {
     this.getTotalOrderCostUsecase = new GetTotalOrderCostUsecase(orderRepository);
     this.getUndeliveredItemsUsecase = new GetUndeliveredItemsUsecase(orderRepository);
     this.updateItemDeliveryUsecase = new UpdateItemDeliveryUsecase(orderRepository);
+    this.getAllOrdersUsecase = new GetAllOrdersUsecase(orderRepository)
   }
 
-  async createOrder(
-    id: string,
-    orderDateValue: Date,
-    estimatedDeliveryDateValue: Date
-  ): Promise<void | Error> {
-    return this.createOrderUsecase.execute(id, orderDateValue, estimatedDeliveryDateValue);
+  async createOrder(createOrderDto: CreateOrderDto): Promise<void | Error> {
+    return this.createOrderUsecase.execute(createOrderDto.orderDateValue, createOrderDto.estimatedDeliveryDateValue);
+  }
+
+  async getAllOrders(): Promise<OrderEntity[] | Error>  {
+    return await this.getAllOrdersUsecase.execute();
   }
 
   async getOrderById(orderId: string): Promise<OrderEntity | Error> {
@@ -77,12 +86,10 @@ export class OrderService {
 
   async addItemToOrder(
     orderId: string,
-    itemId: string,
-    sparePart: SparePartEntity,
-    quantity: number,
-    costPerUnit: number
+    addItemToOrderDto : AddItemToOrderDto
   ): Promise<void | Error> {
-    return this.addItemToOrderUsecase.execute(orderId, itemId, sparePart, quantity, costPerUnit);
+    const {itemId, sparePartId, quantity, costPerUnit } = addItemToOrderDto
+    return this.addItemToOrderUsecase.execute(orderId, itemId, sparePartId, quantity, costPerUnit);
   }
 
   async updateItemDelivery(

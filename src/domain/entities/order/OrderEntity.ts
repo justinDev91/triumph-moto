@@ -77,10 +77,11 @@ export class OrderEntity {
   }
 
   getOrderDate(): Date {
-    return this.orderDate.value;
+    return new Date(this.orderDate.value); 
   }
-
+  
   getEstimatedDeliveryDate(): Date {
-    return this.estimatedDeliveryDate.value;
+    return new Date(this.estimatedDeliveryDate.value); 
   }
+  
 }
