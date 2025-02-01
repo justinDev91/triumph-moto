@@ -5,5 +5,9 @@ export const toDomainOrder = async (
   order: Order,
 ): Promise<OrderEntity | Error> => {
 
-  return OrderEntity.create(order.id, order.orderDate, order.estimatedDeliveryDate);
+  return OrderEntity.create(
+    order.id, 
+    order.orderDate, 
+    order.estimatedDeliveryDate,
+  );
 };

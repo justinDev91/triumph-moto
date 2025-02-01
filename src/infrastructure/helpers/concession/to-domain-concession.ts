@@ -7,14 +7,12 @@ import { UserEntity } from "@domain/entities/user/UserEntity";
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 
 export const toDomainConcession = (concessionOrm: Concession): ConcessionEntity => {
-  const user = toDomainUser(concessionOrm.user);
-  const company = toDomainCompany(concessionOrm.company);
 
   return ConcessionEntity.create(
     concessionOrm.id,
     concessionOrm.name,
-    user as UserEntity,
-    company as CompanyEntity,
+    concessionOrm.user ? toDomainUser(concessionOrm.user) as UserEntity : null,
+    concessionOrm.company ? toDomainCompany(concessionOrm.company) as CompanyEntity : null,
     concessionOrm.createdAt,
     concessionOrm.updatedAt
   ) as ConcessionEntity;

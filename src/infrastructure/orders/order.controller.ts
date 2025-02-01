@@ -6,6 +6,7 @@ import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './tdo/create-order-dto';
 import { AddItemToOrderDto } from './tdo/add-item-to-order.dto';
+import { UpdateItemDeliveryDto } from './tdo/update-item-delivery.dto';
 
 @ApiTags('orders') 
 @Controller('orders')
@@ -74,9 +75,9 @@ export class OrderController {
   async updateItemDelivery(
     @Param('orderId') orderId: string,
     @Param('sparePartId') sparePartId: string,
-    @Body('deliveredQty') deliveredQty: number
+    @Body() updateItemDeliveryDto : UpdateItemDeliveryDto ,
   ): Promise<void | Error> {
-    return this.orderService.updateItemDelivery(orderId, sparePartId, deliveredQty);
+    return this.orderService.updateItemDelivery(orderId, sparePartId, updateItemDeliveryDto.deliveredQty);
   }
 
   @Get(':orderId/fully-delivered')

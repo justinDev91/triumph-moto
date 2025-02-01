@@ -35,3 +35,14 @@ const order = {
     "orderDateValue": "2025-01-01T00:00:00Z",
     "estimatedDeliveryDateValue": "2025-02-01T00:00:00Z"
 }
+
+const maitenance = {
+    "motorcycleId": "7ef814e6-0fa0-47fe-bc04-7edf89389174",
+    "maintenanceType": "Preventive",
+    "date": "2025-01-01T00:00:00Z",
+    "cost": 150.75,
+    "mileageAtService": 12000,
+    "maintenanceIntervalMileage": 5000,
+    "maintenanceIntervalTime": 6,
+    "concessionId": "2f3aaf06-9c2a-4145-8de8-8aeecef34245"
+}

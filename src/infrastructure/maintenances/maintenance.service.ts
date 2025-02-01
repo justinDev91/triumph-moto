@@ -17,6 +17,9 @@ import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { MaintenanceType } from '@domain/types/MaintenanceType';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { MaintenanceRepositoryImpleme } from '@infrastructure/adapters/maintenance.repository.implem';
+import { CreateMaintenanceDto } from './dto/create-maintenance.dto';
+import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
+import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.repository.implem';
 
 @Injectable()
 export class MaintenanceService {
@@ -35,9 +38,11 @@ export class MaintenanceService {
   private readonly checkIfMaintenanceOverdueUsecase: CheckIfMaintenanceOverdueUsecase;
 
   constructor(
-    private readonly maintenanceRepository: MaintenanceRepositoryImpleme
+    private readonly maintenanceRepository: MaintenanceRepositoryImpleme,
+    private readonly motorcycleRepository: MotorcycleRepositoryImplem,
+    private readonly concessionRepository: ConcessionRepositoryImplem
   ) {
-    this.createMaintenanceUsecase = new CreateMaintenanceUsecase(maintenanceRepository);
+    this.createMaintenanceUsecase = new CreateMaintenanceUsecase(maintenanceRepository, motorcycleRepository, concessionRepository);
     this.deleteMaintenanceUsecase = new DeleteMaintenanceUsecase(maintenanceRepository);
     this.findMaintenanceByConcessionIdUsecase = new FindMaintenanceByConcessionIdUsecase(maintenanceRepository);
     this.findMaintenanceByMotorcycleIdUsecase = new FindMaintenanceByMotorcycleIdUsecase(maintenanceRepository);
@@ -52,27 +57,25 @@ export class MaintenanceService {
     this.checkIfMaintenanceOverdueUsecase = new CheckIfMaintenanceOverdueUsecase(maintenanceRepository);
   }
 
-  public async createMaintenance(
-    id: string,
-    motorcycle: MotorcycleEntity,
-    maintenanceType: MaintenanceType,
-    date: Date,
-    cost: number,
-    mileageAtService: number,
-    maintenanceIntervalMileage: number,
-    maintenanceIntervalTime: number,
-    concession: ConcessionEntity | null
-  ): Promise<MaintenanceEntity | Error> {
-    return this.createMaintenanceUsecase.execute(
-      id,
-      motorcycle,
+  public async createMaintenance(createMaintenanceDto : CreateMaintenanceDto): Promise<void | Error> {
+    const {
+      motorcycleId, 
+      maintenanceType, 
+      date,cost, 
+      mileageAtService, 
+      maintenanceIntervalMileage, 
+      maintenanceIntervalTime, 
+      concessionId 
+    } = createMaintenanceDto
+    await this.createMaintenanceUsecase.execute(
+      motorcycleId,
       maintenanceType,
       date,
       cost,
       mileageAtService,
       maintenanceIntervalMileage,
       maintenanceIntervalTime,
-      concession
+      concessionId
     );
   }
 

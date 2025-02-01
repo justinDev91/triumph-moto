@@ -4,6 +4,7 @@ import { EstimatedDeliveryDate } from "@domain/values/order/EstimatedDeliveryDat
 import { SparePartEntity } from "./SparePartEntity";
 import { SparePartQuantityInStockError } from "@domain/errors/sparePart/SparePartQuantityInStockError";
 import { OrderItemQuantityExceedError } from "@domain/errors/orderItem/OrderItemQuantityExceedError";
+import { OrderItemNotFoundError } from "@domain/errors/orderItem/OrderItemNotFoundError";
 
 export class OrderEntity {
   private readonly items: OrderItemEntity[] = [];
@@ -16,9 +17,7 @@ export class OrderEntity {
   ) {}
 
   public static create(
-    id: string,
-    orderDateValue: Date,
-    estimatedDeliveryDateValue: Date,
+id: string, orderDateValue: Date, estimatedDeliveryDateValue: Date, p0?: Promise<Error | OrderItemEntity>,
   ): OrderEntity | Error {    
     const orderDate = OrderDate.from(orderDateValue);
     if (orderDate instanceof Error) return orderDate; 
@@ -46,7 +45,7 @@ export class OrderEntity {
 
   updateItemDelivery(sparePartId: string, deliveredQty: number): void | Error {
     const item = this.items.find((item) => item.sparePart.id === sparePartId);
-    if (!item) return new Error('Item not found');
+    if (!item) return new OrderItemNotFoundError();
   
     const availableQuantity = item.quantityOrdered.value;
     const currentDeliveredQuantity = item.deliveredQuantity.value;

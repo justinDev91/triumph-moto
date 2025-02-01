@@ -3,7 +3,7 @@ import { Concession } from "@infrastructure/concessions/concession.entity";
 import { toOrmUser } from "../user/to-orm-user";
 import { toOrmCompany } from "../company/to-orm-company";
 
- export const toOrmConcession = (concession: ConcessionEntity): Concession => {
+ export const toOrmConcessionCreate = (concession: ConcessionEntity): Concession => {
     const concessionOrm = new Concession();
     concessionOrm.id = concession.id;
     concessionOrm.name = concession.name.value;

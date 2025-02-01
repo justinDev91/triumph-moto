@@ -7,6 +7,7 @@ import { MaintenanceNotFoundError } from '@domain/errors/maintenance/Maintenance
 import { Maintenance } from '@infrastructure/maintenances/maintenance.entity';
 import { toDomainMaintenance } from '@infrastructure/helpers/maintenance/to-domain-maintenance';
 import { toOrmMaintenance } from '@infrastructure/helpers/maintenance/to-orm-maintenance';
+import { toOrmMaintenanceCreate } from '@infrastructure/helpers/maintenance/to-orm-maintenance-create';
 
 @Injectable()
 export class MaintenanceRepositoryImpleme implements MaintenanceRepositoryInterface {
@@ -16,7 +17,8 @@ export class MaintenanceRepositoryImpleme implements MaintenanceRepositoryInterf
   ) {}
 
   public async save(maintenance: MaintenanceEntity): Promise<void> {
-    const maintenanceOrm = toOrmMaintenance(maintenance);
+    const maintenanceOrm = toOrmMaintenanceCreate(maintenance);
+    console.log("maintenanceOrm", maintenanceOrm)
     await this.maintenanceRepository.save(maintenanceOrm);
   }
 
@@ -45,7 +47,7 @@ export class MaintenanceRepositoryImpleme implements MaintenanceRepositoryInterf
     if (maintenancesOrm.length === 0) {
       return new MaintenanceNotFoundError();
     }
-
+    
     return maintenancesOrm.map((maintenanceOrm) => toDomainMaintenance(maintenanceOrm));
   }
 

@@ -20,9 +20,14 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
   ) {}
 
     async findAll(): Promise<OrderEntity[] | Error> {
-      const orders = await this.orderRepository.find();
-      
+      const orders = await this.orderRepository.find({
+        relations: ["items"], 
+      });
+
       const mappedOrders = await Promise.all(orders.map(toDomainOrder.bind(this)));
+
+      if(mappedOrders instanceof Error) return mappedOrders
+
       return mappedOrders.filter(item => !(item instanceof Error)) as OrderEntity[];
     }
 
@@ -50,11 +55,10 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
       const items = await Promise.all(order.items.map(item => 
         this.orderItemRepository.findOne({ where :{id: item.id}})
       ));
-
       const orderEntity = OrderEntity.create(
         order.id,
         order.orderDate,
-        order.estimatedDeliveryDate
+        order.estimatedDeliveryDate,
       );
 
       if (orderEntity instanceof Error) return orderEntity;
@@ -65,9 +69,9 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
         orderEntity.addItem(
           item.id, domainSparePart as SparePartEntity, 
           item.quantityOrdered, 
-          item.costPerUnit);
+          item.costPerUnit,
+        );
       });
-
       return orderEntity;
     } catch (error) {
       return new Error("Failed to find order");
@@ -82,7 +86,7 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
         relations: ["items"],
       });
   
-      if (!orderToUpdate) throw new Error("Order not found");
+      if (!orderToUpdate) throw new OrderNotFoundError();
   
       orderToUpdate.orderDate = order.getOrderDate();
       orderToUpdate.estimatedDeliveryDate = order.getEstimatedDeliveryDate();
@@ -99,7 +103,6 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
       );
   
       orderToUpdate.items = itemsToOrm;
-  
       await this.orderRepository.save(orderToUpdate);
     } catch (error) {
       throw new Error("Failed to update order");

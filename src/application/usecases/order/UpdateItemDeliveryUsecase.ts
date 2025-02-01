@@ -15,6 +15,7 @@ export class UpdateItemDeliveryUsecase {
     if(order instanceof Error) return order
 
     order.updateItemDelivery(sparePartId, deliveredQty);
-    await this.orderRepository.save(order);
+    
+    await this.orderRepository.update(order);
   }
 }

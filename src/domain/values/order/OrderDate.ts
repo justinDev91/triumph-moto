@@ -9,12 +9,12 @@ export class OrderDate implements Value<Date> {
   }
 
   public static from(value: Date): OrderDate | Error {
-    const now = new Date();
-    now.setMilliseconds(0); 
-    now.setSeconds(0);     
-    if (value < now) {
-      return new OrderDateError(); 
-    }
+    // const now = new Date();
+    // now.setMilliseconds(0); 
+    // now.setSeconds(0);     
+    // if (value < now) {
+    //   return new OrderDateError(); 
+    // }
     return new OrderDate(value); 
   }
 

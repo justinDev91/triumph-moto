@@ -1,12 +1,13 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { MaintenanceService } from './maintenance.service';
 import { MaintenanceEntity } from '@domain/entities/maintenance/MaintenanceEntity';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { MaintenanceType } from '@domain/types/MaintenanceType';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { MaintenanceTypeEnum } from '@infrastructure/types/MaintenanceTypeEnum';
+import { CreateMaintenanceDto } from './dto/create-maintenance.dto';
 
-@ApiTags('maintenance') // Group all maintenance endpoints under this tag in Swagger UI
+@ApiTags('maintenance') 
 @Controller('maintenance')
 export class MaintenanceController {
   constructor(private readonly maintenanceService: MaintenanceService) {}
@@ -18,34 +19,10 @@ export class MaintenanceController {
     description: 'Successfully created a maintenance record',
     type: MaintenanceEntity,
   })
-  @ApiBody({
-    description: 'Maintenance details to be created',
-    type: Object,
-  })
   async createMaintenance(
-    @Body() body: {
-      id: string;
-      motorcycle: MotorcycleEntity;
-      maintenanceType: MaintenanceType;
-      date: Date;
-      cost: number;
-      mileageAtService: number;
-      maintenanceIntervalMileage: number;
-      maintenanceIntervalTime: number;
-      concession: ConcessionEntity | null;
-    }
-  ): Promise<MaintenanceEntity | Error> {
-    return this.maintenanceService.createMaintenance(
-      body.id,
-      body.motorcycle,
-      body.maintenanceType,
-      body.date,
-      body.cost,
-      body.mileageAtService,
-      body.maintenanceIntervalMileage,
-      body.maintenanceIntervalTime,
-      body.concession
-    );
+    @Body() createMaintenanceDto : CreateMaintenanceDto
+  ): Promise<void | Error> {
+    await this.maintenanceService.createMaintenance(createMaintenanceDto);
   }
 
   @Delete(':id')
