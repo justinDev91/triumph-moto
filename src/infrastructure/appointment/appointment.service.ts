@@ -13,9 +13,16 @@ import { RepairEntity } from '@domain/entities/repair/RepairEntity';
 import { MaintenanceEntity } from '@domain/entities/maintenance/MaintenanceEntity';
 import { LocationEntity } from '@domain/entities/location/LocationEntity';
 import { AppointmentReason } from '@domain/types/AppointmentReason';
-import { CompanyEntity } from '@domain/entities/company/CompanyEntity';
-import { UserEntity } from '@domain/entities/user/UserEntity';
 import { AppointmentRepositoryImplem } from '@infrastructure/adapters/appointment.repository.implem';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { UserRepositoryImplem } from '@infrastructure/adapters/user.repository.implem';
+import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.repository.implem';
+import { LocationRepositoryImplem } from '@infrastructure/adapters/location.repository.implem';
+import { MaintenanceRepositoryImpleme } from '@infrastructure/adapters/maintenance.repository.implem';
+import { RepairRepositoryImplem } from '@infrastructure/adapters/repair.repository.implem';
+import { MotorcycleTrialRepositoryImplem } from '@infrastructure/adapters/motorcycle.trial.repository.implem';
+import { GetAllAppointmentsUsecase } from '@application/usecases/appointment/GetAllAppointmentUsecase';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -26,65 +33,62 @@ export class AppointmentService {
   private readonly appointmentGetDetailsUseCase: AppointmentGetDetailsUseCase;
   private readonly appointmentUpdateStatusUseCase: AppointmentUpdateStatusUseCase;
   private readonly appointmentUpdateUseCase: AppointmentUpdateUseCase;
+  private readonly getAllAppointmentsUsecase : GetAllAppointmentsUsecase;
 
   constructor(
-    private readonly appointmentRepository: AppointmentRepositoryImplem
+    private readonly appointmentRepository: AppointmentRepositoryImplem,
+    private readonly userRepository: UserRepositoryImplem,
+    private readonly companyRepository: CompanyRepositoryImplem,
+    private readonly locationRepository: LocationRepositoryImplem,
+    private readonly maintenanceRepository: MaintenanceRepositoryImpleme,
+    private readonly repairRepository: RepairRepositoryImplem,
+    private readonly motorcycleTrialRepository: MotorcycleTrialRepositoryImplem
   ) {
     this.appointmentCancelUseCase = new AppointmentCancelUseCase(this.appointmentRepository);
     this.appointmentCompleteUseCase = new AppointmentCompleteUseCase(this.appointmentRepository);
-    this.appointmentCreateUseCase = new AppointmentCreateUseCase(this.appointmentRepository);
+    this.appointmentCreateUseCase = new AppointmentCreateUseCase(
+      this.appointmentRepository,
+      this.userRepository,
+      this.companyRepository,
+      this.locationRepository,
+      this.maintenanceRepository,
+      this.repairRepository,
+      this.motorcycleTrialRepository
+    );
     this.appointmentDeleteUseCase = new AppointmentDeleteUseCase(this.appointmentRepository);
     this.appointmentGetDetailsUseCase = new AppointmentGetDetailsUseCase(this.appointmentRepository);
     this.appointmentUpdateStatusUseCase = new AppointmentUpdateStatusUseCase(this.appointmentRepository);
     this.appointmentUpdateUseCase = new AppointmentUpdateUseCase(this.appointmentRepository);
+    this.getAllAppointmentsUsecase = new GetAllAppointmentsUsecase(this.appointmentRepository)
   }
 
-  public async createAppointment(
-    id: string,
-    user: UserEntity,
-    startTime: Date,
-    endTime: Date,
-    status: AppointmentStatus,
-    createdAt: Date,
-    updatedAt: Date,
-    reason: AppointmentReason,
-    company: CompanyEntity,
-    location: LocationEntity | null = null,
-    maintenance: MaintenanceEntity | null = null,
-    repair: RepairEntity | null = null,
-    motorcycleTrial: MotorcycleTrialEntity | null = null
-  ): Promise<AppointmentEntity | Error> {
-    return await this.appointmentCreateUseCase.createAppointment(
-      id, 
-      user, 
+  public async createAppointment(createAppointmentDto : CreateAppointmentDto): Promise<void | Error> {
+    const {userId, startTime, endTime, status, reason, companyId, locationId, maintenanceId,repairId, motorcycleTrialId } = createAppointmentDto
+    await this.appointmentCreateUseCase.createAppointment(
+      userId, 
       startTime, 
       endTime, 
       status, 
-      createdAt, 
-      updatedAt, 
       reason, 
-      company, 
-      location, 
-      maintenance, 
-      repair, 
-      motorcycleTrial
+      companyId, 
+      locationId, 
+      maintenanceId, 
+      repairId, 
+      motorcycleTrialId
     );
   }
 
   public async updateAppointment(
     id: string,
-    updatedDetails: {
-      startTime?: Date;
-      endTime?: Date;
-      appointmentStatus?: AppointmentStatus;
-      reason?: AppointmentReason;
-      location?: LocationEntity | null;
-      maintenance?: MaintenanceEntity | null;
-      repair?: RepairEntity | null;
-      motorcycleTrial?: MotorcycleTrialEntity | null;
-    }
-  ): Promise<AppointmentEntity | Error> {
-    return await this.appointmentUpdateUseCase.updateAppointment(id, updatedDetails);
+    updateAppointmentDto : UpdateAppointmentDto
+  ): Promise<void | Error> {
+    const {appointmentStatus, reason} = updateAppointmentDto;
+
+    return await this.appointmentUpdateUseCase.updateAppointmentUsecase(id, appointmentStatus, reason);
+  }
+
+  async getAllAppointments(): Promise<AppointmentEntity[] | Error> {
+        return await this.getAllAppointmentsUsecase.execute();
   }
 
   public async updateAppointmentStatus(appointmentId: string, newStatus: AppointmentStatus): Promise<void | Error> {

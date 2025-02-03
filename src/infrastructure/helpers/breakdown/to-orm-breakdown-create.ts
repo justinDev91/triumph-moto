@@ -7,7 +7,7 @@ export const toOrmBreakdownCreate = (breakdownEntity: BreakdownEntity): Breakdow
 
   const breakdownOrm = new Breakdown();
   breakdownOrm.id = breakdownEntity.id;
-  breakdownOrm.motorcycle = toOrmMotorcycleCreate(breakdownEntity.motorcycle);
+  breakdownOrm.motorcycle = breakdownEntity.motorcycle ? toOrmMotorcycleCreate(breakdownEntity.motorcycle) : null;
   breakdownOrm.description = breakdownEntity.description.value;
   breakdownOrm.reportedDate = breakdownEntity.reportedDate.value;
   breakdownOrm.warranty = breakdownEntity.warranty 

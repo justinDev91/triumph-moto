@@ -7,7 +7,7 @@ import { AppointmentReasonEnum } from "@infrastructure/types/AppointmentReasonEn
 import { AppointmentStatusEnum } from "@infrastructure/types/AppointmentStatusEnum";
 import { User } from "@infrastructure/users/user.entity";
 import { ApiProperty } from "@nestjs/swagger";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Appointment {
@@ -32,12 +32,13 @@ export class Appointment {
   @ApiProperty({ description: "The status of the appointment" })
   appointmentStatus: AppointmentStatusEnum;
 
-  @Column({ type: "timestamp" })
   @ApiProperty({ description: "The date the appointment was created" })
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @Column({ type: "timestamp" })
+
   @ApiProperty({ description: "The date the appointment was last updated" })
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @Column("enum", { enum: AppointmentReasonEnum })

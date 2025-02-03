@@ -1,3 +1,4 @@
+import { Value } from './../../domain/values/Value';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -7,6 +8,8 @@ import { AppointmentNotFoundError } from "@domain/errors/appointment/Appointment
 import { Appointment } from "@infrastructure/appointment/appointment.entity";
 import { toDomainAppointment } from "@infrastructure/helpers/appointment/to-domain-appointment";
 import { toOrmAppointment } from "@infrastructure/helpers/appointment/to-orm-appointment";
+import { AppointmentStatusEnum } from '@infrastructure/types/AppointmentStatusEnum';
+import { AppointmentReasonEnum } from '@infrastructure/types/AppointmentReasonEnum';
 
 @Injectable()
 export class AppointmentRepositoryImplem implements AppointmentRepositoryInterface {
@@ -15,20 +18,69 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
     private readonly appointmentRepository: Repository<Appointment>
   ) {}
 
+ 
+  async complete(id: string): Promise<void> {
+     await this.appointmentRepository.update(id, {
+      appointmentStatus: AppointmentStatusEnum.Completed,
+      updatedAt: new Date(),
+    });
+  }
+  
+  async cancel(id: string): Promise<void> {
+    await this.appointmentRepository.update(id, {
+      appointmentStatus: AppointmentStatusEnum.Cancelled,
+      updatedAt: new Date(),
+    });
+  }
+
+  async updateStatus(
+    id: string, 
+    appointmentStatus: AppointmentStatusEnum,
+    reason: AppointmentReasonEnum
+  ): Promise<void> {
+
+    await this.appointmentRepository.update(id, {
+      appointmentStatus,
+      reason
+    }) 
+  }
+
   async findById(appointmentId: string): Promise<AppointmentEntity | Error> {
     try {
       const appointment = await this.appointmentRepository.findOne({
         where: { id: appointmentId },
-        relations: ["user", "company", "location", "maintenance", "repair", "motorcycleTrial"],
+        relations: ["user", "company", "location", "maintenance", "motorcycleTrial"],
       });
 
       if (!appointment) {
-        return new AppointmentNotFoundError(`Appointment with ID ${appointmentId} not found`);
+        return new AppointmentNotFoundError();
       }
 
       return toDomainAppointment(appointment);
     } catch (error) {
       throw new Error("Failed to find appointment");
+    }
+  }
+
+  async findAll(): Promise<AppointmentEntity[] | Error> {
+    try {
+      const appointments = await this.appointmentRepository.find({
+        relations: [
+          "user", 
+          "company", 
+          "location", 
+          "maintenance", 
+          "motorcycleTrial",
+        ],
+      });
+      
+      if (!appointments.length) {
+        return new AppointmentNotFoundError("No appointments found");
+      }
+  
+      return appointments.map(toDomainAppointment);
+    } catch (error) {
+      throw new Error("Failed to retrieve all appointments");
     }
   }
 
@@ -75,6 +127,7 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
   async save(appointment: AppointmentEntity): Promise<void> {
     try {
       const appointmentToSave = toOrmAppointment(appointment);
+
       await this.appointmentRepository.save(appointmentToSave);
     } catch (error) {
       throw new Error("Failed to save appointment");

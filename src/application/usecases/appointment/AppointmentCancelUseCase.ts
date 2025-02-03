@@ -12,6 +12,6 @@ export class AppointmentCancelUseCase {
 
     if (cancelError instanceof Error) return cancelError;
     
-    await this.appointmentRepository.update(appointment);
+    await this.appointmentRepository.cancel(appointmentId);
   }
 }

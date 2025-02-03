@@ -12,8 +12,8 @@ import { Appointment } from "@infrastructure/appointment/appointment.entity";
 import { toDomainMotorcycleTrial } from "../motorcycleTrial/to-domain-motorcycle-trial";
 
 export const toDomainAppointment = (appointmentOrm: Appointment): AppointmentEntity => {
-  const user = toDomainUser(appointmentOrm.user);
-  const company = toDomainCompany(appointmentOrm.company);
+  const user = appointmentOrm.user ? toDomainUser(appointmentOrm.user) : null;
+  const company = appointmentOrm.company ? toDomainCompany(appointmentOrm.company) : null;
   const location = appointmentOrm.location ? toDomainLocation(appointmentOrm.location) : null;
   const maintenance = appointmentOrm.maintenance ? toDomainMaintenance(appointmentOrm.maintenance) : null;
   const repair = appointmentOrm.repair ? toDomainRepair(appointmentOrm.repair) : null;

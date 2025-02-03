@@ -12,6 +12,6 @@ export class AppointmentCompleteUseCase {
 
     if (completeError instanceof Error) return completeError;
     
-    await this.appointmentRepository.update(appointment);
+    await this.appointmentRepository.complete(appointmentId);
   }
 }

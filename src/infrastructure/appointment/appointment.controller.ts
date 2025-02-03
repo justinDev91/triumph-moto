@@ -6,10 +6,12 @@ import { RepairEntity } from '@domain/entities/repair/RepairEntity';
 import { MaintenanceEntity } from '@domain/entities/maintenance/MaintenanceEntity';
 import { LocationEntity } from '@domain/entities/location/LocationEntity';
 import { AppointmentReason } from '@domain/types/AppointmentReason';
-import { CompanyEntity } from '@domain/entities/company/CompanyEntity';
-import { UserEntity } from '@domain/entities/user/UserEntity';
 import { AppointmentService } from './appointment.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { AppointmentStatusEnum } from '@infrastructure/types/AppointmentStatusEnum';
+import { AppointmentReasonEnum } from '@infrastructure/types/AppointmentReasonEnum';
+import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
 @ApiTags('appointments') 
 @Controller('appointments')
@@ -23,58 +25,19 @@ export class AppointmentController {
     description: 'Successfully created an appointment',
     type: AppointmentEntity,
   })
-  @ApiBody({
-    description: 'Appointment details to create a new appointment',
-    type: Object,
-  })
-  public async createAppointment(
-    @Body() body: {
-      id: string;
-      user: UserEntity;
-      startTime: Date;
-      endTime: Date;
-      status: AppointmentStatus;
-      createdAt: Date;
-      updatedAt: Date;
-      reason: AppointmentReason;
-      company: CompanyEntity;
-      location?: LocationEntity;
-      maintenance?: MaintenanceEntity;
-      repair?: RepairEntity;
-      motorcycleTrial?: MotorcycleTrialEntity;
-    }
-  ): Promise<AppointmentEntity | Error> {
-    const {
-      id,
-      user,
-      startTime,
-      endTime,
-      status,
-      createdAt,
-      updatedAt,
-      reason,
-      company,
-      location,
-      maintenance,
-      repair,
-      motorcycleTrial,
-    } = body;
+  public async createAppointment(@Body() createAppointmentDto : CreateAppointmentDto ): Promise<void | Error> {
+    await this.appointmentService.createAppointment(createAppointmentDto);
+  }
 
-    return await this.appointmentService.createAppointment(
-      id,
-      user,
-      startTime,
-      endTime,
-      status,
-      createdAt,
-      updatedAt,
-      reason,
-      company,
-      location,
-      maintenance,
-      repair,
-      motorcycleTrial
-    );
+  @Get()
+  @ApiOperation({ summary: 'Get all appointments' })
+  @ApiResponse({
+    status: 200,
+    description: 'All appointments retrieved successfully',
+    type: [AppointmentEntity],
+  })
+  async getAllbreakdowns(): Promise<AppointmentEntity[] | Error> {
+    return await this.appointmentService.getAllAppointments();
   }
 
   @Put(':id')
@@ -85,42 +48,10 @@ export class AppointmentController {
     description: 'Successfully updated the appointment',
     type: AppointmentEntity,
   })
-  @ApiBody({
-    description: 'Updated appointment details',
-    type: Object,
-  })
   public async updateAppointment(
     @Param('id') id: string,
-    @Body() updatedDetails: {
-      startTime?: Date;
-      endTime?: Date;
-      appointmentStatus?: AppointmentStatus;
-      reason?: AppointmentReason;
-      location?: LocationEntity;
-      maintenance?: MaintenanceEntity;
-      repair?: RepairEntity;
-      motorcycleTrial?: MotorcycleTrialEntity;
-    }
-  ): Promise<AppointmentEntity | Error> {
-    return await this.appointmentService.updateAppointment(id, updatedDetails);
-  }
-
-  @Put(':id/status')
-  @ApiOperation({ summary: 'Update the status of an appointment' })
-  @ApiParam({ name: 'id', description: 'The ID of the appointment to update' })
-  @ApiResponse({
-    status: 200,
-    description: 'Successfully updated the appointment status',
-  })
-  @ApiBody({
-    description: 'New status for the appointment',
-    type: String,
-  })
-  public async updateAppointmentStatus(
-    @Param('id') appointmentId: string,
-    @Body('status') newStatus: AppointmentStatus
-  ): Promise<void | Error> {
-    return await this.appointmentService.updateAppointmentStatus(appointmentId, newStatus);
+    @Body() updateAppointmentDto : UpdateAppointmentDto): Promise<void | Error> {
+    await this.appointmentService.updateAppointment(id, updateAppointmentDto);
   }
 
   @Post(':id/cancel')

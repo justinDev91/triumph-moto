@@ -17,11 +17,9 @@ export const toOrmAppointment = (appointment: AppointmentEntity): Appointment =>
   ormAppointment.maintenance = appointment.maintenance ? toOrmMaintenance(appointment.maintenance) : null;
   ormAppointment.repair = appointment.repair ? toOrmRepair(appointment.repair) : null;
   ormAppointment.motorcycleTrial = appointment.motorcycleTrial ? toOrmMotorcycleTrial(appointment.motorcycleTrial) : null;
-  ormAppointment.startTime = appointment.startTime;
-  ormAppointment.endTime = appointment.endTime;
+  ormAppointment.startTime = new Date(appointment.startTime);
+  ormAppointment.endTime = new Date(appointment.endTime);
   ormAppointment.appointmentStatus = appointment.getStatus() as AppointmentStatusEnum;
-  ormAppointment.createdAt = appointment.createdAt;
-  ormAppointment.updatedAt = appointment.getUpdatedAt();
   ormAppointment.reason = appointment.getReason() as AppointmentReasonEnum;
 
   return ormAppointment;
