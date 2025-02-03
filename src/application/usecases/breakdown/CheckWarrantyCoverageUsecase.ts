@@ -3,11 +3,11 @@ import { BreakdownRepositoryInterface } from "@application/repositories/Breakdow
 export class CheckWarrantyCoverageUsecase {
   constructor(private readonly breakdownRepository: BreakdownRepositoryInterface) {}
 
-  public async execute(breakdownId: string, checkDate: Date): Promise<boolean | Error> {
+  public async execute(breakdownId: string): Promise<boolean | Error> {
     const breakdown = await this.breakdownRepository.findOneById(breakdownId);
-
+    console.log("breakdown", breakdown)
     if(breakdown instanceof Error) return breakdown
     
-    return breakdown.isCoveredByWarranty(checkDate);
+    return breakdown.isCoveredByWarranty(new Date());
   }
 }

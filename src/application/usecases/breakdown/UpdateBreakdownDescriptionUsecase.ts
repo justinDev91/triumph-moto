@@ -6,9 +6,8 @@ export class UpdateBreakdownDescriptionUsecase {
   public async execute(breakdownId: string, newDescription: string): Promise<void | Error> {
     const breakdown = await this.breakdownRepository.findOneById(breakdownId);
 
-    if (breakdown instanceof Error) {
-      return breakdown;
-    }
+    if (breakdown instanceof Error) return breakdown;
+    
 
     const result = breakdown.updateBreakdownDescription(newDescription);
 
@@ -16,6 +15,6 @@ export class UpdateBreakdownDescriptionUsecase {
       return result;
     }
 
-    await this.breakdownRepository.save(breakdown);
+    await this.breakdownRepository.updateDescription(breakdownId, newDescription);
   }
 }

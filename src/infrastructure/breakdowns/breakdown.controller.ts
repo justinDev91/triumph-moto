@@ -5,6 +5,8 @@ import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { WarrantyEntity } from '@domain/entities/warranty/WarrantyEntity';
 import { BreakdownService } from './breakdown.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { CreateBreakDownDto } from './dto/create-breakdown.dto';
+import { UpdateDescriptionBreakDownDto } from './dto/update-description-breakdown.dto';
 
 @ApiTags('breakdowns') 
 @Controller('breakdowns')
@@ -18,29 +20,23 @@ export class BreakdownController {
     description: 'Successfully created a breakdown report',
     type: BreakdownEntity,
   })
-  @ApiBody({
-    description: 'Breakdown report data to create a new breakdown',
-    type: Object,
-  })
   public async createBreakdown(
-    @Body() body: {
-      id: string;
-      motorcycle: MotorcycleEntity;
-      description: string;
-      reportedDate: Date;
-      warranty: WarrantyEntity | null;
-    }
-  ): Promise<BreakdownEntity | Error> {
-    const { id, motorcycle, description, reportedDate, warranty } = body;
-    return await this.breakdownService.createBreakdown(
-      id,
-      motorcycle,
-      description,
-      reportedDate,
-      warranty
-    );
+    @Body() createBreakDownDto: CreateBreakDownDto
+  ): Promise<void | Error> {
+    return await this.breakdownService.createBreakdown(createBreakDownDto);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all breakdowns' })
+  @ApiResponse({
+    status: 200,
+    description: 'All breakdowns retrieved successfully',
+    type: [Object],
+  })
+  async getAllbreakdowns(): Promise<BreakdownEntity[] | Error> {
+    return await this.breakdownService.getAllWarranties();
+  }
+  
   @Put(':id/description')
   @ApiOperation({ summary: 'Update the description of a breakdown' })
   @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
@@ -54,9 +50,9 @@ export class BreakdownController {
   })
   public async updateBreakdownDescription(
     @Param('id') breakdownId: string,
-    @Body('description') newDescription: string
+    @Body() updateDescriptionBreakDownDto: UpdateDescriptionBreakDownDto
   ): Promise<void | Error> {
-    return await this.breakdownService.updateBreakdownDescription(breakdownId, newDescription);
+    return await this.breakdownService.updateBreakdownDescription(breakdownId, updateDescriptionBreakDownDto.description);
   }
 
   @Post(':id/repair')
@@ -95,10 +91,6 @@ export class BreakdownController {
   @Get(':id/warranty')
   @ApiOperation({ summary: 'Check warranty coverage for a breakdown' })
   @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
-  @ApiBody({
-    description: 'The date to check the warranty coverage against',
-    type: Date,
-  })
   @ApiResponse({
     status: 200,
     description: 'Successfully checked warranty coverage',
@@ -106,9 +98,8 @@ export class BreakdownController {
   })
   public async checkWarrantyCoverage(
     @Param('id') breakdownId: string,
-    @Body('checkDate') checkDate: Date
   ): Promise<boolean | Error> {
-    return await this.breakdownService.checkWarrantyCoverage(breakdownId, checkDate);
+    return await this.breakdownService.checkWarrantyCoverage(breakdownId);
   }
 
   @Get(':id')
@@ -149,25 +140,4 @@ export class BreakdownController {
     return await this.breakdownService.getBreakdownRepairHistory(breakdownId);
   }
 
-  @Post('report')
-  @ApiOperation({ summary: 'Report a new breakdown' })
-  @ApiResponse({
-    status: 201,
-    description: 'Successfully reported a new breakdown',
-  })
-  @ApiBody({
-    description: 'Breakdown report data to report a new breakdown',
-    type: Object,
-  })
-  public async reportBreakdown(
-    @Body() body: {
-      motorcycle: MotorcycleEntity;
-      description: string;
-      reportedDate: Date;
-      warranty: WarrantyEntity | null;
-    }
-  ): Promise<void | Error> {
-    const { motorcycle, description, reportedDate, warranty } = body;
-    return await this.breakdownService.reportBreakdown(motorcycle, description, reportedDate, warranty);
-  }
 }

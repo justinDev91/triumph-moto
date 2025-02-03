@@ -7,14 +7,20 @@ import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { Warranty } from '@infrastructure/warranties/warranty.entity';
 import { Repair } from '@infrastructure/repairs/repair.entity';
 import { BreakdownRepositoryImplem } from '@infrastructure/adapters/breakdown.repository.implem';
+import { MotorcycleModule } from '@infrastructure/motorcycles/motorcycle.module';
+import { WarrantyModule } from '@infrastructure/warranties/warranty.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Breakdown, 
-    Motorcycle, 
-    Warranty,
-    Repair
-  ])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Breakdown, 
+      Motorcycle, 
+      Warranty,
+      Repair
+  ]),
+    MotorcycleModule,
+    WarrantyModule
+  ],
   controllers: [BreakdownController],
   providers: [
     BreakdownService,

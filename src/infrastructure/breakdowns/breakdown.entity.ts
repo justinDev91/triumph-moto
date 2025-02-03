@@ -2,7 +2,7 @@ import { Motorcycle } from "@infrastructure/motorcycles/motorcycle.entity";
 import { Repair } from "@infrastructure/repairs/repair.entity";
 import { Warranty } from "@infrastructure/warranties/warranty.entity";
 import { ApiProperty } from "@nestjs/swagger";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn } from "typeorm";
 
 @Entity()
 export class Breakdown {
@@ -18,8 +18,8 @@ export class Breakdown {
   @ApiProperty({ description: "Description of the breakdown" })
   description: string;
 
-  @Column({ type: "date" })
   @ApiProperty({ description: "The date when the breakdown was reported" })
+  @CreateDateColumn({ type: 'timestamp' })
   reportedDate: Date;
 
   @ManyToOne(() => Warranty)

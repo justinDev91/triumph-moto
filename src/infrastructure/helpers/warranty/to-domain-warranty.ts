@@ -4,8 +4,8 @@ import { toDomainMotorcycle } from "../motorcycle/to-domain-motorcycle";
 
 export const toDomainWarranty = (warrantyOrm: Warranty): WarrantyEntity | Error => {
 
-    const warrantyMotorcycle = toDomainMotorcycle(warrantyOrm.motorcycle)
-
+    const warrantyMotorcycle = warrantyOrm.motorcycle ? toDomainMotorcycle(warrantyOrm.motorcycle) : null
+    
     if(warrantyMotorcycle instanceof Error) return warrantyMotorcycle
     
     return WarrantyEntity.create(

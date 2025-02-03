@@ -30,20 +30,25 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
     @InjectRepository(Repair)
     private readonly repairRepository: Repository<Repair>
   ) {}
+  
+  async updateDescription(id: string, description: string): Promise<void> {
+      await this.breakdownRepository.update(id, {
+        description
+      }) 
+  }
 
   async save(breakdown: BreakdownEntity): Promise<void> {
     try {
       const breakdownToSave = this.breakdownRepository.create({
-        id: breakdown.id,
         description: breakdown.description.value,
-        reportedDate: breakdown.reportedDate.value,
         warranty: breakdown.warranty ? await this.warrantyRepository.findOne({ where: { id: breakdown.warranty.id } }) : null,
         motorcycle: await this.motorcycleRepository.findOne({ where: { id: breakdown.motorcycle.id } }),
       });
 
       await this.breakdownRepository.save(breakdownToSave);
+
     } catch (error) {
-      throw new Error("Failed to save breakdown");
+      throw new Error(error);
     }
   }
 
@@ -51,12 +56,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
     try {
       const breakdown = await this.breakdownRepository.findOne({
         where: { id },
-        relations: ["motorcycle", "warranty", "repairs"],
+        relations: ["motorcycle", "warranty"],
       });
-
-      if (!breakdown) {
-        return new BreakdownNotFoundError(`Breakdown with ID ${id} not found`);
-      }
+      if (!breakdown) return new BreakdownNotFoundError();
+      
 
       const motorcycle = toDomainMotorcycle(breakdown.motorcycle);
       const warranty = breakdown.warranty ? toDomainWarranty(breakdown.warranty) : null;
@@ -73,10 +76,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
         return breakdownEntity;
       }
 
-      breakdown.repairs.forEach((repair) => {
-        const repairEntity = toDomainRepair(repair, breakdownEntity);
-        breakdownEntity.addRepair(repairEntity as RepairEntity);
-      });
+      // breakdown.repairs.forEach((repair) => {
+      //   const repairEntity = toDomainRepair(repair, breakdownEntity);
+      //   breakdownEntity.addRepair(repairEntity as RepairEntity);
+      // });
 
       return breakdownEntity;
     } catch (error) {
@@ -88,12 +91,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
     try {
       const breakdowns = await this.breakdownRepository.find({
         where: { motorcycle: { id: motorcycleId } },
-        relations: ["motorcycle", "warranty", "repairs"],
+        relations: ["motorcycle", "warranty"],
       });
 
-      if (breakdowns.length === 0) {
-        return new Error(`No breakdowns found for motorcycle ID ${motorcycleId}`);
-      }
+      if (!breakdowns) return new BreakdownNotFoundError()
 
       const breakdownEntities = breakdowns.map((breakdown) => {
         const motorcycle = toDomainMotorcycle(breakdown.motorcycle);
@@ -111,10 +112,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
           throw new Error("Failed to create breakdown entity");
         }
 
-        breakdown.repairs.forEach((repair) => {
-          const repairEntity = toDomainRepair(repair, breakdownEntity);
-          breakdownEntity.addRepair(repairEntity as RepairEntity);
-        });
+        // breakdown.repairs.forEach((repair) => {
+        //   const repairEntity = toDomainRepair(repair, breakdownEntity);
+        //   breakdownEntity.addRepair(repairEntity as RepairEntity);
+        // });
 
         return breakdownEntity;
       });
@@ -142,7 +143,7 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
   async findAll(): Promise<BreakdownEntity[]> {
     try {
       const breakdowns = await this.breakdownRepository.find({
-        relations: ["motorcycle", "warranty", "repairs"],
+        relations: ["motorcycle", "warranty"],
       });
 
       const breakdownEntities = breakdowns.map((breakdown) => {
@@ -161,15 +162,16 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
           throw new Error("Failed to create breakdown entity");
         }
 
-        breakdown.repairs.forEach((repair) => {
-          const repairEntity = toDomainRepair(repair, breakdownEntity);
-          breakdownEntity.addRepair(repairEntity as RepairEntity);
-        });
+        // breakdown.repairs.forEach((repair) => {
+        //   const repairEntity = toDomainRepair(repair, breakdownEntity);
+        //   breakdownEntity.addRepair(repairEntity as RepairEntity);
+        // });
 
         return breakdownEntity;
       });
 
       return breakdownEntities;
+      
     } catch (error) {
       throw new Error("Failed to find all breakdowns");
     }

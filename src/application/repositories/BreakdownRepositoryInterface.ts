@@ -6,4 +6,5 @@ export interface BreakdownRepositoryInterface {
   findByMotorcycleId(motorcycleId: string): Promise<BreakdownEntity[] | Error>;
   delete(id: string): Promise<void>;
   findAll(): Promise<BreakdownEntity[]>;
+  updateDescription(id: string, description: string): Promise<void>;
 }

@@ -11,7 +11,7 @@ import { MotorcycleTrialRepositoryImplem } from '@infrastructure/adapters/motorc
 import { CreateMotorcycleTrialDto } from './dto/create-motorcycle-trial-dto';
 import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
 import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
-import { GetAllMotorcyclesTrialUsecase } from '@application/usecases/motorcycleTrial/GetAllMotorcycleTrial;Usecase';
+import { GetAllMotorcyclesTrialUsecase } from '@application/usecases/motorcycleTrial/GetAllMotorcycleTrialUsecase';
 
 @Injectable()
 export class MotorcycleTrialService {
@@ -51,9 +51,9 @@ export class MotorcycleTrialService {
   async findById(id: string): Promise<MotorcycleTrialEntity | Error> {
     return await this.findMotorcycleTrialByIdUsecase.execute(id);
   }
-   async getAllMotorcyclesTrial(): Promise<MotorcycleTrialEntity[] | Error> {
+  async getAllMotorcyclesTrial(): Promise<MotorcycleTrialEntity[] | Error> {
       return await this.getAllMotorcyclesTrialUsecase.execute();
-    }
+  }
   
   async endTrial(id: string): Promise<void | Error> {
     return await this.endMotorcycleTrialUsecase.execute(id);

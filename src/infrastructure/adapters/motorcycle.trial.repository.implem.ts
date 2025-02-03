@@ -55,7 +55,7 @@ export class MotorcycleTrialRepositoryImplem implements MotorcycleTrialRepositor
         where: { id },
         relations: ["motorcycle", "driver"],
       });
-
+      
       if (!motorcycleTrial) {
         return new MotorcycleTrialNotFoundError();
       }

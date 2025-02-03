@@ -13,6 +13,11 @@ import { RepairEntity } from '@domain/entities/repair/RepairEntity';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { BreakdownEntity } from '@domain/entities/breakdown/BreakdownEntity';
 import { WarrantyEntity } from '@domain/entities/warranty/WarrantyEntity';
+import { CreateBreakDownDto } from './dto/create-breakdown.dto';
+import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
+import { WarrantyRepositoryImplem } from '@infrastructure/adapters/warranty.repository.implem';
+import { GetAllWarrantiesUseCase } from '@application/usecases/warranty/GetAllWarrantiesUseCase';
+import { GetAllBreakdownsTrialUsecase } from '@application/usecases/breakdown/GetAllBreakdownsUsecase';
 
 @Injectable()
 export class BreakdownService {
@@ -25,31 +30,40 @@ export class BreakdownService {
   private readonly removeRepairFromBreakdownUsecase: RemoveRepairFromBreakdownUsecase;
   private readonly reportBreakdownUsecase: ReportBreakdownUsecase;
   private readonly updateBreakdownDescriptionUsecase: UpdateBreakdownDescriptionUsecase;
+  private readonly getAllBreakdownsTrialUsecase : GetAllBreakdownsTrialUsecase;
 
   constructor(
-    private readonly breakdownRepository: BreakdownRepositoryImplem
+    private readonly breakdownRepository: BreakdownRepositoryImplem,
+    private readonly motorcycleRepository: MotorcycleRepositoryImplem,
+    private readonly warrantyRepository: WarrantyRepositoryImplem
   ) {
     this.addRepairToBreakdownUsecase = new AddRepairToBreakdownUsecase(breakdownRepository);
     this.checkWarrantyCoverageUsecase = new CheckWarrantyCoverageUsecase(breakdownRepository);
-    this.createBreakdownUsecase = new CreateBreakdownUsecase(breakdownRepository);
+    this.createBreakdownUsecase = new CreateBreakdownUsecase(breakdownRepository, motorcycleRepository, warrantyRepository);
     this.findBreakdownByIdUsecase = new FindBreakdownByIdUsecase(breakdownRepository);
     this.getBreakdownsByMotorcycleIdUsecase = new GetBreakdownsByMotorcycleIdUsecase(breakdownRepository);
     this.getBreakdownRepairHistoryUsecase = new GetBreakdownRepairHistoryUsecase(breakdownRepository);
     this.removeRepairFromBreakdownUsecase = new RemoveRepairFromBreakdownUsecase(breakdownRepository);
     this.reportBreakdownUsecase = new ReportBreakdownUsecase(breakdownRepository);
     this.updateBreakdownDescriptionUsecase = new UpdateBreakdownDescriptionUsecase(breakdownRepository);
+    this.getAllBreakdownsTrialUsecase = new GetAllBreakdownsTrialUsecase(breakdownRepository)
+  }
+
+  async getAllWarranties(): Promise<BreakdownEntity[] | Error> {
+        return await this.getAllBreakdownsTrialUsecase.execute();
   }
 
   public async addRepairToBreakdown(breakdownId: string, repair: RepairEntity): Promise<void | Error> {
     return await this.addRepairToBreakdownUsecase.execute(breakdownId, repair);
   }
 
-  public async checkWarrantyCoverage(breakdownId: string, checkDate: Date): Promise<boolean | Error> {
-    return await this.checkWarrantyCoverageUsecase.execute(breakdownId, checkDate);
+  public async checkWarrantyCoverage(breakdownId: string): Promise<boolean | Error> {
+    return await this.checkWarrantyCoverageUsecase.execute(breakdownId);
   }
 
-  public async createBreakdown(id: string, motorcycle: MotorcycleEntity, description: string, reportedDate: Date, warranty: WarrantyEntity | null): Promise<BreakdownEntity | Error> {
-    return await this.createBreakdownUsecase.execute(id, motorcycle, description, reportedDate, warranty);
+  public async createBreakdown(createBreakDownDto: CreateBreakDownDto): Promise<void | Error> {
+    const {motorcycleId, description, warrantyId} = createBreakDownDto
+    return await this.createBreakdownUsecase.execute(motorcycleId, description, warrantyId);
   }
 
   public async findBreakdownById(breakdownId: string): Promise<BreakdownEntity | Error> {
