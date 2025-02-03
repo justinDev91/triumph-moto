@@ -1,7 +1,6 @@
 import { Controller, Post, Body, Param, Get, Put } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { LocationEntity } from '@domain/entities/location/LocationEntity';
-import { LocationStatus } from '@domain/types/LocationStatus';
 import { LocationStatusEnum } from '@infrastructure/types/LocationStatusEnum';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -120,8 +119,8 @@ export class LocationController {
     description: 'Successfully canceled the location record',
     type: LocationEntity,
   })
-  async cancelLocation(@Param('id') id: string): Promise<LocationEntity | Error> {
-    return this.locationService.cancelLocation(id);
+  async cancelLocation(@Param('id') id: string): Promise<void | Error> {
+    await this.locationService.cancelLocation(id);
   }
 
 }

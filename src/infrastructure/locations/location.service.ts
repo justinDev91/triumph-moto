@@ -51,8 +51,8 @@ export class LocationService {
     await this.createLocationUsecase.execute(motorcycleId, userId, startDate, endDate, cost);
   }
 
-  public async cancelLocation(locationId: string): Promise<LocationEntity | Error> {
-    return this.cancelLocationUsecase.execute(locationId);
+  public async cancelLocation(locationId: string): Promise<void | Error> {
+    await this.cancelLocationUsecase.execute(locationId);
   }
 
   public async calculateLocationCost(locationId: string): Promise<number | Error> {
