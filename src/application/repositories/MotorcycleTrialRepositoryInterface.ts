@@ -6,4 +6,5 @@ export interface MotorcycleTrialRepositoryInterface {
   delete(id: string): Promise<void>;
   findAll(): Promise<MotorcycleTrialEntity[] | Error>;
   update(motorcycleTry: MotorcycleTrialEntity): Promise<void>;
+  endTrial(id: string, endDate: Date):  Promise<void>;
 }

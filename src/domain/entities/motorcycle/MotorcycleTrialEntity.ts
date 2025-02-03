@@ -36,10 +36,13 @@ export class MotorcycleTrialEntity {
 
   public getTestDuration(): number | null {
     if (this.endDate) {
+      const startDate = this.startDate instanceof Date ? this.startDate : new Date(this.startDate.value);
+      const endDate = this.endDate instanceof Date ? this.endDate : new Date(this.endDate.value);
+  
       const duration = Math.floor(
-        (this.endDate.value.getTime() - this.startDate.value.getTime()) /
-          (1000 * 60 * 60 * 24),
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
       );
+  
       return duration;
     }
     return null;
@@ -62,6 +65,6 @@ export class MotorcycleTrialEntity {
     const status = this.isTestOngoing()
       ? 'Ongoing'
       : `Completed in ${duration} days`;
-    return `Moto Test ID: ${this.id} | DriverEntity: ${this.driver.name} | Motorcycle: ${this.motorcycle.model} | Status: ${status}`;
+    return `Moto Test ID: ${this.id} | Driver: ${this.driver.name.value} | Motorcycle: ${this.motorcycle.model.value} | Status: ${status}`;
   }
 }

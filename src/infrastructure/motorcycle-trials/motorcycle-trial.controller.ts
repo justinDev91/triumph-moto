@@ -1,13 +1,9 @@
 import { Controller, Post, Get, Delete, Param, Body, Put } from '@nestjs/common';
 import { MotorcycleTrialService } from './motorcycle-trial.service';
 import { MotorcycleTrialEntity } from '@domain/entities/motorcycle/MotorcycleTrialEntity';
-import { CreateMotorcycleTrialDto } from './dto/create-motorcycle-trial-dto';
 import { UpdateMotorcycleTrialDto } from './dto/update-motorcycle-trial-dto';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
-import { DriverEntity } from '@domain/entities/driver/DriverEntity';
-import { toDomainMotorcycle } from '@infrastructure/helpers/motorcycle/to-domain-motorcycle';
-import { toDomainDriver } from '@infrastructure/helpers/driver/to-domain-driver';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { CreateMotorcycleTrialDto } from './dto/create-motorcycle-trial-dto';
 
 @ApiTags('motorcycle-trials') 
 @Controller('motorcycle-trials')
@@ -21,18 +17,18 @@ export class MotorcycleTrialController {
     description: 'Motorcycle trial successfully created',
   })
   async create(@Body() createMotorcycleTrialDto: CreateMotorcycleTrialDto): Promise<void | Error> {
-    const { id, motorcycle, driver, startDate, endDate } = createMotorcycleTrialDto;
+    return await this.motorcycleTrialService.create(createMotorcycleTrialDto);
+  }
 
-    const motorcycleEntity: MotorcycleEntity = toDomainMotorcycle(motorcycle) as MotorcycleEntity;
-    const driverEntity: DriverEntity = toDomainDriver(driver);
-
-    return await this.motorcycleTrialService.create(
-      id,
-      motorcycleEntity,
-      driverEntity,
-      new Date(startDate),
-      new Date(endDate),
-    );
+  @Get()
+  @ApiOperation({ summary: 'Get all motorcyclesTrial' })
+  @ApiResponse({
+    status: 200,
+    description: 'All motorcycleTrials retrieved successfully',
+    type: [Object],
+  })
+  async getAllMotorcycles(): Promise<MotorcycleTrialEntity[] | Error> {
+    return await this.motorcycleTrialService.getAllMotorcyclesTrial();
   }
 
   @Get(':id')
@@ -104,7 +100,7 @@ export class MotorcycleTrialController {
     status: 200,
     description: 'Motorcycle trial ended successfully',
   })
-  async endTrial(@Param('id') id: string, @Body('endDate') endDate: Date): Promise<void | Error> {
-    return await this.motorcycleTrialService.endTrial(id, new Date(endDate));
+  async endTrial(@Param('id') id: string): Promise<void | Error> {
+    return await this.motorcycleTrialService.endTrial(id);
   }
 }

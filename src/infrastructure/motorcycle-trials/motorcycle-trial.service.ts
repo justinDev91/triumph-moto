@@ -7,9 +7,11 @@ import { GetMotorcycleTrialSummaryUsecase } from '@application/usecases/motorcyc
 import { CheckMotorcycleTrialStatusUsecase } from '@application/usecases/motorcycleTrial/CheckMotorcycleTrialStatusUsecase';
 import { UpdateMotorcycleTrialUsecase } from '@application/usecases/motorcycleTrial/UpdateMotorcycleTrialUsecase';
 import { MotorcycleTrialEntity } from '@domain/entities/motorcycle/MotorcycleTrialEntity';
-import { DriverEntity } from '@domain/entities/driver/DriverEntity';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { MotorcycleTrialRepositoryImplem } from '@infrastructure/adapters/motorcycle.trial.repository.implem';
+import { CreateMotorcycleTrialDto } from './dto/create-motorcycle-trial-dto';
+import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
+import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
+import { GetAllMotorcyclesTrialUsecase } from '@application/usecases/motorcycleTrial/GetAllMotorcycleTrial;Usecase';
 
 @Injectable()
 export class MotorcycleTrialService {
@@ -20,27 +22,26 @@ export class MotorcycleTrialService {
   private readonly getMotorcycleTrialSummaryUsecase: GetMotorcycleTrialSummaryUsecase;
   private readonly checkMotorcycleTrialStatusUsecase: CheckMotorcycleTrialStatusUsecase;
   private readonly updateMotorcycleTrialUsecase: UpdateMotorcycleTrialUsecase;
+  private readonly getAllMotorcyclesTrialUsecase : GetAllMotorcyclesTrialUsecase;
 
   constructor(
     private readonly motorcycleTrialRepository: MotorcycleTrialRepositoryImplem,
+    private readonly motorcycleRepository: MotorcycleRepositoryImplem,
+    private readonly driverRepository: DriverRepositoryImplem
   ) {
-    this.createMotorcycleTrialUsecase = new CreateMotorcycleTrialUsecase(motorcycleTrialRepository);
+    this.createMotorcycleTrialUsecase = new CreateMotorcycleTrialUsecase(motorcycleTrialRepository, motorcycleRepository, driverRepository);
     this.deleteMotorcycleTrialUsecase = new DeleteMotorcycleTrialUsecase(motorcycleTrialRepository);
     this.findMotorcycleTrialByIdUsecase = new FindMotorcycleTrialByIdUsecase(motorcycleTrialRepository);
     this.endMotorcycleTrialUsecase = new EndMotorcycleTrialUsecase(motorcycleTrialRepository);
     this.getMotorcycleTrialSummaryUsecase = new GetMotorcycleTrialSummaryUsecase(motorcycleTrialRepository);
     this.checkMotorcycleTrialStatusUsecase = new CheckMotorcycleTrialStatusUsecase(motorcycleTrialRepository);
     this.updateMotorcycleTrialUsecase = new UpdateMotorcycleTrialUsecase(motorcycleTrialRepository);
+    this.getAllMotorcyclesTrialUsecase = new GetAllMotorcyclesTrialUsecase(motorcycleTrialRepository)
   }
 
-  async create(
-    id: string,
-    motorcycle: MotorcycleEntity,
-    driver: DriverEntity,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<void | Error> {
-    return await this.createMotorcycleTrialUsecase.execute(id, motorcycle, driver, startDate, endDate);
+  async create(createMotorcycleTrialDto: CreateMotorcycleTrialDto): Promise<void | Error> {
+    const {motorcycleId, driverId, startDate, endDate} = createMotorcycleTrialDto
+    return await this.createMotorcycleTrialUsecase.execute(motorcycleId, driverId, startDate, endDate);
   }
 
   async delete(id: string): Promise<void | Error> {
@@ -50,9 +51,12 @@ export class MotorcycleTrialService {
   async findById(id: string): Promise<MotorcycleTrialEntity | Error> {
     return await this.findMotorcycleTrialByIdUsecase.execute(id);
   }
-
-  async endTrial(id: string, endDate: Date): Promise<void | Error> {
-    return await this.endMotorcycleTrialUsecase.execute(id, endDate);
+   async getAllMotorcyclesTrial(): Promise<MotorcycleTrialEntity[] | Error> {
+      return await this.getAllMotorcyclesTrialUsecase.execute();
+    }
+  
+  async endTrial(id: string): Promise<void | Error> {
+    return await this.endMotorcycleTrialUsecase.execute(id);
   }
 
   async getSummary(id: string): Promise<string | Error> {

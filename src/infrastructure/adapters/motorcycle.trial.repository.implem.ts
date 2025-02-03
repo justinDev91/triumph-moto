@@ -22,8 +22,13 @@ export class MotorcycleTrialRepositoryImplem implements MotorcycleTrialRepositor
     private readonly driverRepository: Repository<Driver>,
   ) {}
 
+  async endTrial(id: string, endDate: Date): Promise<void> {
+    await this.motorcycleTrialRepository.update(id, {
+      endDate
+    });
+  }
+
   async save(motorcycleTrial: MotorcycleTrialEntity): Promise<void> {
-    try {
         const motorcycle = await this.motorcycleRepository.findOne({
             where: { id: motorcycleTrial.motorcycle.id },
         });
@@ -35,7 +40,6 @@ export class MotorcycleTrialRepositoryImplem implements MotorcycleTrialRepositor
         );
 
       const motorcycleTrialToSave = this.motorcycleTrialRepository.create({
-        id: motorcycleTrial.id,
         motorcycle,
         driver,
         startDate: motorcycleTrial.startDate.value,
@@ -43,9 +47,6 @@ export class MotorcycleTrialRepositoryImplem implements MotorcycleTrialRepositor
       });
 
       await this.motorcycleTrialRepository.save(motorcycleTrialToSave);
-    } catch (error) {
-      throw new Error("Failed to save motorcycle trial");
-    }
   }
 
   async findById(id: string): Promise<MotorcycleTrialEntity | Error> {

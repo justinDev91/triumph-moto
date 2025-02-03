@@ -6,9 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MotorcycleTrial } from './motorcycle-trial.entity';
 import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { Driver } from '@infrastructure/drivers/driver.entity';
+import { MotorcycleModule } from '@infrastructure/motorcycles/motorcycle.module';
+import { DriversModule } from '@infrastructure/drivers/drivers.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MotorcycleTrial, Motorcycle, Driver])],
+  imports: [
+    TypeOrmModule.forFeature([MotorcycleTrial, Motorcycle, Driver]),
+    MotorcycleModule,
+    DriversModule
+  ],
   controllers: [MotorcycleTrialController],
   providers: [
     MotorcycleTrialService,
