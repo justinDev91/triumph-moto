@@ -5,7 +5,7 @@ import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
 export class CancelLocationUsecase {
     constructor(private readonly locationRepository: LocationRepositoryInterface) {}
   
-    public async execute(locationId: string): Promise<LocationEntity | Error> {
+    public async execute(locationId: string): Promise<void | Error> {
       try {
         const location = await this.locationRepository.findById(locationId);
         if (location instanceof Error) return location;
@@ -13,7 +13,7 @@ export class CancelLocationUsecase {
         const cancelResult = location.cancelLocation();
         if (cancelResult instanceof Error) return cancelResult;
   
-        return await this.locationRepository.update({ status: location.status, endDate: null });
+        await this.locationRepository.cancel(locationId);
       } catch (error) {
         return new UnexpectedError(error instanceof Error ? error.message : String(error));
       }

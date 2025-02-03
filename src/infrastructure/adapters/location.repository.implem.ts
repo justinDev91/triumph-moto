@@ -26,6 +26,20 @@ export class LocationRepositoryImplem implements LocationRepositoryInterface {
     private readonly userRepository: Repository<User>
 
   ) {}
+  
+  async endLocation(id: string): Promise<void> {
+    await this.locationRepository.update(id, {
+      endDate: new Date(),
+      status: LocationStatusEnum.COMPLETED,
+    });
+  }
+
+  async cancel(id: string): Promise<void> {
+    await this.locationRepository.update(id, {
+       status: LocationStatusEnum.CANCELED,
+       endDate: null,
+      });
+  }
 
   public async create(location: LocationEntity): Promise<void | Error> {
 
@@ -45,10 +59,10 @@ export class LocationRepositoryImplem implements LocationRepositoryInterface {
       const locationToSave = this.locationRepository.create({
         motorcycle,
         user,
-        startDate: location.startDate,
-        endDate: location.endDate,
+        startDate:  new Date(location.startDate.value),
+        endDate: new Date(location.endDate.value),
         cost: location.cost,
-      } as DeepPartial<Location>);
+      });
       
       await this.locationRepository.save(locationToSave);
     } catch (error) {

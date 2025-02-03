@@ -10,4 +10,6 @@ export interface LocationRepositoryInterface {
     deleteById(id: string): Promise<boolean>;
     findByStatus(status: LocationStatus): Promise<LocationEntity[] | Error>;
     findAll():  Promise<LocationEntity[] | Error>;
+    endLocation(id: string):  Promise<void>;
+    cancel(id: string):  Promise<void>;
 }

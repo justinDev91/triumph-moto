@@ -108,9 +108,8 @@ export class LocationController {
   })
   async endLocation(
     @Param('id') id: string,
-    @Body() body: { endDate: Date }
-  ): Promise<LocationEntity | Error> {
-    return this.locationService.endLocation(id, body.endDate);
+  ): Promise<void | Error> {
+    await  this.locationService.endLocation(id);
   }
 
   @Put(':id/cancel')
@@ -125,28 +124,4 @@ export class LocationController {
     return this.locationService.cancelLocation(id);
   }
 
-  @Put(':id')
-  @ApiOperation({ summary: 'Update a location record' })
-  @ApiParam({ name: 'id', description: 'The ID of the location' })
-  @ApiBody({
-    description: 'Location details to update',
-    type: Object,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Successfully updated the location record',
-    type: LocationEntity,
-  })
-  async update(
-    @Param('id') id: string,
-    @Body() body: {
-      startDate: Date;
-      endDate: Date;
-      status: LocationStatus;
-      cost: number;
-    }
-  ): Promise<LocationEntity | Error> {
-    const updatedLocation = LocationEntity.create(id, null, null, body.startDate, body.endDate, body.status, body.cost) as LocationEntity;
-    return this.locationService.updateLocation(updatedLocation);
-  }
 }

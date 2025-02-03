@@ -36,6 +36,7 @@ export class CreateLocationUsecase {
       );
 
       if (locationEntity instanceof Error) return locationEntity;
+
     await this.locationRepository.create(locationEntity);
     } catch (error) {
       return new UnexpectedError(error instanceof Error ? error.message : String(error));

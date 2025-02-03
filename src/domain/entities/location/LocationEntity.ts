@@ -40,8 +40,10 @@ export class LocationEntity {
     return new LocationEntity(id, motorcycle, user, startDateValue, endDateValue, status, cost);
   }
 
-  public endLocation(endDate: Date): void | Error {
+  public endLocation(): void | Error {
     if (this.status === 'completed' || this.status === 'canceled') return new EndLocationError();
+    
+    const endDate = new Date();
     
     const endDateValue = EndDate.from(this.startDate.value, endDate);
     if (endDateValue instanceof Error) return endDateValue;

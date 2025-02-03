@@ -59,8 +59,8 @@ export class LocationService {
     return this.calculateLocationCostUsecase.execute(locationId);
   }
 
-  public async endLocation(locationId: string, endDate: Date): Promise<LocationEntity | Error> {
-    return this.endLocationUsecase.execute(locationId, endDate);
+  public async endLocation(locationId: string): Promise<void | Error> {
+    await this.endLocationUsecase.execute(locationId);
   }
 
   public async findLocationByMotorcycle(motorcycleId: string): Promise<LocationEntity[] | Error> {
