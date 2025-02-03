@@ -6,5 +6,6 @@ export interface RepairRepositoryInterface {
     findByBreakdownId(breakdownId: string): Promise<RepairEntity[] | Error>;
     deleteById(id: string): Promise<void>;
     update(repair: RepairEntity): Promise<void>;
+    findAll(): Promise<RepairEntity[] | Error>;
   }
   

@@ -7,23 +7,48 @@ import { Injectable } from "@nestjs/common";
 import { toOrmRepair } from "@infrastructure/helpers/repair/to-orm-repair";
 import { toDomainRepair } from "@infrastructure/helpers/repair/to-domain-repair";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Breakdown } from "@infrastructure/breakdowns/breakdown.entity";
 
 @Injectable()
 export class RepairRepositoryImplem implements RepairRepositoryInterface {
   constructor(
     @InjectRepository(Repair)
-    private readonly repairRepository: Repository<Repair>
+    private readonly repairRepository: Repository<Repair>,
+
+    @InjectRepository(Breakdown)
+    private readonly breakdownRepository: Repository<Breakdown>
   ) {}
 
   public async save(repair: RepairEntity): Promise<void> {
-    const repairOrm = toOrmRepair(repair); 
-    await this.repairRepository.save(repairOrm);
+    try {
+      const repairOrm = toOrmRepair(repair);
+      await this.repairRepository.save(repairOrm);
+      
+    } catch (error) {
+      console.error("Error saving repair:", error);
+    }
+  }
+  
+  public async findAll(): Promise<RepairEntity[]> {
+    try {
+      const repairsOrm = await this.repairRepository.find({
+        relations: ["breakdown"], 
+      });
+  
+      if (repairsOrm.length === 0) return []; 
+  
+      return repairsOrm.map((repairOrm) => toDomainRepair(repairOrm)) as RepairEntity[]; 
+
+    } catch (error) {
+      throw new Error("Failed to fetch repairs");
+    }
   }
 
+  
   public async findById(id: string): Promise<RepairEntity | Error> {
     const repairOrm = await this.repairRepository.findOne({
       where: { id },
-      relations: ["breakdown", "cost"],
+      relations: ["breakdown",],
     });
 
     if (!repairOrm) {
@@ -36,7 +61,7 @@ export class RepairRepositoryImplem implements RepairRepositoryInterface {
   public async findByBreakdownId(breakdownId: string): Promise<RepairEntity[] | RepairNotFoundError> {
     const repairsOrm = await this.repairRepository.find({
       where: { breakdown: { id: breakdownId } },
-      relations: ["breakdown", "cost"],
+      relations: ["breakdown"],
     });
 
     if (repairsOrm.length === 0) {

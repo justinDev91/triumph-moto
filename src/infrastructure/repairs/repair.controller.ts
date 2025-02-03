@@ -4,6 +4,7 @@ import { CommonRepairAction } from '@domain/types/motorcycle';
 import { BreakdownEntity } from '@domain/entities/breakdown/BreakdownEntity';
 import { RepairService } from './repair.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateRepairDto } from './dto/create-repair.dto';
 
 @ApiTags('repair') 
 @Controller('repair')
@@ -13,15 +14,14 @@ export class RepairController {
   @Post()
   @ApiResponse({ status: 201, description: 'Repair created successfully', type: RepairEntity })
   async createRepair(
-    @Body() body: { 
-      id: string;
-      breakdown: BreakdownEntity;
-      repairDate: Date;
-      actions: CommonRepairAction[];
-      cost: number;
-    }): Promise<RepairEntity | Error> {
-    const { id, breakdown, repairDate, actions, cost } = body;
-    return this.repairService.createRepair(id, breakdown, repairDate, actions, cost);
+    @Body() createRepairDto: CreateRepairDto): Promise<void | Error> {
+      await this.repairService.createRepair(createRepairDto);
+  }
+
+  @Get()
+  @ApiResponse({ status: 200, description: 'Get all repairs', type: [RepairEntity] })
+  async getAllRepairs(): Promise<RepairEntity[] | Error> {
+    return await this.repairService.getAllRepairs();
   }
 
   @Get(':id')

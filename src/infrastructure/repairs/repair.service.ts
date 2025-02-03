@@ -2,7 +2,6 @@ import { RepairRepositoryImplem } from '@infrastructure/adapters/repair.reposito
 import { Injectable } from "@nestjs/common";
 import { RepairEntity } from "@domain/entities/repair/RepairEntity";
 import { CommonRepairAction } from "@domain/types/motorcycle";
-import { BreakdownEntity } from "@domain/entities/breakdown/BreakdownEntity";
 import { AssociateRepairWithMotorcycleUseCase } from "@application/usecases/repair/AssociateRepairWithMotorcycleUseCase";
 import { CheckHighCostRepairUseCase } from "@application/usecases/repair/CheckHighCostRepairUseCase";
 import { CheckRepairWarrantyCoverageUseCase } from "@application/usecases/repair/CheckRepairWarrantyCoverageUseCase";
@@ -13,6 +12,8 @@ import { GetRepairsByBreakdownIdUsecase } from "@application/usecases/repair/Get
 import { UpdateRepairActionsUseCase } from "@application/usecases/repair/UpdateRepairActionsUseCase";
 import { UpdateRepairUsecase } from "@application/usecases/repair/UpdateRepairUsecase";
 import { BreakdownRepositoryImplem } from '@infrastructure/adapters/breakdown.repository.implem';
+import { CreateRepairDto } from './dto/create-repair.dto';
+import { GetAllRepairsUsecase } from '@application/usecases/repair/GetAllRepairsUsecase';
 
 @Injectable()
 export class RepairService {
@@ -25,6 +26,7 @@ export class RepairService {
   private readonly getRepairsByBreakdownIdUsecase: GetRepairsByBreakdownIdUsecase;
   private readonly updateRepairActionsUseCase: UpdateRepairActionsUseCase;
   private readonly updateRepairUsecase: UpdateRepairUsecase;
+  private readonly getAllRepairsUsecase: GetAllRepairsUsecase;
 
   constructor(
     private readonly repairRepository: RepairRepositoryImplem,
@@ -36,23 +38,23 @@ export class RepairService {
     );
     this.checkHighCostRepairUseCase = new CheckHighCostRepairUseCase(repairRepository);
     this.checkRepairWarrantyCoverageUseCase = new CheckRepairWarrantyCoverageUseCase(repairRepository);
-    this.createRepairUsecase = new CreateRepairUsecase(repairRepository);
+    this.createRepairUsecase = new CreateRepairUsecase(repairRepository, breakdownRepository);
     this.deleteRepairUsecase = new DeleteRepairUsecase(repairRepository);
     this.getRepairByIdUsecase = new GetRepairByIdUsecase(repairRepository);
     this.getRepairsByBreakdownIdUsecase = new GetRepairsByBreakdownIdUsecase(repairRepository);
     this.updateRepairActionsUseCase = new UpdateRepairActionsUseCase(repairRepository);
     this.updateRepairUsecase = new UpdateRepairUsecase(repairRepository);
+    this.getAllRepairsUsecase = new GetAllRepairsUsecase(repairRepository)
   }
 
-  async createRepair(
-    id: string,
-    breakdown: BreakdownEntity,
-    repairDate: Date,
-    actions: CommonRepairAction[],
-    cost: number
-  ): Promise<RepairEntity | Error> {
-    return this.createRepairUsecase.execute(id, breakdown, repairDate, actions, cost);
+  async createRepair(createRepairDto: CreateRepairDto): Promise<void | Error> {
+    const {breakdownId, repairDate, actions, cost} = createRepairDto
+    await this.createRepairUsecase.execute(breakdownId, repairDate, actions, cost);
   }
+
+  async getAllRepairs(): Promise<RepairEntity[] | Error> {
+    return await this.getAllRepairsUsecase.execute();
+  } 
 
   async getRepairById(id: string): Promise<RepairEntity | Error> {
     return this.getRepairByIdUsecase.execute(id);

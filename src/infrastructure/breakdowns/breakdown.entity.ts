@@ -26,7 +26,7 @@ export class Breakdown {
   @ApiProperty({ description: "The warranty associated with this breakdown, if any" })
   warranty: Warranty| null;
 
-  @OneToMany(() => Repair, (repair) => repair.breakdown)
+  @OneToMany(() => Repair, (repair) => repair.breakdown, { cascade: true })
   @ApiProperty({ description: "The repairs associated with this breakdown" })
   repairs: Repair[];
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Breakdown } from "@infrastructure/breakdowns/breakdown.entity";
 import { CommonRepairActionEnum } from "@infrastructure/types/CommonRepairActionEnum";  
 @Entity()
@@ -8,7 +8,8 @@ export class Repair {
   @ApiProperty({ description: "Unique identifier for the repair record" })
   id: string;
 
-  @ManyToOne(() => Breakdown, (breakdown) => breakdown.repairs)
+  @ManyToOne(() => Breakdown, (breakdown) => breakdown.repairs, {onDelete: "SET NULL" })
+  @JoinColumn({ name: "breakdownId" })
   @ApiProperty({ description: "The breakdown associated with this repair" })
   breakdown: Breakdown;
 
