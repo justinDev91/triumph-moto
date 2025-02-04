@@ -10,13 +10,15 @@ import { RemoveDriverFromCompanyUsecase } from '@application/usecases/company/Re
 import { RemoveMotorcycleFromCompanyUsecase } from '@application/usecases/company/RemoveMotorcycleFromCompanyUsecase';
 import { UpdateCompanyNameUsecase } from '@application/usecases/company/UpdateCompanyNameUsecase';
 import { CompanyRepositoryImplem } from '@infrastructure/adapters/company.repository.implem';
-import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { GetAllCompaniesUsecase } from '@application/usecases/company/GetAllCompaniesUsecase';
 import { CreateCompanyDto } from './dto/create-user-dto';
 import { UserRepositoryImplem } from '@infrastructure/adapters/user.repository.implem';
 import { GetCompanyByIdUsecase } from '@application/usecases/company/GetCompanyByIdUsecase';
+import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.repository.implem';
+import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
+import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.repository.implem';
 
 @Injectable()
 export class CompanyService {
@@ -35,10 +37,13 @@ export class CompanyService {
   constructor(
     private readonly companyRepository: CompanyRepositoryImplem,
     private readonly userRepository: UserRepositoryImplem,
+    private readonly concessionRepository: ConcessionRepositoryImplem,
+    private readonly driverRepository: DriverRepositoryImplem,
+    private readonly motorcycleRepository: MotorcycleRepositoryImplem
   ) {
-    this.addConcessionToCompanyUseCase = new AddConcessionToCompanyUseCase(companyRepository);
-    this.addDriverToCompanyUsecase = new AddDriverToCompanyUsecase(companyRepository);
-    this.addMotorcycleToCompanyUsecase = new AddMotorcycleToCompanyUsecase(companyRepository);
+    this.addConcessionToCompanyUseCase = new AddConcessionToCompanyUseCase(companyRepository, concessionRepository);
+    this.addDriverToCompanyUsecase = new AddDriverToCompanyUsecase(companyRepository, driverRepository);
+    this.addMotorcycleToCompanyUsecase = new AddMotorcycleToCompanyUsecase(companyRepository, motorcycleRepository);
     this.createCompanyUsecase = new CreateCompanyUsecase(companyRepository, userRepository);
     this.getCompanyDriversUsecase = new GetCompanyDriversUsecase(companyRepository);
     this.removeConcessionFromCompanyUseCase = new RemoveConcessionFromCompanyUseCase(companyRepository);
@@ -51,7 +56,7 @@ export class CompanyService {
 
   async createCompany(createCompanyDto: CreateCompanyDto): Promise<void | Error> {
     const { userId, name } = createCompanyDto;
-    await this.createCompanyUsecase.execute(name, userId);
+    return await this.createCompanyUsecase.execute(name, userId);
   }
 
   public async getAllCompanies(): Promise<CompanyEntity[] | Error> {
@@ -62,16 +67,16 @@ export class CompanyService {
     return await this.getCompanyByIdUsecase.execute(companyId);
   }
 
-  async addConcessionToCompany(concession: ConcessionEntity, companyId: string): Promise<void | Error> {
-    return await this.addConcessionToCompanyUseCase.execute(concession, companyId);
+  async addConcessionToCompany(companyId: string, concessionId: string): Promise<void | Error> {
+    return await this.addConcessionToCompanyUseCase.execute(companyId, concessionId);
   }
 
-  async addDriverToCompany(companyId: string, driver: DriverEntity): Promise<CompanyEntity | Error> {
-    return await this.addDriverToCompanyUsecase.execute(companyId, driver);
+  async addDriverToCompany(companyId: string, driverId: string): Promise< void | Error> {
+    return await this.addDriverToCompanyUsecase.execute(companyId, driverId);
   }
 
-  async addMotorcycleToCompany(companyId: string, motorcycle: MotorcycleEntity): Promise<CompanyEntity | Error> {
-    return await this.addMotorcycleToCompanyUsecase.execute(companyId, motorcycle);
+  async addMotorcycleToCompany(companyId: string, motorcycleId: string): Promise<void | Error> {
+    return await this.addMotorcycleToCompanyUsecase.execute(companyId, motorcycleId);
   }
 
   getCompanyDrivers(companyId: string): DriverEntity[] | Error {
@@ -82,11 +87,11 @@ export class CompanyService {
     return await this.removeConcessionFromCompanyUseCase.execute(companyId, concessionId);
   }
 
-  async removeDriverFromCompany(companyId: string, driverId: string): Promise<CompanyEntity | Error> {
+  async removeDriverFromCompany(companyId: string, driverId: string): Promise<void | Error> {
     return await this.removeDriverFromCompanyUsecase.execute(companyId, driverId);
   }
 
-  async removeMotorcycleFromCompany(companyId: string, motorcycleId: string): Promise<CompanyEntity | Error> {
+  async removeMotorcycleFromCompany(companyId: string, motorcycleId: string): Promise<void | Error> {
     return await this.removeMotorcycleFromCompanyUsecase.execute(companyId, motorcycleId);
   }
 

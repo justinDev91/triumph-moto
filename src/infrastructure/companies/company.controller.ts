@@ -1,12 +1,13 @@
 import { Controller, Post, Body, Param, Put, Delete, Get } from '@nestjs/common';
 import { CompanyEntity } from '@domain/entities/company/CompanyEntity';
-import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { DriverEntity } from '@domain/entities/driver/DriverEntity';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { CompanyService } from './company.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { CreateCompanyDto } from './dto/create-user-dto';
 import { UpdateCompanyNameDto } from './dto/update-company-name-dto';
+import { AddConcessionToCompanyDto } from './dto/add-concession-company.dto';
+import { AddDriverToCompanyDto } from './dto/add-driver-company.dto copy';
+import { AddMotorcycleToCompanyDto } from './dto/add-motorcycle-company.dto copy';
 
 @ApiTags('companies') 
 @Controller('companies')
@@ -22,7 +23,7 @@ export class CompanyController {
   })
   public async createCompany(
     @Body() createCompanyDto: CreateCompanyDto): Promise<void | Error> {
-    await this.companyService.createCompany(createCompanyDto);
+    return await this.companyService.createCompany(createCompanyDto);
   }
 
   @Get()
@@ -70,15 +71,11 @@ export class CompanyController {
     description: 'Successfully added a concession to the company',
     type: CompanyEntity,
   })
-  @ApiBody({
-    description: 'Concession data to be added to the company',
-    type: ConcessionEntity,
-  })
   public async addConcessionToCompany(
     @Param('id') companyId: string,
-    @Body() concession: ConcessionEntity
+    @Body() addConcessionToCompanyDto: AddConcessionToCompanyDto
   ): Promise<void | Error> {
-    return await this.companyService.addConcessionToCompany(concession, companyId);
+    return await this.companyService.addConcessionToCompany(companyId, addConcessionToCompanyDto.concessionId);
   }
 
   @Delete(':id/concessions/:concessionId')
@@ -104,15 +101,11 @@ export class CompanyController {
     description: 'Successfully added a driver to the company',
     type: CompanyEntity,
   })
-  @ApiBody({
-    description: 'Driver data to be added to the company',
-    type: DriverEntity,
-  })
   public async addDriverToCompany(
     @Param('id') companyId: string,
-    @Body() driver: DriverEntity
-  ): Promise<CompanyEntity | Error> {
-    return await this.companyService.addDriverToCompany(companyId, driver);
+    @Body() driver: AddDriverToCompanyDto
+  ): Promise<void | Error> {
+    return await this.companyService.addDriverToCompany(companyId, driver.driverId);
   }
 
   @Get(':id/drivers')
@@ -139,7 +132,7 @@ export class CompanyController {
   public async removeDriverFromCompany(
     @Param('id') companyId: string,
     @Param('driverId') driverId: string
-  ): Promise<CompanyEntity | Error> {
+  ): Promise<void | Error> {
     return await this.companyService.removeDriverFromCompany(companyId, driverId);
   }
 
@@ -151,15 +144,11 @@ export class CompanyController {
     description: 'Successfully added a motorcycle to the company',
     type: CompanyEntity,
   })
-  @ApiBody({
-    description: 'Motorcycle data to be added to the company',
-    type: MotorcycleEntity,
-  })
   public async addMotorcycleToCompany(
     @Param('id') companyId: string,
-    @Body() motorcycle: MotorcycleEntity
-  ): Promise<CompanyEntity | Error> {
-    return await this.companyService.addMotorcycleToCompany(companyId, motorcycle);
+    @Body() motorcycle: AddMotorcycleToCompanyDto
+  ): Promise<void | Error> {
+    return await this.companyService.addMotorcycleToCompany(companyId, motorcycle.motorcycleId);
   }
 
   @Delete(':id/motorcycles/:motorcycleId')
@@ -174,7 +163,7 @@ export class CompanyController {
   public async removeMotorcycleFromCompany(
     @Param('id') companyId: string,
     @Param('motorcycleId') motorcycleId: string
-  ): Promise<CompanyEntity | Error> {
+  ): Promise<void | Error> {
     return await this.companyService.removeMotorcycleFromCompany(companyId, motorcycleId);
   }
 }

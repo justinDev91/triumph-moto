@@ -11,6 +11,6 @@ export class RemoveConcessionFromCompanyUseCase {
     
     company.removeConcession(concessionId);
 
-    await this.companyRepository.save(company);
+    return await this.companyRepository.removeConcession(companyId, concessionId);
   }
 }

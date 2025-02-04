@@ -18,11 +18,9 @@ export class CreateCompanyUsecase {
       const user = await this.userRepository.findOne(userId); 
       if (user instanceof Error) return user; 
       
-
       const company = CompanyEntity.create(null, name, user, new Date(), new Date());
       if (company instanceof Error) return company; 
       
-
       await this.companyRepository.save(company);
       
     } catch (error) {

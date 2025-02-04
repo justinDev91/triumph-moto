@@ -6,7 +6,6 @@ export class GetCompanyDriversUsecase {
   
     public async execute(companyId: string): Promise<Error | DriverEntity[]> {
       const company = await this.companyRepository.findById(companyId);
-
       if (company instanceof Error) return company
 
       return company.getDrivers();

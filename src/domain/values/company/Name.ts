@@ -5,7 +5,7 @@ export class Name {
   private constructor(public readonly value: string) {}
 
   public static from(value: string): Name | Error {
-    const regex = /^[a-zA-Z0-9.]+$/;
+    const regex = /^[a-zA-Z0-9.\s-]+$/;
 
     if (value.length < 3 || value.length > 50) {
       return new NameLengthError();

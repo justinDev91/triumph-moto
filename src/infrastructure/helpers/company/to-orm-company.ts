@@ -1,10 +1,10 @@
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 import { Company } from "@infrastructure/companies/company.entity";
-import { toOrmUser } from "../user/to-orm-user";
+import { toOrmUserCreate } from "../user/to-orm-user-create";
 
 export const toOrmCompany = (company: CompanyEntity): Company => {
     const companyOrm = new Company();
     companyOrm.name = company.name.value;  
-    companyOrm.user =  companyOrm.user  ? toOrmUser(company.user) : null; 
+    companyOrm.user =  company.user ? toOrmUserCreate(company.user) : null; 
     return companyOrm;
 }

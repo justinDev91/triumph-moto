@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConcessionController } from './concession.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConcessionService } from './concession.service';
@@ -18,8 +18,9 @@ import { UsersModule } from '@infrastructure/users/users.module';
         User,
         Company
     ]),
-    CompanyModule,
-    UsersModule
+    forwardRef(() => CompanyModule),
+    forwardRef(() => UsersModule),
+    
     ],
     providers: [
         ConcessionService,
