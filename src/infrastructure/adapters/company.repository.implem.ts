@@ -182,7 +182,7 @@ export class CompanyRepositoryImplem implements CompanyRepositoryInterface {
 
   async save(company: CompanyEntity): Promise<void> {
     const companyOrm = toOrmCompany(company);    
-    const result = await this.companyRepository.save(companyOrm);
+    await this.companyRepository.save(companyOrm);
   }
 
   async update(company: CompanyEntity): Promise<void | Error> {

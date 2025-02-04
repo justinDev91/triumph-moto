@@ -1,5 +1,4 @@
 import { ConcessionRepositoryInterface } from "@application/repositories/ConcessionRepositoryInterface";
-import { ConcessionEntity } from "@domain/entities/concession/ConcessionEntity";
 import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
 
 export class RemoveMotorcycleFromConcessionUsecase {
@@ -10,14 +9,13 @@ export class RemoveMotorcycleFromConcessionUsecase {
     public async execute(
       concessionId: string,
       motorcycleId: string
-    ): Promise<ConcessionEntity | Error> {
+    ): Promise<void | Error> {
       try {
         const concession = await this.concessionRepository.findById(concessionId);
         if (concession instanceof Error) return concession;
   
         concession.removeMotorcycle(motorcycleId);
-        await this.concessionRepository.save(concession);
-        return concession;
+        return await this.concessionRepository.removeMotorcycle(concessionId, motorcycleId);
       } catch (error) {
         return new UnexpectedError(error instanceof Error ? error.message : String(error));
       }

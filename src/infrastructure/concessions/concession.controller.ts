@@ -1,10 +1,11 @@
 import { Controller, Post, Get, Put, Delete, Param, Body } from '@nestjs/common';
 import { ConcessionService } from './concession.service';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
-import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { CreateConcessionDto } from './dto/create-concession.dto';
 import { UpdateConcessionNameDto } from './dto/update-concession-name.dto';
+import { AddMotorcycleToConcessionNameDto } from './dto/add-motorcycle-concession.dto';
+import { AssignCompanyToConcessionNameDto } from './dto/assign-company-concession.dto';
 
 @ApiTags('concessions') 
 @Controller('concessions')
@@ -59,15 +60,11 @@ export class ConcessionController {
     description: 'Successfully added a motorcycle to the concession',
     type: ConcessionEntity,
   })
-  @ApiBody({
-    description: 'Motorcycle data to be added to the concession',
-    type: MotorcycleEntity,
-  })
   async addMotorcycleToConcession(
     @Param('id') concessionId: string,
-    @Body() motorcycle: MotorcycleEntity
-  ): Promise<ConcessionEntity | Error> {
-    return this.concessionService.addMotorcycleToConcession(concessionId, motorcycle);
+    @Body() motorcycle: AddMotorcycleToConcessionNameDto
+  ): Promise<void | Error> {
+    return this.concessionService.addMotorcycleToConcession(concessionId, motorcycle.motorcycleId);
   }
 
   @Delete(':concessionId/motorcycle/:motorcycleId')
@@ -82,7 +79,7 @@ export class ConcessionController {
   async removeMotorcycleFromConcession(
     @Param('concessionId') concessionId: string,
     @Param('motorcycleId') motorcycleId: string
-  ): Promise<ConcessionEntity | Error> {
+  ): Promise<void | Error> {
     return this.concessionService.removeMotorcycleFromConcession(concessionId, motorcycleId);
   }
 
@@ -93,15 +90,11 @@ export class ConcessionController {
     status: 200,
     description: 'Successfully assigned the concession to the company',
   })
-  @ApiBody({
-    description: 'Company ID to assign the concession to',
-    type: Object,
-  })
   async assignConcessionToCompany(
     @Param('id') concessionId: string,
-    @Body() { companyId }: { companyId: string }
+    @Body() Company: AssignCompanyToConcessionNameDto
   ): Promise<void | Error> {
-    return this.concessionService.assignConcessionToCompany(concessionId, companyId);
+    return this.concessionService.assignConcessionToCompany(concessionId, Company.companyId);
   }
 
   @Delete(':id')

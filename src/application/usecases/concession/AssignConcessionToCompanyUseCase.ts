@@ -17,7 +17,6 @@ export class AssignConcessionToCompanyUseCase {
   
     company.addConcession(concession);
 
-    await this.concessionRepository.save(concession);
-    await this.companyRepository.save(company);
+    return await this.concessionRepository.addCompany(concessionId, companyId);
   }
 }

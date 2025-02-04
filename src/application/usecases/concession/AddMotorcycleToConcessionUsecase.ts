@@ -1,24 +1,29 @@
 import { ConcessionRepositoryInterface } from "@application/repositories/ConcessionRepositoryInterface";
+import { MotorcycleRepositoryInterface } from "@application/repositories/MotorcycleRepositoryInterface";
 import { ConcessionEntity } from "@domain/entities/concession/ConcessionEntity";
-import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
 import { UnexpectedError } from "@domain/errors/user/UnexpectedError";
 
 export class AddMotorcycleToConcessionUsecase {
   public constructor(
-    private readonly concessionRepository: ConcessionRepositoryInterface
+    private readonly concessionRepository: ConcessionRepositoryInterface,
+    private readonly motorcycleRepository: MotorcycleRepositoryInterface,
+
   ) {}
 
   public async execute(
     concessionId: string,
-    motorcycle: MotorcycleEntity
-  ): Promise<ConcessionEntity | Error> {
+    motorcycleId: string
+  ): Promise<void | Error> {
     try {
       const concession = await this.concessionRepository.findById(concessionId);
       if (concession instanceof Error) return concession;
 
+      const motorcycle = await this.motorcycleRepository.findById(motorcycleId);
+      if (motorcycle instanceof Error) return motorcycle;
+
       concession.addMotorcycle(motorcycle);
-      await this.concessionRepository.save(concession);
-      return concession;
+
+      return  this.concessionRepository.addMotorcycle(concessionId, motorcycleId);
     } catch (error) {
       return new UnexpectedError(error instanceof Error ? error.message : String(error));
     }

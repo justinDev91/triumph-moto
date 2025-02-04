@@ -11,7 +11,7 @@ import { ConcessionModule } from '@infrastructure/concessions/concession.module'
   imports: [
     TypeOrmModule.forFeature([Motorcycle]),
     forwardRef(() => CompanyModule),
-    ConcessionModule
+    forwardRef(() => ConcessionModule),
   ],
   providers: [
     MotorcycleService,

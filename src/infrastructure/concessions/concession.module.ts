@@ -9,6 +9,7 @@ import { User } from '@infrastructure/users/user.entity';
 import { Company } from '@infrastructure/companies/company.entity';
 import { CompanyModule } from '@infrastructure/companies/company.module';
 import { UsersModule } from '@infrastructure/users/users.module';
+import { MotorcycleModule } from '@infrastructure/motorcycles/motorcycle.module';
 
 @Module({
     controllers: [ConcessionController],
@@ -20,7 +21,7 @@ import { UsersModule } from '@infrastructure/users/users.module';
     ]),
     forwardRef(() => CompanyModule),
     forwardRef(() => UsersModule),
-    
+    forwardRef(() => MotorcycleModule),
     ],
     providers: [
         ConcessionService,

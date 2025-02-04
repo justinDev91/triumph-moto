@@ -13,6 +13,10 @@ import { toDomainMotorcycle } from "@infrastructure/helpers/motorcycle/to-domain
 import { UserEntity } from "@domain/entities/user/UserEntity";
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 import { ConcessionNotFoundError } from "@domain/errors/concession/ConcessionNotFoundError";
+import { MotorcycleNotFoundError } from "@domain/errors/motorcycle/MotorcycleNotFoundError";
+import { MotorcycleAlreadAssignedError } from "@domain/errors/company/MotorcycleAlreadAssignedError";
+import { MotorcycleNotAssignedError } from "@domain/errors/company/MotorcycleNotAssignedError";
+import { CompanyAlreadyExisteError } from "@domain/errors/company/CompanyAlreadyExisteError";
 
 @Injectable()
 export class ConcessionRepositoryImplem implements ConcessionRepositoryInterface {
@@ -29,6 +33,80 @@ export class ConcessionRepositoryImplem implements ConcessionRepositoryInterface
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>
   ) {}
+  
+  async addCompany(concessionId: string, companyId: string): Promise<void | Error> {
+    const concession = await this.concessionRepository.findOne({ 
+      where: { id: concessionId }, 
+      relations: ["company"] 
+    });
+    if (!concession) return new ConcessionNotFoundError();
+
+    const company = await this.companyRepository.findOne({ 
+        where: { id: companyId },
+        relations: ["concessions"]
+    });
+    if (!company) return new MotorcycleNotFoundError();
+    
+    if (company.concessions?.some(existingConcession=> existingConcession.id === concessionId)) {
+      return new CompanyAlreadyExisteError();
+    }
+
+    await this.concessionRepository.update(concessionId, {
+      company,
+      updatedAt: new Date(),
+    });
+    company.concessions.push(concession);
+    await this.companyRepository.save(concession);
+  }
+  
+  async removeMotorcycle(concessionId: string, motorcycleId: string): Promise<void | Error> {
+    const motorcycle = await this.motorcycleRepository.findOne({ where: { id: motorcycleId }, relations: ["concession"] });
+        if (!motorcycle) return new MotorcycleNotFoundError();
+        
+        const concession = await this.concessionRepository.findOne(
+          { where: { id: concessionId }, relations: ["motorcycles"] }
+        );
+        if (!concession) return new ConcessionNotFoundError();
+        
+        if (!concession?.motorcycles?.some(motorcycle => motorcycle.id === motorcycleId)) {
+          return new MotorcycleNotAssignedError();
+        }
+    
+        concession.motorcycles = concession.motorcycles.filter(motorcycle => motorcycle.id !== motorcycleId);
+    
+        await this.motorcycleRepository.update(motorcycleId, {
+          concession: null,
+          updatedAt: new Date(),
+        });
+    
+        await this.concessionRepository.save(concession);
+  }
+
+  async addMotorcycle(concessionId: string, motorcycleId: string): Promise<void | Error> {
+     const concession = await this.concessionRepository.findOne({ 
+          where: { id: concessionId }, 
+          relations: ["motorcycles"] 
+        });
+        if (!concession) return new ConcessionNotFoundError();
+    
+        const motorcycle = await this.motorcycleRepository.findOne({ 
+            where: { id: motorcycleId },
+            relations: ["concession"]
+        });
+        if (!motorcycle) return new MotorcycleNotFoundError();
+    
+        if (concession.motorcycles?.some(existingMotorcycle => existingMotorcycle.id === motorcycleId)) {
+          return new MotorcycleAlreadAssignedError();
+        }
+    
+        await this.motorcycleRepository.update(motorcycleId, {
+          concession,
+          updatedAt: new Date(),
+        });
+    
+        concession.motorcycles.push(motorcycle);
+        await this.concessionRepository.save(concession);
+  }
 
   async save(concession: ConcessionEntity): Promise<void> {
     try {
