@@ -59,10 +59,14 @@ export class LocationEntity {
     this.endDate = null;
   }
 
-  public calculateCost(): void | Error {
+  public calculateCost(): number | Error {
     if (!this.endDate) return new EndDateError();
-  
+    console.log("this.endDate.value.getTime()", this.endDate, this.endDate.value.getTime())
+    console.log("this.startDate.value.getTime()", this.startDate, this.startDate.value.getTime())
+
+
     const durationInMilliseconds = this.endDate.value.getTime() - this.startDate.value.getTime();
+    console.log("durationInMilliseconds", durationInMilliseconds)
     const durationInHours = durationInMilliseconds / (1000 * 3600);
     this.cost = Math.round(durationInHours * 10); 
   }

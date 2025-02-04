@@ -81,7 +81,7 @@ export class LocationController {
     return this.locationService.findLocationsByStatus(status);
   }
 
-  @Put(':id/calculate-cost')
+  @Get(':id/calculate-cost')
   @ApiOperation({ summary: 'Calculate the cost for a specific location' })
   @ApiParam({ name: 'id', description: 'The ID of the location' })
   @ApiResponse({

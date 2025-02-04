@@ -8,11 +8,10 @@ export class CalculateLocationCostUsecase {
       try {
         const location = await this.locationRepository.findById(locationId);
         if (location instanceof Error) return location;
-  
+
         const calculateResult = location.calculateCost();
         if (calculateResult instanceof Error) return calculateResult;
-  
-        await this.locationRepository.update(calculateResult);
+        
         return location.cost;
       } catch (error) {
         return new UnexpectedError(error instanceof Error ? error.message : String(error));
