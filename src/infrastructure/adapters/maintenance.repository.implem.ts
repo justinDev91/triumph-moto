@@ -18,7 +18,6 @@ export class MaintenanceRepositoryImpleme implements MaintenanceRepositoryInterf
 
   public async save(maintenance: MaintenanceEntity): Promise<void> {
     const maintenanceOrm = toOrmMaintenanceCreate(maintenance);
-    console.log("maintenanceOrm", maintenanceOrm)
     await this.maintenanceRepository.save(maintenanceOrm);
   }
 

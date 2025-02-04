@@ -13,6 +13,6 @@ export class UpdateDriverContactInfoUsecase {
     if(driver instanceof Error) return driver
 
     driver.updateContactInfo({ email: newEmail, phone: newPhone });
-    await this.driverRepository.save(driver);
+    return await this.driverRepository.updateContactInfo(driverId, newEmail, newPhone);
   }
 }

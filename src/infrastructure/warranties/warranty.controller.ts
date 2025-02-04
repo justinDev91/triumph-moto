@@ -45,8 +45,8 @@ export class WarrantyController {
   async update(
     @Param('id') id: string,
     @Body() updateWarrantyDto: UpdateWarrantyDto
-  ): Promise<WarrantyEntity | Error> {
-    return await this.warrantyService.update(updateWarrantyDto);
+  ): Promise<void | Error> {
+    await this.warrantyService.update(id, updateWarrantyDto);
   }
 
   @Delete(':id')

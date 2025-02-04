@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { LicenseTypeEnum } from '@infrastructure/types/LicenseTypeEnum';
 import { Company } from '@infrastructure/companies/company.entity';
 import { User } from '@infrastructure/users/user.entity';
+import { DrivingRecord } from './driver.record.entity';
 
 @Entity()
 export class Driver {
@@ -50,4 +51,9 @@ export class Driver {
   @ApiProperty({ description: 'The updatedAt timestamp of the user' })
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @OneToMany(() => DrivingRecord, drivingRecord => drivingRecord.driver, { cascade: true, nullable: true})
+  @ApiProperty({ description: 'Driving history of the driver', type: [DrivingRecord] })
+  drivingHistory?: DrivingRecord[];
+
 }

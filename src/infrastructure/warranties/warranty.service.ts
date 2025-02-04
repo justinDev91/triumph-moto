@@ -61,8 +61,8 @@ export class WarrantyService {
     return await this.getWarrantyDetailsUsecase.execute(id);
   }
 
-  async update(updateWarrantyDto: UpdateWarrantyDto): Promise<WarrantyEntity | Error> {
-    const {id, startDate, endDate, coverageDetails, isActive} = updateWarrantyDto;
-    return await this.updateWarrantyUsecase.execute(id, startDate, endDate, coverageDetails, isActive);
+  async update(id :string, updateWarrantyDto: UpdateWarrantyDto): Promise<void | Error> {
+    const {coverageDetails, isActive} = updateWarrantyDto;
+    await this.updateWarrantyUsecase.execute(id, coverageDetails, isActive);
   }
 }

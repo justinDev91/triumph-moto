@@ -5,7 +5,7 @@ export class CheckWarrantyCoverageUsecase {
 
   public async execute(breakdownId: string): Promise<boolean | Error> {
     const breakdown = await this.breakdownRepository.findOneById(breakdownId);
-    console.log("breakdown", breakdown)
+
     if(breakdown instanceof Error) return breakdown
     
     return breakdown.isCoveredByWarranty(new Date());

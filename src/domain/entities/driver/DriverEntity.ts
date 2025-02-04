@@ -124,6 +124,7 @@ export class DriverEntity {
       identifier: this.company.id,
       name: this.company.name.value,
       user: this.company.user,
+      company:  this.company,
     };
   }
 

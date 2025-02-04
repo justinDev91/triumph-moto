@@ -64,9 +64,11 @@ export class WarrantyRepositoryImplem implements WarrantyRepositoryInterface {
     return toDomainWarranty(warrantyOrm);
   }
 
-  async update(warranty: WarrantyEntity): Promise<void> {
-    const warrantyOrm = toOrmWarranty(warranty);
-    await this.warrantyRepository.update(warrantyOrm.id, warrantyOrm);
+  async update(id: string, coverageDetails: string, isActive: boolean): Promise<void> {
+    await this.warrantyRepository.update(id, {
+      coverageDetails,
+      isActive,
+    });
   }
 
   async remove(id: string): Promise<void> {

@@ -20,7 +20,7 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
   
     const existingUser = await this.usersRepository.findOne({ where: { id: user.id } });
     if (!existingUser) throw new Error("User not found");
-  
+    
     await this.usersRepository.save(ormUser);
   }
 

@@ -21,7 +21,7 @@ export const toDomainDriver = (driver: Driver): DriverEntity => {
       driver.createdAt,
       driver.updatedAt,
       domainCompany as CompanyEntity,
-      domainUser as UserEntity
+      domainUser as UserEntity,
 
     ) as DriverEntity;
 }

@@ -17,6 +17,6 @@ export class AssignDriverToCompanyUseCase {
     
     driver.assignToCompany(company);
 
-    await this.driverRepository.save(driver);
+    return await this.driverRepository.assignCompany(driverId, companyId);
   }
 }

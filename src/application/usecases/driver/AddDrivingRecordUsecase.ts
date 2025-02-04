@@ -11,6 +11,7 @@ export class AddDrivingRecordUsecase {
 
     driver.addDrivingRecord(record);
     
-    await this.driverRepository.save(driver);
+    const {date, motorcycleId, type, details} = record 
+    await this.driverRepository.addRecord(id, date, motorcycleId, type, details );
   }
 }
