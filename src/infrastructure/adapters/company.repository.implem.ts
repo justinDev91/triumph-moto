@@ -216,7 +216,6 @@ export class CompanyRepositoryImplem implements CompanyRepositoryInterface {
       },
     );
     if (!companyOrm) return new CompanyNotFoundError();
-
     return toDomainCompany(companyOrm);
   }
 

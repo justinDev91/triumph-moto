@@ -3,6 +3,9 @@ import { MotorcycleService } from './motorcycle.service';
 import { CreateMotorcycleDto } from './dto/create-motorcycle.dto';
 import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { MotorStatus } from '@domain/types/motorcycle';
+import { UpdateMotorcycleMileageDto } from './dto/update-motorcycle-mileage.dto';
+import { UpdateMotorcycleStatusDto } from './dto/update-motorcycle-status.dto';
+import { UpdateMotorcycleServiceDetailsDto } from './dto/update-motorcycle-service-details.dto';
 
 @ApiTags('motorcycles') 
 @Controller('motorcycles')
@@ -27,9 +30,9 @@ export class MotorcycleController {
   })
   async updateMileage(
     @Param('id') id: string,
-    @Body('newMileage') newMileage: number,
+    @Body() updateMotorcycleMileageDto: UpdateMotorcycleMileageDto,
   ): Promise<void | Error> {
-    return await this.motorcycleService.updateMileage(id, newMileage);
+    return await this.motorcycleService.updateMileage(id, updateMotorcycleMileageDto.mileage);
   }
 
   @Put(':id/status')
@@ -40,9 +43,9 @@ export class MotorcycleController {
   })
   async updateMotorcycleStatus(
     @Param('id') id: string,
-    @Body('newStatus') newStatus: MotorStatus,
+    @Body() data: UpdateMotorcycleStatusDto,
   ): Promise<void | Error> {
-    return await this.motorcycleService.updateMotorcycleStatus(id, newStatus);
+    return await this.motorcycleService.updateMotorcycleStatus(id, data.status);
   }
 
   @Put(':id/service')
@@ -53,10 +56,9 @@ export class MotorcycleController {
   })
   async updateServiceDetails(
     @Param('id') id: string,
-    @Body('newServiceMileage') newServiceMileage: number,
-    @Body('serviceDate') serviceDate: Date,
+    @Body() data: UpdateMotorcycleServiceDetailsDto,
   ): Promise<void | Error> {
-    return await this.motorcycleService.updateServiceDetails(id, newServiceMileage, serviceDate);
+    return await this.motorcycleService.updateServiceDetails(id, data.mileage, data.date);
   }
 
   @Get(':id/company')

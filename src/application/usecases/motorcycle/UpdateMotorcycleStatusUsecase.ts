@@ -10,6 +10,7 @@ export class UpdateMotorcycleStatusUsecase {
     if(motorcycle instanceof Error) return motorcycle
 
     motorcycle.updateStatus(newStatus);
-    await this.motorcycleRepository.save(motorcycle);
+
+    await this.motorcycleRepository.updateStatus(id, newStatus);
   }
 }

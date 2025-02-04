@@ -6,7 +6,6 @@ export class GetMotorcycleConcessionDetailsUsecase {
   public async execute(motorcycleId: string): Promise<object | null | Error> {
     const motorcycle = await this.motorcycleRepository.findById(motorcycleId);
     if (motorcycle instanceof Error) return motorcycle;
-
     return motorcycle.getConcessionDetails();
   }
 }

@@ -9,6 +9,7 @@ import { toDomainMotorcycle } from '@infrastructure/helpers/motorcycle/to-domain
 import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { Company } from '@infrastructure/companies/company.entity';
 import { toOrmCompany } from '@infrastructure/helpers/company/to-orm-company';
+import { MotorStatusEnum } from '@infrastructure/types/MotorStatusEnum';
 
 @Injectable()
 export class MotorcycleRepositoryImplem implements MotorcycleRepositoryInterface {
@@ -16,6 +17,28 @@ export class MotorcycleRepositoryImplem implements MotorcycleRepositoryInterface
     @InjectRepository(Motorcycle)
     private readonly motorcycleRepository: Repository<Motorcycle>,
   ) {}
+  
+  async updateServiceDetails(id: string, nextServiceMileage: number, lastServiceDate: Date): Promise<void> {
+    await this.motorcycleRepository.update(id, {
+      nextServiceMileage,
+      lastServiceDate: new Date(lastServiceDate),
+      updatedAt: new Date(),
+    });
+  }
+
+  async updateStatus(id: string, status: MotorStatusEnum): Promise<void> {
+    await this.motorcycleRepository.update(id, {
+      status,
+      updatedAt: new Date(),
+    });
+  }
+
+  async updateMileage(id: string, mileage: number): Promise<void>  {
+    await this.motorcycleRepository.update(id, {
+      mileage,
+      updatedAt: new Date(),
+    });
+  }
 
   async save(motorcycle: MotorcycleEntity): Promise<void> {
     const motorcycleOrm = toOrmMotorcycle(motorcycle);
@@ -41,7 +64,7 @@ export class MotorcycleRepositoryImplem implements MotorcycleRepositoryInterface
       relations : ['company', 'concession']
     });
     if (!allMotorcycles || allMotorcycles.length === 0) return new MotorcycleNotFoundError();
-    
+
     return allMotorcycles.map(toDomainMotorcycle) as MotorcycleEntity[]
   }
 
@@ -61,6 +84,7 @@ export class MotorcycleRepositoryImplem implements MotorcycleRepositoryInterface
   }
 
   async update(motorcycle: MotorcycleEntity): Promise<void> {
+    console.log("motorcycle", motorcycle)
     const motorcycleOrm = toOrmMotorcycle(motorcycle);
     await this.motorcycleRepository.update(motorcycleOrm.id, motorcycleOrm);
   }

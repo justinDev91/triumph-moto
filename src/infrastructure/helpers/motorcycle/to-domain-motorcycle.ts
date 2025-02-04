@@ -2,6 +2,8 @@ import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
 import { Motorcycle } from "@infrastructure/motorcycles/motorcycle.entity";
 import { toDomainCompany } from "../company/to-domain-company";
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
+import { toDomainConcession } from "../concession/to-domain-concession";
+import { ConcessionEntity } from "@domain/entities/concession/ConcessionEntity";
 
 export const toDomainMotorcycle = (motorcycleOrm: Motorcycle): MotorcycleEntity | Error => {
     return MotorcycleEntity.create(
@@ -16,7 +18,9 @@ export const toDomainMotorcycle = (motorcycleOrm: Motorcycle): MotorcycleEntity 
       motorcycleOrm.nextServiceMileage,
       motorcycleOrm.createdAt,
       motorcycleOrm.updatedAt,
-      motorcycleOrm.company ? toDomainCompany(motorcycleOrm.company) as CompanyEntity: null
+      motorcycleOrm.company ? toDomainCompany(motorcycleOrm.company) as CompanyEntity: null,
+      motorcycleOrm.concession ? toDomainConcession(motorcycleOrm.concession): null
+
     );
   };
   

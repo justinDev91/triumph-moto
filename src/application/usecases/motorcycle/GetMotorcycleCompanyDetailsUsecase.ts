@@ -11,7 +11,7 @@ export class GetMotorcycleCompanyDetailsUsecase {
     const motorcycle = await this.motorcycleRepository.findById(motorcycleId);
     if (motorcycle instanceof Error) return motorcycle;
 
-    const company = await this.companyRepository.findById(motorcycle.id);
+    const company = await this.companyRepository.findById(motorcycle.company.id);
     if (company instanceof Error) return company;
 
     return company; 

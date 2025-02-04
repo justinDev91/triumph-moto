@@ -10,6 +10,6 @@ export class UpdateServiceDetailsUsecase {
 
     motorcycle.updateServiceDetails(newServiceMileage, serviceDate);
 
-    await this.motorcycleRepository.save(motorcycle);
+    await this.motorcycleRepository.updateServiceDetails(id, newServiceMileage, serviceDate);
   }
 }

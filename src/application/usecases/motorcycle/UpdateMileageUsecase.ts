@@ -9,6 +9,7 @@ export class UpdateMileageUsecase {
     if(motorcycle instanceof Error) return motorcycle
 
     motorcycle.updateMileage(newMileage);
-    await this.motorcycleRepository.save(motorcycle);
+
+    await this.motorcycleRepository.updateMileage(id, newMileage);
   }
 }

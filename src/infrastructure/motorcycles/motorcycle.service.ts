@@ -17,6 +17,7 @@ import { AssignMotorcycleToConcessionUsecase } from '@application/usecases/motor
 import { ConcessionRepositoryImplem } from '@infrastructure/adapters/concession.repository.implem';
 import { MotorcycleEntity } from '@domain/entities/motorcycle/MotorcycleEntity';
 import { GetAllMotorcyclesUsecase } from '@application/usecases/motorcycle/GetAllMotorcyclesUsecase';
+import { MotorStatusEnum } from '@infrastructure/types/MotorStatusEnum';
 
 @Injectable()
 export class MotorcycleService {
@@ -94,7 +95,7 @@ export class MotorcycleService {
     return await this.updateMileageUsecase.execute(id, newMileage);
   }
 
-  async updateMotorcycleStatus(id: string, newStatus: MotorStatus): Promise<void | Error> {
+  async updateMotorcycleStatus(id: string, newStatus: MotorStatusEnum): Promise<void | Error> {
     return await this.updateMotorcycleStatusUsecase.execute(id, newStatus);
   }
 

@@ -10,6 +10,10 @@ export const toDomainCompany = (companyOrm: Company): CompanyEntity | Error => {
     companyOrm.user ? toDomainUser(companyOrm.user) as UserEntity : null,
     companyOrm.createdAt,
     companyOrm.updatedAt,
+    //extends the classe CompanyEntity to allow to send these proprieties
+    //companyOrm.motorcycles
+    //companyOrm.drivers
+    //companyOrm.concessions
   );
   
   return companyEntity;
