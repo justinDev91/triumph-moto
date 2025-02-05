@@ -8,14 +8,46 @@ import { Maintenance } from '@infrastructure/maintenances/maintenance.entity';
 import { toDomainMaintenance } from '@infrastructure/helpers/maintenance/to-domain-maintenance';
 import { toOrmMaintenance } from '@infrastructure/helpers/maintenance/to-orm-maintenance';
 import { toOrmMaintenanceCreate } from '@infrastructure/helpers/maintenance/to-orm-maintenance-create';
+import { MotorcycleNotFoundError } from '@domain/errors/motorcycle/MotorcycleNotFoundError';
+import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 
 @Injectable()
 export class MaintenanceRepositoryImpleme implements MaintenanceRepositoryInterface {
   constructor(
     @InjectRepository(Maintenance)
     private readonly maintenanceRepository: Repository<Maintenance>,
+
+    @InjectRepository(Motorcycle)
+    private readonly motorcycleRepository: Repository<Motorcycle>,
   ) {}
 
+  async scheduleNextMaintenance(maintenance: MaintenanceEntity): Promise<void | Error> {
+    const [maintenanceOrm, motorcycle] = await Promise.all([
+      this.maintenanceRepository.findOne({ where: { id: maintenance.id }, relations: ["motorcycle"] }),
+      this.motorcycleRepository.findOne({ where: { id: maintenance.motorcycle.id } })
+    ]);
+  
+    if (!maintenanceOrm) return new MaintenanceNotFoundError();
+    if (!motorcycle) return new MotorcycleNotFoundError();
+  
+    return this.maintenanceRepository.manager.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.update(this.motorcycleRepository.target, motorcycle.id, {
+        nextServiceMileage: maintenance.motorcycle.nextServiceMileage,
+        lastServiceDate: maintenance.motorcycle._lastServiceDate
+      });
+  
+      const updatedMotorcycle = await transactionalEntityManager.findOne(this.motorcycleRepository.target, {
+        where: { id: motorcycle.id }
+      });
+  
+      if (!updatedMotorcycle) throw new MotorcycleNotFoundError();
+  
+      await transactionalEntityManager.update(this.maintenanceRepository.target, maintenanceOrm.id, {
+        motorcycle: updatedMotorcycle
+      });
+    });
+  }
+  
   public async save(maintenance: MaintenanceEntity): Promise<void> {
     const maintenanceOrm = toOrmMaintenanceCreate(maintenance);
     await this.maintenanceRepository.save(maintenanceOrm);

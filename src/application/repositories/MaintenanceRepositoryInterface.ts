@@ -10,4 +10,5 @@ export interface MaintenanceRepositoryInterface {
   findByConcessionId(concessionId: string): Promise<MaintenanceEntity[] | MaintenanceNotFoundError>;
   findOverdue(): Promise<MaintenanceEntity[]>;
   update(maintenance: MaintenanceEntity): Promise<void>;
+  scheduleNextMaintenance(maintenance: MaintenanceEntity): Promise<void | Error>;
 }

@@ -99,7 +99,7 @@ export class MaintenanceService {
     return this.getMaintenanceByIdUseCase.execute(id);
   }
 
-  public async markMaintenanceAsCompleted(id: string): Promise<MaintenanceEntity | Error> {
+  public async markMaintenanceAsCompleted(id: string): Promise<boolean | Error> {
     return this.markMaintenanceAsCompletedUsecase.execute(id);
   }
 

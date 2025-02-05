@@ -8,7 +8,6 @@ export const toOrmMaintenanceCreate = (maintenance: MaintenanceEntity): Maintena
     const maintenanceOrm = new Maintenance();
     maintenanceOrm.maintenanceType = maintenance.maintenanceType as MaintenanceTypeEnum; 
     
-    // Convert to Date object if it's not already one
     maintenanceOrm.date = maintenance.date instanceof Date ? maintenance.date : new Date(maintenance.date);
     
     maintenanceOrm.cost = maintenance.cost;

@@ -10,6 +10,7 @@ export class ScheduleNextMaintenanceUsecase {
       if (maintenance instanceof MaintenanceNotFoundError) return maintenance;
   
       maintenance.scheduleNextMaintenance();
-      await this.maintenanceRepository.save(maintenance);
+
+      await this.maintenanceRepository.scheduleNextMaintenance(maintenance);
     }
   }

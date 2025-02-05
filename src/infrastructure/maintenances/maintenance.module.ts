@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Maintenance } from './maintenance.entity';
 import { MotorcycleModule } from '@infrastructure/motorcycles/motorcycle.module';
 import { ConcessionModule } from '@infrastructure/concessions/concession.module';
+import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Maintenance]),
+    TypeOrmModule.forFeature([Maintenance, Motorcycle]),
     MotorcycleModule,
     ConcessionModule
   ],

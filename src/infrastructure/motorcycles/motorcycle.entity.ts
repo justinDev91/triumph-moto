@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
 import { MotorStatusEnum } from '@infrastructure/types/MotorStatusEnum';
 import { Company } from '@infrastructure/companies/company.entity';
 import { Concession } from '@infrastructure/concessions/concession.entity';
+import { Maintenance } from '@infrastructure/maintenances/maintenance.entity';
 
 @Entity()
 export class Motorcycle {
@@ -61,5 +62,7 @@ export class Motorcycle {
   @ManyToOne(() => Concession, concession => concession.motorcycles)
   @ApiProperty({ description: 'The concession associated with the motorcycle' })
   concession: Concession | null;
-
+  
+  @OneToOne(() => Maintenance, (maintenance) => maintenance.motorcycle, { nullable: true, onDelete: "SET NULL" })
+  maintenance?: Maintenance | null;
 }

@@ -4,7 +4,6 @@ import { MaintenanceEntity } from '@domain/entities/maintenance/MaintenanceEntit
 import { MaintenanceType } from '@domain/types/MaintenanceType';
 import { ConcessionEntity } from '@domain/entities/concession/ConcessionEntity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
-import { MaintenanceTypeEnum } from '@infrastructure/types/MaintenanceTypeEnum';
 import { CreateMaintenanceDto } from './dto/create-maintenance.dto';
 
 @ApiTags('maintenance') 
@@ -90,12 +89,7 @@ export class MaintenanceController {
   @Put('complete/:id')
   @ApiOperation({ summary: 'Mark maintenance as completed' })
   @ApiParam({ name: 'id', description: 'The ID of the maintenance record' })
-  @ApiResponse({
-    status: 200,
-    description: 'Maintenance record marked as completed',
-    type: MaintenanceEntity,
-  })
-  async markMaintenanceAsCompleted(@Param('id') id: string): Promise<MaintenanceEntity | Error> {
+  async markMaintenanceAsCompleted(@Param('id') id: string): Promise<boolean | Error> {
     return this.maintenanceService.markMaintenanceAsCompleted(id);
   }
 
