@@ -70,14 +70,12 @@ export class OrderController {
     return this.orderService.addItemToOrder(orderId, addItemToOrderDto);
   }
 
-  @Put(':orderId/items/:sparePartId/delivery')
-  @ApiResponse({ status: 200, description: 'Item delivery updated successfully' })
+  @Put(':orderId/delivery')
+  @ApiResponse({ status: 200, description: 'Order Items delivery successfully' })
   async updateItemDelivery(
     @Param('orderId') orderId: string,
-    @Param('sparePartId') sparePartId: string,
-    @Body() updateItemDeliveryDto : UpdateItemDeliveryDto ,
   ): Promise<void | Error> {
-    return this.orderService.updateItemDelivery(orderId, sparePartId, updateItemDeliveryDto.deliveredQty);
+    return this.orderService.updateItemDelivery(orderId);
   }
 
   @Get(':orderId/fully-delivered')

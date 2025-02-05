@@ -6,4 +6,9 @@ export interface OrderRepositoryInterface {
   findByDateRange(startDate: Date, endDate: Date): Promise<OrderEntity[] | Error>;
   update(order: OrderEntity): Promise<void>;
   findAll():  Promise<OrderEntity[] | Error>;
+  addItem(
+    orderId: string, 
+    itemId: string,
+  ): Promise<void | Error>;
+  delivery(orderId: string): Promise<void | Error>;
 }

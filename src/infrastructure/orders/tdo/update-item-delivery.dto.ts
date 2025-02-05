@@ -6,5 +6,4 @@ export class UpdateItemDeliveryDto {
     example: 5 
   })
   deliveredQty: number;
-
 }

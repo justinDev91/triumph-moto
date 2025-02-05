@@ -9,6 +9,8 @@ import { toDomainSparePart } from "@infrastructure/helpers/sparPart/to-domain-sp
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 import { toDomainOrder } from "@infrastructure/helpers/order/to-domain-order";
 import { toOrmSpartPart } from "@infrastructure/helpers/sparPart/to-orm-spart-part";
+import { OrderItemNotFoundError } from "@domain/errors/orderItem/OrderItemNotFoundError";
+import { OrderItemAlreadAssignedError } from "@domain/errors/orderItem/OrderItemAlreadAssignedError";
 
 export class OrderRepositoryImplem implements OrderRepositoryInterface {
   constructor(
@@ -18,7 +20,32 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
   ) {}
+  
+  delivery(orderId: string): Promise<void | Error> {
+    throw new Error("Method not implemented.");
+  }
 
+    async addItem(orderId: string, itemId: string): Promise<void | Error> {
+      const [item, order] = await Promise.all([
+        this.orderItemRepository.findOne({ where: { id: itemId } }),
+        this.orderRepository.findOne({ where: { id: orderId }, relations: ["items"] })
+      ]);
+    
+      if (!item) return new OrderItemNotFoundError();
+      if (!order) return new OrderNotFoundError();
+      if (order.items.some(existingItem => existingItem.id === itemId)) {
+        return new OrderItemAlreadAssignedError();
+      }
+    
+      return this.orderRepository.manager.transaction(async (transactionalEntityManager) => {
+        item.order = order;
+        await transactionalEntityManager.save(item);
+    
+        order.items.push(item);
+        await transactionalEntityManager.save(order);
+      });
+    }
+    
     async findAll(): Promise<OrderEntity[] | Error> {
       const orders = await this.orderRepository.find({
         relations: ["items"], 

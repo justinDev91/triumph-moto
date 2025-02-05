@@ -84,7 +84,6 @@ export class MotorcycleRepositoryImplem implements MotorcycleRepositoryInterface
   }
 
   async update(motorcycle: MotorcycleEntity): Promise<void> {
-    console.log("motorcycle", motorcycle)
     const motorcycleOrm = toOrmMotorcycle(motorcycle);
     await this.motorcycleRepository.update(motorcycleOrm.id, motorcycleOrm);
   }

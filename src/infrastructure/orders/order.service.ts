@@ -9,15 +9,15 @@ import { GetOrderItemsUsecase } from '@application/usecases/order/GetOrderItemsU
 import { GetOrdersByDateRangeUsecase } from '@application/usecases/order/GetOrdersByDateRangeUsecase';
 import { GetTotalOrderCostUsecase } from '@application/usecases/order/GetTotalOrderCostUsecase';
 import { GetUndeliveredItemsUsecase } from '@application/usecases/order/GetUndeliveredItemsUsecase';
-import { UpdateItemDeliveryUsecase } from '@application/usecases/order/UpdateItemDeliveryUsecase';
 import { OrderEntity } from '@domain/entities/order/OrderEntity';
 import { OrderItemEntity } from '@domain/entities/order/OrderItemEntity';
-import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
 import { OrderRepositoryImplem } from '@infrastructure/adapters/order.repository.implem';
 import { CreateOrderDto } from './tdo/create-order-dto';
 import { GetAllOrdersUsecase } from '@application/usecases/order/GetAllOrdersUsecase';
 import { AddItemToOrderDto } from './tdo/add-item-to-order.dto';
 import { SparePartRepositoryImplem } from '@infrastructure/adapters/spare.part.repository.implem';
+import { OrderItemRepositoryImplem } from '@infrastructure/adapters/order.item.repository.implem';
+import { ItemDeliveryUsecase } from '@application/usecases/order/UpdateItemDeliveryUsecase';
 
 @Injectable()
 export class OrderService {
@@ -31,14 +31,15 @@ export class OrderService {
   private readonly getOrdersByDateRangeUsecase: GetOrdersByDateRangeUsecase;
   private readonly getTotalOrderCostUsecase: GetTotalOrderCostUsecase;
   private readonly getUndeliveredItemsUsecase: GetUndeliveredItemsUsecase;
-  private readonly updateItemDeliveryUsecase: UpdateItemDeliveryUsecase;
+  private readonly ItemDeliveryUsecase: ItemDeliveryUsecase;
   private readonly getAllOrdersUsecase : GetAllOrdersUsecase;
 
   constructor(
     private readonly orderRepository: OrderRepositoryImplem,
-    private readonly sparePartRepository: SparePartRepositoryImplem
+    private readonly sparePartRepository: SparePartRepositoryImplem,
+    private readonly orderItemRepository: OrderItemRepositoryImplem
   ) {
-    this.addItemToOrderUsecase = new AddItemToOrderUsecase(orderRepository, sparePartRepository);
+    this.addItemToOrderUsecase = new AddItemToOrderUsecase(orderRepository, sparePartRepository, orderItemRepository);
     this.checkIfOrderFullyDeliveredUsecase = new CheckIfOrderFullyDeliveredUsecase(orderRepository);
     this.createOrderUsecase = new CreateOrderUsecase(orderRepository);
     this.getEstimatedDeliveryDateUsecase = new GetEstimatedDeliveryDateUsecase(orderRepository);
@@ -48,7 +49,7 @@ export class OrderService {
     this.getOrdersByDateRangeUsecase = new GetOrdersByDateRangeUsecase(orderRepository);
     this.getTotalOrderCostUsecase = new GetTotalOrderCostUsecase(orderRepository);
     this.getUndeliveredItemsUsecase = new GetUndeliveredItemsUsecase(orderRepository);
-    this.updateItemDeliveryUsecase = new UpdateItemDeliveryUsecase(orderRepository);
+    this.ItemDeliveryUsecase = new ItemDeliveryUsecase(orderRepository);
     this.getAllOrdersUsecase = new GetAllOrdersUsecase(orderRepository)
   }
 
@@ -88,16 +89,14 @@ export class OrderService {
     orderId: string,
     addItemToOrderDto : AddItemToOrderDto
   ): Promise<void | Error> {
-    const {itemId, sparePartId, quantity, costPerUnit } = addItemToOrderDto
-    return this.addItemToOrderUsecase.execute(orderId, itemId, sparePartId, quantity, costPerUnit);
+    const {itemId} = addItemToOrderDto
+    return this.addItemToOrderUsecase.execute(orderId, itemId);
   }
 
   async updateItemDelivery(
     orderId: string,
-    sparePartId: string,
-    deliveredQty: number
   ): Promise<void | Error> {
-    return this.updateItemDeliveryUsecase.execute(orderId, sparePartId, deliveredQty);
+    return this.ItemDeliveryUsecase.execute(orderId);
   }
 
 
