@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RepairController } from './repair.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Repair } from './repair.entity';
@@ -10,8 +10,8 @@ import { BreakdownModule } from '@infrastructure/breakdowns/breakdown.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Repair, Breakdown]),
-    BreakdownModule
-  ],
+    forwardRef(() => BreakdownModule),
+    ],
   controllers: [RepairController],
   providers: [
     RepairService,

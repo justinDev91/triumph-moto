@@ -7,4 +7,5 @@ export interface BreakdownRepositoryInterface {
   delete(id: string): Promise<void>;
   findAll(): Promise<BreakdownEntity[]>;
   updateDescription(id: string, description: string): Promise<void>;
+  addRepair(breakdownId: string, repairId: string):  Promise<void | Error>;
 }

@@ -8,6 +8,7 @@ import { toOrmRepair } from "@infrastructure/helpers/repair/to-orm-repair";
 import { toDomainRepair } from "@infrastructure/helpers/repair/to-domain-repair";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Breakdown } from "@infrastructure/breakdowns/breakdown.entity";
+import { CommonRepairActionEnum } from "@infrastructure/types/CommonRepairActionEnum";
 
 @Injectable()
 export class RepairRepositoryImplem implements RepairRepositoryInterface {
@@ -18,6 +19,20 @@ export class RepairRepositoryImplem implements RepairRepositoryInterface {
     @InjectRepository(Breakdown)
     private readonly breakdownRepository: Repository<Breakdown>
   ) {}
+
+  async updateActions(repairId: string, newActions: CommonRepairActionEnum[]): Promise<void | Error> {
+    console.log("updateActions")
+
+    const repair = await this.repairRepository.findOne({ where: { id: repairId } });
+    if (!repair) return new RepairNotFoundError();
+    console.log("repair", repair)
+
+    const updatedActions = [...new Set([...repair.actions, ...newActions])];
+    console.log("updatedActions", updatedActions)
+    await this.repairRepository.update(repairId, {
+      actions: updatedActions,
+    });
+  }
 
   public async save(repair: RepairEntity): Promise<void> {
     try {

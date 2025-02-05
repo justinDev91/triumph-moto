@@ -51,8 +51,7 @@ export class BreakdownEntity {
 
   public isCoveredByWarranty(checkDate: Date): boolean {
     if (!this.warranty) {
-      throw new BreakdownInvalidWarrantyError();
-    }
+      return false    }
     return this.warranty.isWarrantyValid(checkDate);
   }
 

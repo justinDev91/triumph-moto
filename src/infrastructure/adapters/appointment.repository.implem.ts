@@ -1,4 +1,3 @@
-import { Value } from './../../domain/values/Value';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -7,9 +6,9 @@ import { AppointmentEntity } from "@domain/entities/appointment/AppointmentEntit
 import { AppointmentNotFoundError } from "@domain/errors/appointment/AppointmentNotFoundError";
 import { Appointment } from "@infrastructure/appointment/appointment.entity";
 import { toDomainAppointment } from "@infrastructure/helpers/appointment/to-domain-appointment";
-import { toOrmAppointment } from "@infrastructure/helpers/appointment/to-orm-appointment";
 import { AppointmentStatusEnum } from '@infrastructure/types/AppointmentStatusEnum';
 import { AppointmentReasonEnum } from '@infrastructure/types/AppointmentReasonEnum';
+import { toOrmAppointmentCreate } from "@infrastructure/helpers/appointment/to-orm-appointment";
 
 @Injectable()
 export class AppointmentRepositoryImplem implements AppointmentRepositoryInterface {
@@ -73,6 +72,7 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
           "motorcycleTrial",
         ],
       });
+      console.log("appointments", appointments)
       
       if (!appointments.length) {
         return new AppointmentNotFoundError("No appointments found");
@@ -126,7 +126,7 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
 
   async save(appointment: AppointmentEntity): Promise<void> {
     try {
-      const appointmentToSave = toOrmAppointment(appointment);
+      const appointmentToSave = toOrmAppointmentCreate(appointment);
 
       await this.appointmentRepository.save(appointmentToSave);
     } catch (error) {
@@ -136,7 +136,7 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
 
   async update(appointment: AppointmentEntity): Promise<void> {
     try {
-      const appointmentToUpdate = toOrmAppointment(appointment);
+      const appointmentToUpdate = toOrmAppointmentCreate(appointment);
       await this.appointmentRepository.update(appointment.id, appointmentToUpdate);
     } catch (error) {
       throw new Error("Failed to update appointment");

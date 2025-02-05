@@ -1,7 +1,6 @@
 import { Controller, Post, Get, Param, Body, Delete, Put } from '@nestjs/common';
 import { RepairEntity } from '@domain/entities/repair/RepairEntity';
 import { CommonRepairAction } from '@domain/types/motorcycle';
-import { BreakdownEntity } from '@domain/entities/breakdown/BreakdownEntity';
 import { RepairService } from './repair.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateRepairDto } from './dto/create-repair.dto';
@@ -42,12 +41,6 @@ export class RepairController {
     return this.repairService.deleteRepair(id);
   }
 
-  @Post(':repairId/motorcycle')
-  @ApiResponse({ status: 200, description: 'Associate repair with motorcycle' })
-  async associateRepairWithMotorcycle(@Param('repairId') repairId: string): Promise<void | Error> {
-    return this.repairService.associateRepairWithMotorcycle(repairId);
-  }
-
   @Post(':repairId/high-cost/:threshold')
   @ApiResponse({ status: 200, description: 'Check if the repair cost is above a threshold', type: Boolean })
   async checkHighCostRepair(
@@ -57,7 +50,7 @@ export class RepairController {
     return this.repairService.checkHighCostRepair(repairId, threshold);
   }
 
-  @Post(':repairId/warranty')
+  @Get(':repairId/warranty')
   @ApiResponse({ status: 200, description: 'Check warranty coverage for repair', type: Boolean })
   async checkRepairWarrantyCoverage(@Param('repairId') repairId: string): Promise<boolean | Error> {
     return this.repairService.checkRepairWarrantyCoverage(repairId);
@@ -72,13 +65,4 @@ export class RepairController {
     return this.repairService.updateRepairActions(repairId, newActions);
   }
 
-  @Put(':repairId')
-  @ApiResponse({ status: 200, description: 'Update repair', type: RepairEntity })
-  async updateRepair(
-    @Param('repairId') repairId: string,
-    @Body() repair: RepairEntity
-  ): Promise<RepairEntity | Error> {
-    repair.id = repairId;
-    return this.repairService.updateRepair(repair);
-  }
 }

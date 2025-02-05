@@ -55,22 +55,19 @@ export class BreakdownController {
     return await this.breakdownService.updateBreakdownDescription(breakdownId, updateDescriptionBreakDownDto.description);
   }
 
-  @Post(':id/repair')
+  @Post(':id/breakdown/:repairId')
   @ApiOperation({ summary: 'Add a repair to a breakdown report' })
   @ApiParam({ name: 'id', description: 'The ID of the breakdown' })
+  @ApiParam({ name: 'repairId', description: 'The ID of the repair' })
   @ApiResponse({
     status: 200,
     description: 'Successfully added a repair to the breakdown',
   })
-  @ApiBody({
-    description: 'Repair data to be added to the breakdown report',
-    type: RepairEntity,
-  })
   public async addRepairToBreakdown(
     @Param('id') breakdownId: string,
-    @Body() repair: RepairEntity
+    @Param('repairId') repairId: string,
   ): Promise<void | Error> {
-    return await this.breakdownService.addRepairToBreakdown(breakdownId, repair);
+    return await this.breakdownService.addRepairToBreakdown(breakdownId, repairId);
   }
 
   @Delete(':id/repair/:repairId')

@@ -20,8 +20,8 @@ export class Repair {
   @Column({
     type: "text",
     transformer: {
-      to: (actions: CommonRepairActionEnum[]): string => actions.join(","), 
-      from: (value: string): CommonRepairActionEnum[] => value.split(",") as CommonRepairActionEnum[], 
+      to: (actions: CommonRepairActionEnum[]): string => actions?.join(","), 
+      from: (value: string): CommonRepairActionEnum[] => value?.split(",") as CommonRepairActionEnum[], 
     },
   })
   @ApiProperty({ description: "The actions performed during the repair" })

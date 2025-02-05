@@ -18,6 +18,7 @@ import { MotorcycleRepositoryImplem } from '@infrastructure/adapters/motorcycle.
 import { WarrantyRepositoryImplem } from '@infrastructure/adapters/warranty.repository.implem';
 import { GetAllWarrantiesUseCase } from '@application/usecases/warranty/GetAllWarrantiesUseCase';
 import { GetAllBreakdownsTrialUsecase } from '@application/usecases/breakdown/GetAllBreakdownsUsecase';
+import { RepairRepositoryImplem } from '@infrastructure/adapters/repair.repository.implem';
 
 @Injectable()
 export class BreakdownService {
@@ -35,9 +36,11 @@ export class BreakdownService {
   constructor(
     private readonly breakdownRepository: BreakdownRepositoryImplem,
     private readonly motorcycleRepository: MotorcycleRepositoryImplem,
-    private readonly warrantyRepository: WarrantyRepositoryImplem
+    private readonly warrantyRepository: WarrantyRepositoryImplem,
+    private readonly repairRepository: RepairRepositoryImplem
+    
   ) {
-    this.addRepairToBreakdownUsecase = new AddRepairToBreakdownUsecase(breakdownRepository);
+    this.addRepairToBreakdownUsecase = new AddRepairToBreakdownUsecase(breakdownRepository, repairRepository);
     this.checkWarrantyCoverageUsecase = new CheckWarrantyCoverageUsecase(breakdownRepository);
     this.createBreakdownUsecase = new CreateBreakdownUsecase(breakdownRepository, motorcycleRepository, warrantyRepository);
     this.findBreakdownByIdUsecase = new FindBreakdownByIdUsecase(breakdownRepository);
@@ -53,8 +56,8 @@ export class BreakdownService {
         return await this.getAllBreakdownsTrialUsecase.execute();
   }
 
-  public async addRepairToBreakdown(breakdownId: string, repair: RepairEntity): Promise<void | Error> {
-    return await this.addRepairToBreakdownUsecase.execute(breakdownId, repair);
+  public async addRepairToBreakdown(breakdownId: string, repairId: string): Promise<void | Error> {
+    return await this.addRepairToBreakdownUsecase.execute(breakdownId, repairId);
   }
 
   public async checkWarrantyCoverage(breakdownId: string): Promise<boolean | Error> {

@@ -9,12 +9,13 @@ export class UpdateRepairActionsUseCase {
       newActions: CommonRepairAction[]
     ): Promise<void | Error> {
       const repair = await this.repairRepository.findById(repairId);
-  
+
       if (repair instanceof Error) {
         return repair;
       }
   
       repair.updateActions(newActions);
-      await this.repairRepository.save(repair); 
+
+      return await this.repairRepository.updateActions(repairId, newActions ); 
   }
 }

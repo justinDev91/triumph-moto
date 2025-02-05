@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { BreakdownController } from './breakdown.controller';
 import { BreakdownService } from './breakdown.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { Repair } from '@infrastructure/repairs/repair.entity';
 import { BreakdownRepositoryImplem } from '@infrastructure/adapters/breakdown.repository.implem';
 import { MotorcycleModule } from '@infrastructure/motorcycles/motorcycle.module';
 import { WarrantyModule } from '@infrastructure/warranties/warranty.module';
+import { RepairModule } from '@infrastructure/repairs/repair.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { WarrantyModule } from '@infrastructure/warranties/warranty.module';
       Repair
   ]),
     MotorcycleModule,
-    WarrantyModule
+    WarrantyModule,
+    forwardRef(() => RepairModule),
   ],
   controllers: [BreakdownController],
   providers: [

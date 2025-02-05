@@ -11,9 +11,11 @@ import { toDomainMotorcycle } from "@infrastructure/helpers/motorcycle/to-domain
 import { toDomainWarranty } from "@infrastructure/helpers/warranty/to-domain-warranty";
 import { BreakdownNotFoundError } from "@domain/errors/breakdown/BreakdownNotFoundError"; 
 import { WarrantyEntity } from "@domain/entities/warranty/WarrantyEntity";
-import { toDomainRepair } from '@infrastructure/helpers/repair/to-domain-repair';
-import { RepairEntity } from '@domain/entities/repair/RepairEntity';
 import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
+import { RepairNotFoundError } from "@domain/errors/repair/RepairNotFoundError";
+import { RepairAlreadyAssignedError } from "@domain/errors/repair/RepairAlreadyAssignedError";
+import { toDomainRepair } from "@infrastructure/helpers/repair/to-domain-repair";
+import { RepairEntity } from "@domain/entities/repair/RepairEntity";
 
 @Injectable()
 export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
@@ -30,7 +32,35 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
     @InjectRepository(Repair)
     private readonly repairRepository: Repository<Repair>
   ) {}
+
+  async addRepair(breakdownId: string, repairId: string): Promise<void | Error> {
+    console.log("addRepair")
+
+    const [breakdown, repair] = await Promise.all([
+      this.breakdownRepository.findOne({ where: { id: breakdownId }, relations: ["repairs"] }),
+      this.repairRepository.findOne({ where: { id: repairId }, relations: ["breakdown"] }),
+    ]);
   
+    if (!breakdown) return new BreakdownNotFoundError();
+    if (!repair) return new RepairNotFoundError();
+
+    console.log("breakdown", breakdown, "repair", repair)
+
+    if (breakdown.repairs.some(existingRepair => existingRepair.id === repairId)) {
+      return new RepairAlreadyAssignedError();
+    }
+
+    return this.breakdownRepository.manager.transaction(async (transactionalEntityManager) => {
+      repair.breakdown = breakdown;
+      await transactionalEntityManager.save(repair);
+  
+      breakdown.repairs.push(repair);
+      const result = await transactionalEntityManager.save(breakdown);
+      console.log("result", result)
+    });
+  }
+  
+
   async updateDescription(id: string, description: string): Promise<void> {
       await this.breakdownRepository.update(id, {
         description
@@ -56,7 +86,7 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
     try {
       const breakdown = await this.breakdownRepository.findOne({
         where: { id },
-        relations: ["motorcycle", "warranty"],
+        relations: ["motorcycle", "warranty", "repairs"],
       });
       if (!breakdown) return new BreakdownNotFoundError();
       
@@ -76,10 +106,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
         return breakdownEntity;
       }
 
-      // breakdown.repairs.forEach((repair) => {
-      //   const repairEntity = toDomainRepair(repair, breakdownEntity);
-      //   breakdownEntity.addRepair(repairEntity as RepairEntity);
-      // });
+      breakdown.repairs.forEach((repair) => {
+        const repairEntity = toDomainRepair(repair);
+        breakdownEntity.addRepair(repairEntity as RepairEntity);
+      });
 
       return breakdownEntity;
     } catch (error) {
@@ -91,7 +121,7 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
     try {
       const breakdowns = await this.breakdownRepository.find({
         where: { motorcycle: { id: motorcycleId } },
-        relations: ["motorcycle", "warranty"],
+        relations: ["motorcycle", "warranty", "repairs"],
       });
 
       if (!breakdowns) return new BreakdownNotFoundError()
@@ -112,10 +142,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
           throw new Error("Failed to create breakdown entity");
         }
 
-        // breakdown.repairs.forEach((repair) => {
-        //   const repairEntity = toDomainRepair(repair, breakdownEntity);
-        //   breakdownEntity.addRepair(repairEntity as RepairEntity);
-        // });
+        breakdown.repairs.forEach((repair) => {
+          const repairEntity = toDomainRepair(repair);
+          breakdownEntity.addRepair(repairEntity as RepairEntity);
+        });
 
         return breakdownEntity;
       });
@@ -143,7 +173,7 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
   async findAll(): Promise<BreakdownEntity[]> {
     try {
       const breakdowns = await this.breakdownRepository.find({
-        relations: ["motorcycle", "warranty"],
+        relations: ["motorcycle", "warranty", "repairs"],
       });
 
       const breakdownEntities = breakdowns.map((breakdown) => {
@@ -162,10 +192,10 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
           throw new Error("Failed to create breakdown entity");
         }
 
-        // breakdown.repairs.forEach((repair) => {
-        //   const repairEntity = toDomainRepair(repair, breakdownEntity);
-        //   breakdownEntity.addRepair(repairEntity as RepairEntity);
-        // });
+        breakdown.repairs.forEach((repair) => {
+          const repairEntity = toDomainRepair(repair);
+          breakdownEntity.addRepair(repairEntity as RepairEntity);
+        });
 
         return breakdownEntity;
       });
