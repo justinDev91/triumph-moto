@@ -3,11 +3,11 @@ import { ResponseUserDto } from "./response-user.dto";
 
 export const toResponseUserDto = (user: UserEntity): ResponseUserDto => ({
     id: user.id, 
-    firstName: user.firstName.value,
-    lastName: user.lastName.value,
-    email: user.email.value,
+    firstName: user.firstName?.value,
+    lastName: user.lastName?.value,
+    email: user.email?.value,
     isActive: user.isActive,
     administrator: user.administrator,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
-});
+  });

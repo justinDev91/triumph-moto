@@ -9,7 +9,7 @@ export class WarrantyCoverageDetails implements Value<string> {
   }
 
   public static from(value: string): WarrantyCoverageDetails | Error {
-    const regex = /^[a-zA-Z0-9\s]*$/; 
+    const regex = /^[a-zA-Z0-9\s.,]*$/;
     if (!regex.test(value)) {
       return new WarrantyCoverageDetailsError();
     }

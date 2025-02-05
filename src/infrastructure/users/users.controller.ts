@@ -33,7 +33,7 @@ export class UsersController {
   async findAll(): Promise<ResponseUserDto[] | Error> {
     const users = await this.usersService.findAll();;
     if (users instanceof Error) return users;
-
+    console.log("users from controller", users)
     return users.map(toResponseUserDto);
   }
 

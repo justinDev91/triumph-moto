@@ -15,6 +15,10 @@ import { MotorcycleTrialModule } from '@infrastructure/motorcycle-trials/motorcy
 import { BreakdownModule } from '@infrastructure/breakdowns/breakdown.module';
 import { RepairModule } from '@infrastructure/repairs/repair.module';
 import { AppointmentModule } from '@infrastructure/appointment/appointment.module';
+import { User } from '@infrastructure/users/user.entity';
+import { Driver } from '@infrastructure/drivers/driver.entity';
+import { Company } from '@infrastructure/companies/company.entity';
+import { SeederModule } from '@infrastructure/seeders/seeder.module';
 
 @Module({
   imports: [
@@ -28,6 +32,11 @@ import { AppointmentModule } from '@infrastructure/appointment/appointment.modul
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([
+      User, 
+      Driver,
+      Company
+    ]),
     UsersModule,
     DriversModule,
     CompanyModule,
@@ -42,7 +51,8 @@ import { AppointmentModule } from '@infrastructure/appointment/appointment.modul
     MotorcycleTrialModule,
     BreakdownModule,
     RepairModule,
-    AppointmentModule
+    AppointmentModule,
+    SeederModule
   ],
 })
 export class AppModule {}

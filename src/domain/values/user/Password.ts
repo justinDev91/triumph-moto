@@ -12,13 +12,13 @@ export class Password implements Value<string> {
   public static from(value: string): Password | Error {
     if (value.length < 8) return new PasswordTooShortError();
 
-    if (!/(?=\d)/.test(value)) return new PasswordDoesNotIncludeNumberError();
+    // if (!/(?=\d)/.test(value)) return new PasswordDoesNotIncludeNumberError();
 
     if (!/(?=[a-z])/.test(value)) return new PasswordDoesNotIncludeLowercaseLetterError();
 
     if (!/(?=[A-Z])/.test(value)) return new PasswordDoesNotIncludeUppercaseLetterError();
 
-    if (!/(?=[^a-zA-Z0-9])/.test(value)) return new PasswordDoesNotIncludeSymbolError();
+    // if (!/(?=[^a-zA-Z0-9])/.test(value)) return new PasswordDoesNotIncludeSymbolError();
 
     return new Password(value);
   }

@@ -33,6 +33,7 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
 
   async findAll(): Promise<UserEntity[] | Error> {
     const users = await this.usersRepository.find();
+    console.log("users", users)
     return users.map(toDomainUser)  as UserEntity[];
   }
 

@@ -12,7 +12,7 @@ export class SparePartCriticalLevel implements Value<number> {
     if (value < 0) {
       return new SparePartCriticalLevelError();
     }
-    if (value < 10) {
+    if (value < 4) {
       return new SparePartCriticalLevelError();
     }
     return new SparePartCriticalLevel(value);
