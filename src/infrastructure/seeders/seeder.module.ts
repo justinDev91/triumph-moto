@@ -10,6 +10,9 @@ import { Warranty } from '@infrastructure/warranties/warranty.entity';
 import { Motorcycle } from '@infrastructure/motorcycles/motorcycle.entity';
 import { SparePart } from '@infrastructure/spare-parts/spare-part.entity';
 import { SparePartSeeder } from './spare.part.seeder';
+import { Repair } from '@infrastructure/repairs/repair.entity';
+import { Breakdown } from '@infrastructure/breakdowns/breakdown.entity';
+import { RepairSeeder } from './repair.seeder';
 
 @Module({
   imports: [
@@ -19,20 +22,25 @@ import { SparePartSeeder } from './spare.part.seeder';
         Company,
         Warranty,
         Motorcycle,
-        SparePart
+        SparePart,
+        Repair,
+        Breakdown
+
     ]),
   ],
   providers: [
     UserSeeder, 
     DriverSeeder,
     WarrantySeeder,
-    SparePartSeeder
+    SparePartSeeder,
+    RepairSeeder
 ],
   exports: [
     UserSeeder, 
     DriverSeeder,
     WarrantySeeder,
-    SparePartSeeder
+    SparePartSeeder,
+    RepairSeeder
 ],
 })
 export class SeederModule {}
