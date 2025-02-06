@@ -17,6 +17,19 @@ import { OrderItem } from '@infrastructure/order-items/order-item.entity';
 import { Order } from '@infrastructure/orders/order.entity';
 import { OrderItemSeeder } from './order.item.seeder';
 import { OrderSeeder } from './order.seeder';
+import { Location } from '@infrastructure/locations/location.entity';
+import { LocationSeeder } from './location.seeder';
+import { Concession } from '@infrastructure/concessions/concession.entity';
+import { MotorcycleSeeder } from './motorcycle.seeders';
+import { MotorcycleTrial } from '@infrastructure/motorcycle-trials/motorcycle-trial.entity';
+import { MotorcycleTrialSeeder } from './motorcycle.trial.seeder';
+import { Maintenance } from '@infrastructure/maintenances/maintenance.entity';
+import { MaintenanceSeeder } from './maintenance.seeder';
+import { ConcessionSeeder } from './concession.seeder';
+import { CompanySeeder } from './company.seeder';
+import { BreakdownSeeder } from './breakdown.seeder';
+import { Appointment } from '@infrastructure/appointment/appointment.entity';
+import { AppointmentSeeder } from './appointment.seeder';
 
 @Module({
   imports: [
@@ -30,8 +43,12 @@ import { OrderSeeder } from './order.seeder';
         Repair,
         Breakdown,
         OrderItem,
-        Order
-
+        Order,
+        Location,
+        Concession,
+        MotorcycleTrial,
+        Maintenance,
+        Appointment
     ]),
   ],
   providers: [
@@ -41,7 +58,15 @@ import { OrderSeeder } from './order.seeder';
     SparePartSeeder,
     RepairSeeder,
     OrderItemSeeder,
-    OrderSeeder
+    OrderSeeder,
+    LocationSeeder,
+    MotorcycleSeeder,
+    MotorcycleTrialSeeder,
+    MaintenanceSeeder,
+    ConcessionSeeder,
+    CompanySeeder,
+    BreakdownSeeder,
+    AppointmentSeeder
 ],
   exports: [
     UserSeeder, 
@@ -50,7 +75,16 @@ import { OrderSeeder } from './order.seeder';
     SparePartSeeder,
     RepairSeeder,
     OrderItemSeeder,
-    OrderSeeder
+    OrderSeeder,
+    LocationSeeder,
+    MotorcycleSeeder,
+    MotorcycleTrialSeeder,
+    MaintenanceSeeder,
+    ConcessionSeeder,
+    CompanySeeder,
+    BreakdownSeeder,
+    AppointmentSeeder
+
 ],
 })
 export class SeederModule {}

@@ -34,7 +34,6 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
   ) {}
 
   async addRepair(breakdownId: string, repairId: string): Promise<void | Error> {
-    console.log("addRepair")
 
     const [breakdown, repair] = await Promise.all([
       this.breakdownRepository.findOne({ where: { id: breakdownId }, relations: ["repairs"] }),
@@ -43,8 +42,6 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
   
     if (!breakdown) return new BreakdownNotFoundError();
     if (!repair) return new RepairNotFoundError();
-
-    console.log("breakdown", breakdown, "repair", repair)
 
     if (breakdown.repairs.some(existingRepair => existingRepair.id === repairId)) {
       return new RepairAlreadyAssignedError();
@@ -55,8 +52,7 @@ export class BreakdownRepositoryImplem implements BreakdownRepositoryInterface {
       await transactionalEntityManager.save(repair);
   
       breakdown.repairs.push(repair);
-      const result = await transactionalEntityManager.save(breakdown);
-      console.log("result", result)
+       await transactionalEntityManager.save(breakdown);
     });
   }
   

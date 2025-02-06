@@ -21,14 +21,11 @@ export class RepairRepositoryImplem implements RepairRepositoryInterface {
   ) {}
 
   async updateActions(repairId: string, newActions: CommonRepairActionEnum[]): Promise<void | Error> {
-    console.log("updateActions")
 
     const repair = await this.repairRepository.findOne({ where: { id: repairId } });
     if (!repair) return new RepairNotFoundError();
-    console.log("repair", repair)
 
     const updatedActions = [...new Set([...repair.actions, ...newActions])];
-    console.log("updatedActions", updatedActions)
     await this.repairRepository.update(repairId, {
       actions: updatedActions,
     });

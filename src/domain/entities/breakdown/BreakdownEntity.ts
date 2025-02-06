@@ -2,7 +2,6 @@ import { BreakdownDescription } from "@domain/values/breakdown/BreakdownDescript
 import { MotorcycleEntity } from "../motorcycle/MotorcycleEntity";
 import { BreakdownReportedDate } from "@domain/values/breakdown/BreakdownReportedDate";
 import { WarrantyEntity } from "../warranty/WarrantyEntity";
-import { BreakdownInvalidWarrantyError } from "@domain/errors/breakdown/BreakdownInvalidWarrantyError";
 import { RepairEntity } from "../repair/RepairEntity";
 
 export class BreakdownEntity {

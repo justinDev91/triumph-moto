@@ -3,11 +3,10 @@ import { Motorcycle } from "@infrastructure/motorcycles/motorcycle.entity";
 import { toDomainCompany } from "../company/to-domain-company";
 import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
 import { toDomainConcession } from "../concession/to-domain-concession";
-import { ConcessionEntity } from "@domain/entities/concession/ConcessionEntity";
 
 export const toDomainMotorcycle = (motorcycleOrm: Motorcycle): MotorcycleEntity | Error => {
     return MotorcycleEntity.create(
-      motorcycleOrm.id,
+      motorcycleOrm?.id,
       motorcycleOrm.brand,
       motorcycleOrm.model,
       motorcycleOrm.year,

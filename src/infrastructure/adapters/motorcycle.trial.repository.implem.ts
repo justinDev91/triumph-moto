@@ -99,12 +99,12 @@ export class MotorcycleTrialRepositoryImplem implements MotorcycleTrialRepositor
       });
 
       if (!motorcycleTrials.length) return new MotorcycleTrialNotFoundError();
-      
+
       const motorcycleTrialEntities = motorcycleTrials.map((trial) =>
          MotorcycleTrialEntity.create(
           trial.id,
-          toDomainMotorcycle(trial.motorcycle) as MotorcycleEntity,
-          toDomainDriver(trial.driver),
+          trial.motorcycle ? toDomainMotorcycle(trial.motorcycle) as MotorcycleEntity: null,
+          trial.driver ? toDomainDriver(trial.driver) : null,
           trial.startDate,
           trial.endDate,
         ),

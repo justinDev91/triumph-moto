@@ -5,8 +5,8 @@ import { toDomainMotorcycle } from "../motorcycle/to-domain-motorcycle";
 import { toDomainDriver } from "../driver/to-domain-driver";
 
 export const toDomainMotorcycleTrial = (motorcycleTrialOrm: MotorcycleTrial): MotorcycleTrialEntity | Error => {
-  const motorcycle = toDomainMotorcycle(motorcycleTrialOrm.motorcycle);
-  const driver = toDomainDriver(motorcycleTrialOrm.driver);
+  const motorcycle = motorcycleTrialOrm.motorcycle ?  toDomainMotorcycle(motorcycleTrialOrm.motorcycle): null;
+  const driver = motorcycleTrialOrm.driver ? toDomainDriver(motorcycleTrialOrm.driver) : null;
 
   return MotorcycleTrialEntity.create(
     motorcycleTrialOrm.id,

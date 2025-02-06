@@ -1,3 +1,9 @@
+import { AppointmentSeeder } from './appointment.seeder';
+import { BreakdownSeeder } from './breakdown.seeder';
+import { CompanySeeder } from './company.seeder';
+import { ConcessionSeeder } from './concession.seeder';
+import { MaintenanceSeeder } from './maintenance.seeder';
+import { MotorcycleTrialSeeder } from './motorcycle.trial.seeder';
 import { UserSeeder } from './user.seeder';
 import { DriverSeeder } from './driver.seeder';
 import { NestFactory } from '@nestjs/core';
@@ -7,6 +13,8 @@ import { SparePartSeeder } from './spare.part.seeder';
 import { RepairSeeder } from './repair.seeder';
 import { OrderItemSeeder } from './order.item.seeder';
 import { OrderSeeder } from './order.seeder';
+import { LocationSeeder } from './location.seeder';
+import { MotorcycleSeeder } from './motorcycle.seeders';
 
 export const runSeeders = async () => {
   const app = await NestFactory.create(AppModule);
@@ -17,15 +25,27 @@ export const runSeeders = async () => {
   const repairSeeder = app.get(RepairSeeder);
   const orderItemSeeder = app.get(OrderItemSeeder);
   const orderSeeder = app.get(OrderSeeder);
-
+  const locationSeeder = app.get(LocationSeeder);
+  const motorcycleSeeder = app.get(MotorcycleSeeder);
+  const motorcycleTrialSeeder = app.get(MotorcycleTrialSeeder);
+  const maintenanceSeeder = app.get(MaintenanceSeeder);
+  const concessionSeeder = app.get(ConcessionSeeder);
+  const companySeeder = app.get(CompanySeeder);
+  const breakdownSeeder = app.get(BreakdownSeeder);
+  const appointmentSeeder = app.get(AppointmentSeeder);
 
 //   await userSeeder.seedUsers(10); 
 //   await driverSeeder.seedDrivers(10);
 //   await warrantySeeder.seedWarranties(10);
 //   await sparePartSeeder.seedSpareParts(10);
 //   await repairSeeder.seedRepairs(10);
-//   await orderItemSeeder.seedOrderItems(5);
-//   await orderSeeder.seedOrders(3);
-
-
+//   await orderItemSeeder.seedOrderItems(10);
+//   await orderSeeder.seedOrders(10);
+//   await locationSeeder.seedLocations(10);
+//   await motorcycleSeeder.seedMotorcycles(10);
+//   await motorcycleTrialSeeder.seedMotorcycleTrials(10);
+//   await concessionSeeder.seedConcessions(10);
+//   await companySeeder.seedCompanies(10);
+//  await breakdownSeeder.seedBreakdowns(10);
+//  await appointmentSeeder.seedAppointments(10);
 };

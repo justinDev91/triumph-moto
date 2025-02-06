@@ -72,7 +72,6 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
           "motorcycleTrial",
         ],
       });
-      console.log("appointments", appointments)
       
       if (!appointments.length) {
         return new AppointmentNotFoundError("No appointments found");

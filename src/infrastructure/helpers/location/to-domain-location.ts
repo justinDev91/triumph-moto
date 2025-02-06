@@ -11,8 +11,8 @@ export const toDomainLocation = (locationOrm: Location): LocationEntity => {
 
   return LocationEntity.create(
     locationOrm.id,
-    toDomainMotorcycle(locationOrm.motorcycle) as MotorcycleEntity,
-    toDomainUser(locationOrm.user) as UserEntity,
+    locationOrm.motorcycle ? toDomainMotorcycle(locationOrm.motorcycle) as MotorcycleEntity : null,
+    locationOrm.user ? toDomainUser(locationOrm.user) as UserEntity: null,
     locationOrm.startDate,
     locationOrm.endDate,
     locationOrm.status as LocationStatus,
