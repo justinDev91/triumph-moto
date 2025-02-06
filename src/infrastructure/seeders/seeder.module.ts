@@ -13,6 +13,10 @@ import { SparePartSeeder } from './spare.part.seeder';
 import { Repair } from '@infrastructure/repairs/repair.entity';
 import { Breakdown } from '@infrastructure/breakdowns/breakdown.entity';
 import { RepairSeeder } from './repair.seeder';
+import { OrderItem } from '@infrastructure/order-items/order-item.entity';
+import { Order } from '@infrastructure/orders/order.entity';
+import { OrderItemSeeder } from './order.item.seeder';
+import { OrderSeeder } from './order.seeder';
 
 @Module({
   imports: [
@@ -24,7 +28,9 @@ import { RepairSeeder } from './repair.seeder';
         Motorcycle,
         SparePart,
         Repair,
-        Breakdown
+        Breakdown,
+        OrderItem,
+        Order
 
     ]),
   ],
@@ -33,14 +39,18 @@ import { RepairSeeder } from './repair.seeder';
     DriverSeeder,
     WarrantySeeder,
     SparePartSeeder,
-    RepairSeeder
+    RepairSeeder,
+    OrderItemSeeder,
+    OrderSeeder
 ],
   exports: [
     UserSeeder, 
     DriverSeeder,
     WarrantySeeder,
     SparePartSeeder,
-    RepairSeeder
+    RepairSeeder,
+    OrderItemSeeder,
+    OrderSeeder
 ],
 })
 export class SeederModule {}

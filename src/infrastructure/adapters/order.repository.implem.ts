@@ -47,16 +47,63 @@ export class OrderRepositoryImplem implements OrderRepositoryInterface {
     }
     
     async findAll(): Promise<OrderEntity[] | Error> {
-      const orders = await this.orderRepository.find({
-        relations: ["items"], 
-      });
+      try {
+        const orders = await this.orderRepository.find({
+          relations: ["items"],
+        });
+  
+        const mappedOrders = await Promise.all(
+          orders.map(async (order) => {
+            const orderEntity = OrderEntity.create(
+              order.id,
+              order.orderDate,
+              order.estimatedDeliveryDate,
+            );
+  
+            if (orderEntity instanceof Error) return orderEntity;
+  
+            const items = await Promise.all(
+              order.items.map(async (item) => {
+                const orderItem = await this.orderItemRepository.findOne({
+                  where: { id: item.id },
+                  relations: ["order", "sparePart"]
+                });
+  
+                if (!orderItem) return new Error(`Order Item with id ${item.id} not found`);
+  
+                const domainSparePart = item.sparePart ? await toDomainSparePart(orderItem.sparePart): null;
 
-      const mappedOrders = await Promise.all(orders.map(toDomainOrder.bind(this)));
-
-      if(mappedOrders instanceof Error) return mappedOrders
-
-      return mappedOrders.filter(item => !(item instanceof Error)) as OrderEntity[];
+                if (domainSparePart instanceof Error) return domainSparePart;
+  
+                orderEntity.addItem(
+                  orderItem.id,
+                  domainSparePart,
+                  orderItem.quantityOrdered,
+                  orderItem.costPerUnit,
+                );
+  
+                return orderItem;
+              }),
+            );
+  
+            if (items.some((item) => item instanceof Error)) {
+              return items.find((item) => item instanceof Error)!;
+            }
+  
+            return orderEntity;
+          })
+        );
+  
+        if (mappedOrders.some((order) => order instanceof Error)) {
+          return mappedOrders.find((order) => order instanceof Error)!;
+        }
+  
+        return mappedOrders.filter((order) => !(order instanceof Error)) as OrderEntity[];
+      } catch (error) {
+        return new Error("Failed to process orders");
+      }
     }
+  
 
     findByDateRange(startDate: Date, endDate: Date): Promise<OrderEntity[] | Error> {
         throw new Error("Method not implemented.");
