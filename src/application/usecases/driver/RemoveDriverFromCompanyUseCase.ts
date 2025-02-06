@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DriverRepositoryImplem } from '@infrastructure/adapters/driver.repository.implem';
+import { DriverRepositoryImplem } from '@adapters/driver.repository.implem';
 import { DriverNotFoundError } from '@domain/errors/driver/DriverNotFoundError';
 import { DriverRepositoryInterface } from '@application/repositories/DriverRepositoryInterface';
 

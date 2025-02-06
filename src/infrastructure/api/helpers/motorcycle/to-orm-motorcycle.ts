@@ -1,0 +1,18 @@
+import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
+import { Motorcycle } from "@api/motorcycles/motorcycle.entity";
+import { MotorStatusEnum } from "@api/types/MotorStatusEnum";
+import { toOrmCompany } from "../company/to-orm-company";
+
+export const toOrmMotorcycle = (motorcycle: MotorcycleEntity): Motorcycle => {
+    const motorcycleOrm = new Motorcycle();
+    motorcycleOrm.brand = motorcycle.brand.value
+    motorcycleOrm.model = motorcycle.model.value
+    motorcycleOrm.year = motorcycle.year.value
+    motorcycleOrm.mileage = motorcycle.mileage
+    motorcycleOrm.status = motorcycle.status as MotorStatusEnum;
+    motorcycleOrm.purchaseDate = motorcycle.purchaseDate;
+    motorcycleOrm.lastServiceDate = motorcycle.lastServiceDate;
+    motorcycleOrm.nextServiceMileage = motorcycle.nextServiceMileage;
+    motorcycleOrm.company =  motorcycle.company ? toOrmCompany(motorcycle.company) : null
+    return motorcycleOrm;
+  };

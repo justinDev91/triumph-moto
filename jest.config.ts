@@ -21,7 +21,7 @@ const config: Config = {
   moduleNameMapper: {
     "^@domain/(.*)$": "<rootDir>/src/domain/$1",
     "^@application/(.*)$": "<rootDir>/src/application/$1",
-    "^@infrastructure/(.*)$": "<rootDir>/src/infrastructure/$1",
+    "^@api/(.*)$": "<rootDir>/src/infrastructure/$1",
   },
 
   transform: {
