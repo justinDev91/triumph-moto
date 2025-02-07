@@ -26,4 +26,9 @@ export class UsersService {
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  searchUsers(query: string): Observable<User[]> {
+    console.log("query search service...")
+    return this.http.get<User[]>(`${this.apiUrl}/search?query=${query}`);
+  }
 }

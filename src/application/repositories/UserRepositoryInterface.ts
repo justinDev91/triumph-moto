@@ -6,4 +6,5 @@ export interface UserRepositoryInterface {
   findOne(id: string): Promise<UserEntity | Error>;
   remove(id: string): Promise<void>;
   update(user: UserEntity): Promise<void>;
+  findByFirstOrLastName(query: string): Promise<UserEntity[]>;
 }

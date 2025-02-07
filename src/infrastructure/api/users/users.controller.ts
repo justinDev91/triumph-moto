@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query, 
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,21 +29,31 @@ export class UsersController {
     return toResponseUserDto(user);
   }
 
+  @Get('search')
+  @ApiResponse({ status: 200, description: 'Search users by first or last name', type: [UserEntity] })
+  async searchUsers(@Query('query') query: string): Promise<ResponseUserDto[] | Error> {
+    console.log("searchUsers controller...", query);
+
+    const users = await this.usersService.searchUsersByFirstOrLastName(query);
+    if (users instanceof Error) return users;
+    return users.map(toResponseUserDto);
+  }
+  
   @Get()
   @ApiResponse({ status: 200, description: 'Get all users', type: [UserEntity] })
   async findAll(): Promise<ResponseUserDto[] | Error> {
-    const users = await this.usersService.findAll();;
+    const users = await this.usersService.findAll();
     if (users instanceof Error) return users;
-    console.log("users from controller", users)
+    console.log('users from controller', users);
     return users.map(toResponseUserDto);
   }
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Get user by ID', type: UserEntity })
   async findOne(@Param('id') id: string): Promise<ResponseUserDto | Error> {
-      const user = await this.usersService.findOne(id);
-      if (user instanceof Error) return user;
-      return toResponseUserDto(user);
+    const user = await this.usersService.findOne(id);
+    if (user instanceof Error) return user;
+    return toResponseUserDto(user);
   }
 
   @Delete(':id')
@@ -66,7 +77,7 @@ export class UsersController {
   @Put(':id/activate')
   @ApiResponse({ status: 200, description: 'Activate the user' })
   async activateUser(@Param('id') id: string): Promise<ResponseUserDto | Error> {
-    const user = await this.usersService.activateUser(id);;
+    const user = await this.usersService.activateUser(id);
     if (user instanceof Error) return user;
     return toResponseUserDto(user);
   }
@@ -102,4 +113,6 @@ export class UsersController {
   ): Promise<void | Error> {
     return this.usersService.removeDriverFromUser(userId, driverId);
   }
+
+
 }

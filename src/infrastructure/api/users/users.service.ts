@@ -15,6 +15,7 @@ import { UserDeactivateUseCase } from '@application/usecases/user/UserDeactivate
 import { AddDriverToUserUsecase } from '@application/usecases/user/AddDriverToUserUsecase';
 import { GetDriversForUserUsecase } from '@application/usecases/user/GetDriversForUserUsecase';
 import { RemoveDriverFromUserUsecase } from '@application/usecases/user/RemoveDriverFromUserUsecase';
+import { SearchUserByFirstOrLastNameUseCase } from '@application/usecases/user/SearchUserByFirstOrLastNameUseCase';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,7 @@ export class UsersService {
   private readonly addDriverToUserUsecase: AddDriverToUserUsecase;
   private readonly getDriversForUserUsecase: GetDriversForUserUsecase;
   private readonly removeDriverFromUserUsecase: RemoveDriverFromUserUsecase;
+  private readonly searchUserByFirstOrLastNameUseCase: SearchUserByFirstOrLastNameUseCase;
 
   constructor(
     private readonly userRepository: UserRepositoryImplem,
@@ -45,6 +47,7 @@ export class UsersService {
     this.addDriverToUserUsecase = new AddDriverToUserUsecase(userRepository, driverRepository);
     this.getDriversForUserUsecase = new GetDriversForUserUsecase(userRepository, driverRepository);
     this.removeDriverFromUserUsecase = new RemoveDriverFromUserUsecase(userRepository, driverRepository);
+    this.searchUserByFirstOrLastNameUseCase = new SearchUserByFirstOrLastNameUseCase(userRepository); 
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity | Error> {
@@ -101,5 +104,9 @@ export class UsersService {
 
   async removeDriverFromUser(userId: string, driverId: string): Promise<void | Error> {
     return this.removeDriverFromUserUsecase.execute(userId, driverId);
+  }
+
+  async searchUsersByFirstOrLastName(query: string): Promise<UserEntity[] | Error> {
+    return this.searchUserByFirstOrLastNameUseCase.execute(query);
   }
 }

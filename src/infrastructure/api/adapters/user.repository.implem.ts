@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepositoryInterface } from '@application/repositories/UserRepositoryInterface';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from '@api/users/user.entity';
 import { UserEntity } from '@domain/entities/user/UserEntity';
 import { UserNotFoundError } from '@domain/errors/user/UserNotFoundError';
@@ -14,6 +14,18 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>, 
   ) {}
+
+  async findByFirstOrLastName(query: string): Promise<UserEntity[]> {
+
+    const users = await this.usersRepository.find({
+      where: [
+        { firstName: Like(`%${query}%`) },
+        { lastName: Like(`%${query}%`) },
+      ],
+    });
+
+    return users.map(toDomainUser) as UserEntity[];
+  }
 
   async update(user: UserEntity): Promise<void> {
     const ormUser = toOrmUser(user);

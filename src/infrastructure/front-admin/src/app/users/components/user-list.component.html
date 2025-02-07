@@ -9,16 +9,27 @@
     <input
       type="text"
       placeholder="Search users..."
+      #filter
       class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
     />
+    <!-- Select dropdown for user status filter -->
     <select
+      #filterStatus
       class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
     >
-      <option value="">Filter</option>
+      <option value="">Filter by Status</option>
       <option value="active">Active</option>
       <option value="inactive">Inactive</option>
     </select>
   </div>
+
+  <!-- Search button that triggers searchUsers method with filter values -->
+  <button
+    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+    (click)="searchUsers(filter.value)"
+  >
+    Search
+  </button>
 
   <button
     class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
