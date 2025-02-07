@@ -1,0 +1,39 @@
+<div class="warranty-detail p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-8">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Warranty Detail</h2>
+
+  <!-- Loading state -->
+  <div *ngIf="!warranty" class="text-center text-gray-500">
+    <p>Loading warranty data...</p>
+  </div>
+
+  <!-- Display warranty data when available -->
+  <div *ngIf="warranty">
+    <div class="warranty-info space-y-4 mb-6">
+      <p class="text-lg text-gray-700"><strong>Motorcycle:</strong> {{ warranty.motorcycleModel }}</p>
+      <p class="text-lg text-gray-700"><strong>Start Date:</strong> {{ warranty.startDate | date }}</p>
+      <p class="text-lg text-gray-700"><strong>End Date:</strong> {{ warranty.endDate | date }}</p>
+
+      <p class="text-lg text-gray-700"><strong>Status:</strong>
+        <span [ngClass]="{
+          'text-green-500': new Date(warranty.endDate) > new Date(),
+          'text-red-500': new Date(warranty.endDate) <= new Date()
+        }">
+          {{ new Date(warranty.endDate) > new Date() ? 'Active' : 'Inactive' }}
+        </span>
+      </p>
+
+      <p class="text-lg text-gray-700"><strong>Created At:</strong> {{ warranty.createdAt | date:'short' }}</p>
+      <p class="text-lg text-gray-700"><strong>Updated At:</strong> {{ warranty.updatedAt | date:'short' }}</p>
+    </div>
+
+    <!-- Associated Motorcycle -->
+    <div class="mt-6">
+      <h3 class="text-xl font-medium text-gray-800 mb-4">Motorcycle Details</h3>
+      <p class="text-lg text-gray-700"><strong>Model:</strong> {{ warranty.motorcycleModel }}</p>
+      <p class="text-lg text-gray-700"><strong>VIN:</strong> {{ warranty.motorcycleVin }}</p>
+      <p class="text-lg text-gray-700"><strong>Year:</strong> {{ warranty.motorcycleYear }}</p>
+    </div>
+  </div>
+</div>
+
+<router-outlet />

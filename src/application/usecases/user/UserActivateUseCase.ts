@@ -13,7 +13,7 @@ export class UserActivateUseCase {
 
     user.activate();
 
-    await this.userRepository.update(user);
+    await this.userRepository.toggleStatus(userId, user);
 
     return user;
   }

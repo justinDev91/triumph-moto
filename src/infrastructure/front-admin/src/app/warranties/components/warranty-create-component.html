@@ -1,0 +1,101 @@
+<div class="max-w-lg mx-auto mt-10">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Create New Warranty</h2>
+
+  <form (ngSubmit)="createWarranty()" #createWarrantyForm="ngForm">
+    <!-- Motorcycle Model -->
+    <div class="mb-4">
+      <label for="motorcycleModel" class="block text-sm font-medium text-gray-700">Motorcycle Model</label>
+      <input
+        type="text"
+        id="motorcycleModel"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="warranty.motorcycleModel"
+        name="motorcycleModel"
+        required
+        #motorcycleModel="ngModel"
+      />
+      <div *ngIf="motorcycleModel.invalid && motorcycleModel.touched" class="text-red-500 text-xs mt-1">
+        Motorcycle Model is required
+      </div>
+    </div>
+
+    <!-- Motorcycle VIN -->
+    <div class="mb-4">
+      <label for="motorcycleVin" class="block text-sm font-medium text-gray-700">Motorcycle VIN</label>
+      <input
+        type="text"
+        id="motorcycleVin"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="warranty.motorcycleVin"
+        name="motorcycleVin"
+        required
+        #motorcycleVin="ngModel"
+      />
+      <div *ngIf="motorcycleVin.invalid && motorcycleVin.touched" class="text-red-500 text-xs mt-1">
+        Motorcycle VIN is required
+      </div>
+    </div>
+
+    <!-- Motorcycle Year -->
+    <div class="mb-4">
+      <label for="motorcycleYear" class="block text-sm font-medium text-gray-700">Motorcycle Year</label>
+      <input
+        type="number"
+        id="motorcycleYear"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="warranty.motorcycleYear"
+        name="motorcycleYear"
+        required
+        #motorcycleYear="ngModel"
+      />
+      <div *ngIf="motorcycleYear.invalid && motorcycleYear.touched" class="text-red-500 text-xs mt-1">
+        Motorcycle Year is required
+      </div>
+    </div>
+
+    <!-- Start Date -->
+    <div class="mb-4">
+      <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+      <input
+        type="date"
+        id="startDate"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="warranty.startDate"
+        name="startDate"
+        required
+        #startDate="ngModel"
+      />
+      <div *ngIf="startDate.invalid && startDate.touched" class="text-red-500 text-xs mt-1">
+        Start Date is required
+      </div>
+    </div>
+
+    <!-- End Date -->
+    <div class="mb-4">
+      <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
+      <input
+        type="date"
+        id="endDate"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="warranty.endDate"
+        name="endDate"
+        required
+        #endDate="ngModel"
+      />
+      <div *ngIf="endDate.invalid && endDate.touched" class="text-red-500 text-xs mt-1">
+        End Date is required
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+      [disabled]="createWarrantyForm.invalid"
+    >
+      Create Warranty
+    </button>
+  </form>
+</div>
+
+<router-outlet />
