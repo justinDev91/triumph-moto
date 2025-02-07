@@ -1,67 +1,47 @@
-<div class="user-detail">
-  <h2>User Detail</h2>
+<div class="user-detail p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-8">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">User Detail</h2>
 
   <!-- Loading state -->
-  <div *ngIf="!user">
+  <div *ngIf="!user" class="text-center text-gray-500">
     <p>Loading user data...</p>
   </div>
 
   <!-- Display user data when available -->
   <div *ngIf="user">
-    <div class="user-info">
-      <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Role:</strong> {{ user.administrator ? 'Administrator' : 'Regular User' }}</p>
-      <p><strong>Status:</strong>
-        <!-- <span [ngClass]="{'active': user.isActive, 'inactive': !user.isActive}">
-          {{ user.isActive ? 'Active' : 'Inactive' }}
-        </span> -->
-      </p>
-      <p><strong>Created At:</strong> {{ user.createdAt | date }}</p>
-      <p><strong>Updated At:</strong> {{ user.updatedAt | date }}</p>
-    </div>
+    <div class="user-info space-y-4 mb-6">
+      <p class="text-lg text-gray-700"><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+      <p class="text-lg text-gray-700"><strong>Email:</strong> {{ user.email }}</p>
+      <p class="text-lg text-gray-700"><strong>Role:</strong> {{ user.administrator ? 'Administrator' : 'Regular User' }}</p>
 
-    <!-- Actions: Activate/Deactivate User -->
-    <div class="user-actions">
-      <!-- <button (click)="activateUser()" [disabled]="user.isActive">Activate User</button>
-      <button (click)="deactivateUser()" [disabled]="!user.isActive">Deactivate User</button> -->
+      <p class="text-lg text-gray-700"><strong>Status:</strong>
+        <span [ngClass]="{
+          'text-green-500': user.isActive,
+          'text-red-500': !user.isActive
+        }">
+          {{ user.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </p>
+
+      <p class="text-lg text-gray-700"><strong>Created At:</strong> {{ user.createdAt | date:'short' }}</p>
+      <p class="text-lg text-gray-700"><strong>Updated At:</strong> {{ user.updatedAt | date:'short' }}</p>
     </div>
 
     <!-- Assigned Drivers -->
-    <div class="user-drivers" *ngIf="user.drivers?.length">
-      <h3>Assigned Drivers</h3>
-      <ul>
-        <li *ngFor="let driver of user.drivers">
-          {{ driver.name }} ({{ driver.licenseNumber }})
+    <div *ngIf="user.drivers?.length" class="user-drivers mt-6">
+      <h3 class="text-xl font-medium text-gray-800 mb-4">Assigned Drivers</h3>
+      <ul class="space-y-2">
+        <li *ngFor="let driver of user.drivers" class="flex items-center text-gray-700">
+          <span class="mr-2 font-semibold">{{ driver.name }}</span>
+          <span class="text-sm text-gray-500">({{ driver.license }})</span>
         </li>
       </ul>
     </div>
-    <div *ngIf="!user.drivers?.length">
+
+    <div *ngIf="!user.drivers?.length" class="mt-4 text-gray-500">
       <p>No drivers assigned.</p>
     </div>
 
-    <div class="user-companies" *ngIf="user.companies?.length">
-      <h3>Associated Companies</h3>
-      <ul>
-        <li *ngFor="let company of user.companies">
-          {{ company.name }} ({{ company.type }})
-        </li>
-      </ul>
-    </div>
-    <div *ngIf="!user.companies?.length">
-      <p>No companies associated with this user.</p>
-    </div>
-
-    <div class="user-concessions" *ngIf="user.concessions?.length">
-      <h3>Concessions</h3>
-      <ul>
-        <li *ngFor="let concession of user.concessions">
-          {{ concession.name }} ({{ concession.status }})
-        </li>
-      </ul>
-    </div>
-    <div *ngIf="!user.concessions?.length">
-      <p>No concessions found for this user.</p>
-    </div>
   </div>
 </div>
+
+<router-outlet />

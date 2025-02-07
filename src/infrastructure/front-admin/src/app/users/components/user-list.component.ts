@@ -2,13 +2,18 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { UsersService } from '../services/users.service';
 import { User } from '../../shared/models/user.model';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    FormsModule,
+    RouterModule
+  ],
   templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {

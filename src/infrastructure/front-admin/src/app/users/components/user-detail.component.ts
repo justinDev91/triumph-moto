@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { UsersService } from '../services/users.service';
 import { User } from '../../shared/models/user.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-detail',
+  standalone: true,
   imports: [
       CommonModule,
+      RouterOutlet
     ],
   templateUrl: './user-detail.component.html',
 })
