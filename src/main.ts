@@ -6,6 +6,15 @@ import { runSeeders } from '@infrastructure/api/seeders';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: [
+      process.env.CLIENT_URL || 'http://localhost:4200',
+      process.env.API_URL || 'http://localhost:3000',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Thiumph-motocycle')
     .setDescription('Thiumph clean archi api')
