@@ -7,4 +7,6 @@ export interface UserRepositoryInterface {
   remove(id: string): Promise<void>;
   update(user: UserEntity): Promise<void>;
   findByFirstOrLastName(query: string): Promise<UserEntity[]>;
+  findByStatus(isActive: boolean): Promise<UserEntity[]>;
+  toggleStatus(id: string, user: UserEntity): Promise<void>
 }

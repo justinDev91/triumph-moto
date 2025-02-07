@@ -10,6 +10,7 @@ import {
   CreateDateColumn, 
   UpdateDateColumn 
 } from 'typeorm';
+import { Appointment } from '../appointment/appointment.entity';
 
 @Entity()
 export class User {
@@ -49,15 +50,18 @@ export class User {
   @Column({ default: true, nullable: true })
   isActive: boolean;
 
-  @OneToMany(() => Company, company => company.user)
+  @OneToMany(() => Company, company => company.user, {cascade: true })
   @ApiProperty({ description: 'List of companies associated with the user' })
   companies: Company[];
 
-  @OneToMany(() => Concession, concession => concession.user)
+  @OneToMany(() => Concession, concession => concession.user, {cascade: true })
   @ApiProperty({ description: 'List of concessions associated with the user' })
   concessions: Concession[];
 
-  @OneToMany(() => Driver, driver => driver.user)
+  @OneToMany(() => Driver, driver => driver.user, {cascade: true })
   @ApiProperty({ description: 'List of drivers associated with the user' })
   drivers: Driver[];
+
+  @OneToMany(() => Appointment, appointment => appointment.user, { cascade: true , nullable: true })
+  appointments?: Appointment[];
 }

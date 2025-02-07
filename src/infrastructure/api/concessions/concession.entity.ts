@@ -14,11 +14,11 @@ export class Concession {
   @ApiProperty({ description: 'The user associated with the concession' })
   user: User;
 
-  @OneToMany(() => Motorcycle, motorcycle => motorcycle.concession, { nullable: true })
+  @OneToMany(() => Motorcycle, motorcycle => motorcycle.concession, { nullable: true, cascade: true })
   @ApiProperty({ description: 'The list of motorcycles associated with the concession' })
   motorcycles: Motorcycle[];
 
-  @ManyToOne(() => Company, company => company.concessions, { nullable: true }) 
+  @ManyToOne(() => Company, company => company.concessions, { nullable: true, cascade: true }) 
   @ApiProperty({ 
     description: 'The company associated with the concession', 
     type: Company, 

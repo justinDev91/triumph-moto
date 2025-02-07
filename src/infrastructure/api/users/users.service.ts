@@ -16,6 +16,8 @@ import { AddDriverToUserUsecase } from '@application/usecases/user/AddDriverToUs
 import { GetDriversForUserUsecase } from '@application/usecases/user/GetDriversForUserUsecase';
 import { RemoveDriverFromUserUsecase } from '@application/usecases/user/RemoveDriverFromUserUsecase';
 import { SearchUserByFirstOrLastNameUseCase } from '@application/usecases/user/SearchUserByFirstOrLastNameUseCase';
+import { FilterByActiveOrInactiveUserUseCase } from '@application/usecases/user/FilterByActiveOrInactiveUserUsecase';
+import { ToggleUserStatusUseCase } from '@application/usecases/user/ToggleUserStatusUsecase';
 
 @Injectable()
 export class UsersService {
@@ -31,6 +33,8 @@ export class UsersService {
   private readonly getDriversForUserUsecase: GetDriversForUserUsecase;
   private readonly removeDriverFromUserUsecase: RemoveDriverFromUserUsecase;
   private readonly searchUserByFirstOrLastNameUseCase: SearchUserByFirstOrLastNameUseCase;
+  private readonly filterByActiveOrInactiveUserUseCase: FilterByActiveOrInactiveUserUseCase;
+  private readonly toggleUserStatusUseCase: ToggleUserStatusUseCase;
 
   constructor(
     private readonly userRepository: UserRepositoryImplem,
@@ -47,7 +51,9 @@ export class UsersService {
     this.addDriverToUserUsecase = new AddDriverToUserUsecase(userRepository, driverRepository);
     this.getDriversForUserUsecase = new GetDriversForUserUsecase(userRepository, driverRepository);
     this.removeDriverFromUserUsecase = new RemoveDriverFromUserUsecase(userRepository, driverRepository);
-    this.searchUserByFirstOrLastNameUseCase = new SearchUserByFirstOrLastNameUseCase(userRepository); 
+    this.searchUserByFirstOrLastNameUseCase = new SearchUserByFirstOrLastNameUseCase(userRepository);
+    this.filterByActiveOrInactiveUserUseCase = new FilterByActiveOrInactiveUserUseCase(userRepository);
+    this.toggleUserStatusUseCase = new ToggleUserStatusUseCase(userRepository);
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity | Error> {
@@ -108,5 +114,13 @@ export class UsersService {
 
   async searchUsersByFirstOrLastName(query: string): Promise<UserEntity[] | Error> {
     return this.searchUserByFirstOrLastNameUseCase.execute(query);
+  }
+
+  async filterUsersByStatus(status: 'active' | 'inactive'): Promise<UserEntity[] | Error> {
+    return this.filterByActiveOrInactiveUserUseCase.execute(status);  
+  }
+
+  async toggleUserStatus(userId: string): Promise<void> {
+    this.toggleUserStatusUseCase.execute(userId);
   }
 }

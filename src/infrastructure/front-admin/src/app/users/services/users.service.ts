@@ -28,7 +28,15 @@ export class UsersService {
   }
 
   searchUsers(query: string): Observable<User[]> {
-    console.log("query search service...")
     return this.http.get<User[]>(`${this.apiUrl}/search?query=${query}`);
   }
+
+  filterUsersByStatus(status: 'active' | 'inactive'): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/filter-by-status?status=${status}`);
+  }
+
+  toggleUserStatus(id: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/${id}/toggle-status`, {});
+  }
+
 }

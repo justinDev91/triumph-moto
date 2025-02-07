@@ -63,6 +63,10 @@ export class UserEntity {
     this.isActive = false;
   }
 
+  toggleStatus() {
+    this.isActive = !this.isActive;
+  }
+  
   public isAdmin(): boolean {
     return this.administrator;
   }

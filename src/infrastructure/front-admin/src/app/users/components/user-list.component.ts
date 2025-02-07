@@ -3,11 +3,12 @@ import { UsersService } from '../services/users.service';
 import { User } from '../../shared/models/user.model';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, FormsModule],
   templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {
@@ -17,6 +18,7 @@ export class UserListComponent implements OnInit {
   usersPerPage: number = 11;
   totalUsers: number = 0;
   totalPages: number = 1;
+  filterStatus: string = '';
 
   constructor(
     private readonly usersService: UsersService,
@@ -29,6 +31,10 @@ export class UserListComponent implements OnInit {
 
   fetchUsers(): void {
     this.usersService.getAllUsers().subscribe((users: User[]) => {
+      if (this.filterStatus) {
+        users = this.filterUsersByStatus(users, this.filterStatus);
+      }
+
       this.totalUsers = users.length;
       this.totalPages = Math.ceil(this.totalUsers / this.usersPerPage);
       const startIndex = (this.currentPage - 1) * this.usersPerPage;
@@ -54,7 +60,23 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  toggleUserStatus(user: User): void {}
+  filterUsersByStatus(users: User[], status: string): User[] {
+    return users.filter(user => {
+      if (status === 'active') {
+        return user.isActive;
+      } else if (status === 'inactive') {
+        return !user.isActive;
+      }
+      return true;
+    });
+  }
+
+  toggleUserStatus(user: User): void {
+    this.usersService.toggleUserStatus(user.id).subscribe(() => {
+      user.isActive = !user.isActive;
+      this.cdRef.detectChanges();
+    });
+  }
 
   deleteUser(user: User): void {
     this.usersService.deleteUser(user.id).subscribe(() => {
@@ -78,5 +100,10 @@ export class UserListComponent implements OnInit {
       this.currentPage--;
       this.fetchUsers();
     }
+  }
+
+  onChange(): void {
+    console.log('onChange', this.filterStatus);
+    this.fetchUsers();
   }
 }

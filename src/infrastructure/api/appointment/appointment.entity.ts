@@ -15,7 +15,7 @@ export class Appointment {
   @ApiProperty({ description: "Unique identifier for the appointment" })
   id: string;
 
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User, { eager: true, })
   @JoinColumn({ name: "userId" })
   @ApiProperty({ description: "The user associated with the appointment" })
   user: User;
@@ -45,27 +45,27 @@ export class Appointment {
   @ApiProperty({ description: "The reason for the appointment" })
   reason: AppointmentReasonEnum;
 
-  @ManyToOne(() => Company)
+  @ManyToOne(() => Company, {cascade: true})
   @JoinColumn({ name: "companyId" })
   @ApiProperty({ description: "The company associated with the appointment" })
   company: Company;
 
-  @ManyToOne(() => Location, { nullable: true })
+  @ManyToOne(() => Location, { nullable: true, cascade: true})
   @JoinColumn({ name: "locationId" })
   @ApiProperty({ description: "The location associated with the appointment" })
   location: Location | null;
 
-  @ManyToOne(() => Maintenance, {nullable: true })
+  @ManyToOne(() => Maintenance, {nullable: true, cascade: true})
   @JoinColumn({ name: "maintenanceId" })
   @ApiProperty({ description: "The maintenance associated with the appointment" })
   maintenance: Maintenance | null;
 
-  @ManyToOne(() => Repair, { nullable: true })
+  @ManyToOne(() => Repair, { nullable: true, cascade: true })
   @JoinColumn({ name: "repairId" })
   @ApiProperty({ description: "The repair associated with the appointment" })
   repair: Repair | null;
 
-  @ManyToOne(() => MotorcycleTrial, {nullable: true })
+  @ManyToOne(() => MotorcycleTrial, {nullable: true, cascade: true })
   @JoinColumn({ name: "motorcycleTrialId" })
   @ApiProperty({ description: "The motorcycle trial associated with the appointment" })
   motorcycleTrial: MotorcycleTrial | null;

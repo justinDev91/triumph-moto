@@ -14,6 +14,22 @@ export class UserRepositoryImplem implements UserRepositoryInterface {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>, 
   ) {}
+  
+  async toggleStatus(id: string, user: UserEntity): Promise<void> {
+      await this.usersRepository.update(id, {
+          isActive: user.isActive
+        });
+  }
+  
+  async findByStatus(isActive: boolean): Promise<UserEntity[]> {
+    const users = await this.usersRepository.find({
+      where: {
+        isActive: isActive,
+      },
+    });
+
+    return users.map(toDomainUser) as UserEntity[];
+  }
 
   async findByFirstOrLastName(query: string): Promise<UserEntity[]> {
 

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query, 
@@ -32,11 +33,14 @@ export class UsersController {
   @Get('search')
   @ApiResponse({ status: 200, description: 'Search users by first or last name', type: [UserEntity] })
   async searchUsers(@Query('query') query: string): Promise<ResponseUserDto[] | Error> {
-    console.log("searchUsers controller...", query);
-
     const users = await this.usersService.searchUsersByFirstOrLastName(query);
     if (users instanceof Error) return users;
     return users.map(toResponseUserDto);
+  }
+
+  @Get('filter-by-status')
+  async filterByStatus(@Query('status') status: 'active' | 'inactive'): Promise<UserEntity[] | Error> {
+    return await this.usersService.filterUsersByStatus(status);    
   }
   
   @Get()
@@ -44,7 +48,6 @@ export class UsersController {
   async findAll(): Promise<ResponseUserDto[] | Error> {
     const users = await this.usersService.findAll();
     if (users instanceof Error) return users;
-    console.log('users from controller', users);
     return users.map(toResponseUserDto);
   }
 
@@ -114,5 +117,9 @@ export class UsersController {
     return this.usersService.removeDriverFromUser(userId, driverId);
   }
 
+  @Patch(':id/toggle-status')
+  async toggleUserStatus(@Param('id') userId: string): Promise<void> {
+    this.usersService.toggleUserStatus(userId);
+  }
 
 }

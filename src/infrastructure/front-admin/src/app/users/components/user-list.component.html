@@ -11,10 +11,11 @@
       placeholder="Search users..."
       #filter
       class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      (input)="searchUsers(filter.value)"
     />
-    <!-- Select dropdown for user status filter -->
     <select
-      #filterStatus
+      [(ngModel)]="filterStatus"
+      (change)="onChange()"
       class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
     >
       <option value="">Filter by Status</option>
@@ -22,14 +23,6 @@
       <option value="inactive">Inactive</option>
     </select>
   </div>
-
-  <!-- Search button that triggers searchUsers method with filter values -->
-  <button
-    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
-    (click)="searchUsers(filter.value)"
-  >
-    Search
-  </button>
 
   <button
     class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
@@ -68,13 +61,18 @@
         <td class="px-3 py-2">{{ user.administrator ? 'Yes' : 'No' }}</td>
         <td class="px-3 py-2 space-x-2">
           <button
-            class="text-yellow-500 hover:text-yellow-700 text-sm"
+            class="w-24 p-2 rounded-lg text-white text-sm transition duration-300 text-center"
+            [ngClass]="{
+              'bg-yellow-500 hover:bg-yellow-600': user.isActive,
+              'bg-green-500 hover:bg-green-700': !user.isActive
+            }"
             (click)="toggleUserStatus(user)"
           >
             {{ user.isActive ? 'Deactivate' : 'Activate' }}
           </button>
+
           <button
-            class="text-red-500 hover:text-red-700 text-sm"
+            class="w-24 p-2 text-white bg-red-600 hover:bg-red-800 rounded-lg text-sm transition duration-300 text-center"
             (click)="deleteUser(user)"
           >
             Delete
