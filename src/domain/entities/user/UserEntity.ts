@@ -10,14 +10,14 @@ export class UserEntity {
     public id: string,
     public firstName: Username,
     public lastName: Username,
-    public email: Email,  
+    public email: Email,
     public password: Password,
     public readonly createdAt: Date,
-    public readonly administrator: boolean, 
+    public readonly administrator: boolean,
     public updatedAt: Date,
-    public isActive: boolean = true, 
+    public isActive: boolean = true
   ) {}
-  
+
   public static create(
     id: string,
     firstName: string,
@@ -27,20 +27,18 @@ export class UserEntity {
     createdAt: Date,
     administrator: boolean,
     updatedAt: Date,
-    isActive: boolean = true,  
   ): UserEntity | Error {
+    const firstNameValue = Username.from(firstName);
+    if (firstNameValue instanceof Error) return firstNameValue;
 
-    const firstNameValue = Username.from(firstName);  
-    if (firstNameValue instanceof Error) return firstNameValue; 
+    const lastNameValue = Username.from(lastName);
+    if (lastNameValue instanceof Error) return lastNameValue;
 
-    const lastNameValue = Username.from(lastName); 
-    if (lastNameValue instanceof Error) return lastNameValue; 
-
-    const emailValue = Email.from(email);  
+    const emailValue = Email.from(email);
     if (emailValue instanceof Error) return emailValue;
 
-    const passwordValue = Password.from(password); 
-    if (passwordValue instanceof Error) return passwordValue; 
+    const passwordValue = Password.from(password);
+    if (passwordValue instanceof Error) return passwordValue;
 
     return new UserEntity(
       id,
@@ -49,9 +47,9 @@ export class UserEntity {
       emailValue,
       passwordValue,
       createdAt,
-      administrator,  
+      administrator,
       updatedAt,
-      isActive, 
+      false
     );
   }
 
@@ -66,7 +64,7 @@ export class UserEntity {
   toggleStatus() {
     this.isActive = !this.isActive;
   }
-  
+
   public isAdmin(): boolean {
     return this.administrator;
   }
