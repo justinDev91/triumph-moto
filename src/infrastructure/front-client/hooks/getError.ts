@@ -1,4 +1,4 @@
-export default function useError(name: string): string {
+export default function getError(name: string): string {
   let errorMessage = 'Une erreur est survenue.';
 
   switch (name) {

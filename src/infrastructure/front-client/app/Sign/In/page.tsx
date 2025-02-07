@@ -1,5 +1,6 @@
 "use client";
-import { FormEvent, Fragment, useState } from "react";
+import { FormEvent, Fragment, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Field,
   Fieldset,
@@ -10,14 +11,39 @@ import {
 } from "@headlessui/react";
 import MessageModal from "@/components/MessageModal";
 import login from "@/app/actions/login";
+import Link from "next/link";
+import createSessionUser from "@/hooks/user/createSessionUser";
+import getSessionUser from "@/hooks/user/getSessionUser";
 
 export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkSession() {
+      const getSessionResponse = await getSessionUser();
+      if (getSessionResponse.ok && getSessionResponse.email) {
+        router.push("/Profil");
+      }
+    }
+    checkSession();
+  }, [router]);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const actionResponse = await login(formData);
-    console.log(actionResponse);
+    if ("email" in actionResponse) {
+      const createSessionResponse = await createSessionUser(actionResponse);
+      if (createSessionResponse.ok) {
+        console.log("Session created successfully");
+        router.push("/Profil");
+      } else {
+        setError("Oui");
+      }
+    } else {
+      setError(actionResponse.name);
+    }
   }
 
   return (
@@ -47,10 +73,15 @@ export default function SignIn() {
             type="submit"
             className="mt-4 bg-blue-500 text-white p-2 rounded"
           >
-            Inscription
+            Connexion
           </Button>
         </Fieldset>
       </form>
+      <div className="mt-4 text-center">
+        <Link href="/Sign/Up" className="text-blue-500 underline">
+          Pas de compte ? Inscrivez-vous ici
+        </Link>
+      </div>
       {error && (
         <MessageModal
           isError={true}

@@ -11,6 +11,7 @@ import {
   Button,
 } from "@headlessui/react";
 import MessageModal from "@/components/MessageModal";
+import Link from "next/link";
 
 export default function SignUp() {
   const [message, setMessage] = useState<string | null>(null);
@@ -77,6 +78,11 @@ export default function SignUp() {
           </Button>
         </Fieldset>
       </form>
+      <div className="mt-4 text-center">
+        <Link href="/Sign/In" className="text-blue-500 underline">
+          Déjà inscrit ? Connectez-vous ici
+        </Link>
+      </div>
       {message && (
         <MessageModal
           isError={false}

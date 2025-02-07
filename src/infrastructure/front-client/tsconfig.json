@@ -20,13 +20,19 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@triumph-motorcycles/css": ["./app/globals.css"],
+      "@triumph-motorcycles/css": ["./app/globals.css"]
       // "@triumph-motorcycles/interfaces": ["./interfaces/index.ts"],
       // "@triumph-motorcycles/types": ["./types/index.ts"],
       // "@triumph-motorcycles/domain/errors": ["../../domain/errors"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",
