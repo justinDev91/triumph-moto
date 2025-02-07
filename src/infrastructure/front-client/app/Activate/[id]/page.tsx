@@ -16,7 +16,7 @@ export default function ActivatePage() {
       try {
         const response = await activation(id);
         if (response === 200) {
-          router.push("/login");
+          router.push("/Sign/In");
         } else {
           setMessage("Une erreur est survenue lors de l'activation.");
         }
