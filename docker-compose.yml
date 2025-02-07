@@ -17,3 +17,8 @@ services:
       MYSQL_DATABASE: test
     ports:
       - "3307:3306"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"

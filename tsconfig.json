@@ -23,5 +23,10 @@
     "incremental": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "test/**/*", "src/infrastructure/front-admin"],
+  "include": [
+    "src/**/*",
+    "test/**/*",
+    "src/infrastructure/front-admin",
+    "src/infrastructure/front-client"
+  ]
 }

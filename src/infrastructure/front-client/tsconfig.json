@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"],
+      "@triumph-motorcycles/css": ["./app/globals.css"],
+      // "@triumph-motorcycles/interfaces": ["./interfaces/index.ts"],
+      // "@triumph-motorcycles/types": ["./types/index.ts"],
+      // "@triumph-motorcycles/domain/errors": ["../../domain/errors"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/spec.ts",
+    "src/infrastructure/front-admin"
+  ]
+}
