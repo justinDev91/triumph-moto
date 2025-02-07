@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../../shared/models/user.model';
+import { CreateUserDto } from '../tdo/create-user.tdo';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,8 @@ export class UsersService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
-  createUser(user: Partial<User>): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}`, user);
+  createUser(createUserDto: CreateUserDto): Observable<User> {
+    return this.http.post<User>(this.apiUrl, createUserDto);
   }
 
   deleteUser(id: string): Observable<void> {
