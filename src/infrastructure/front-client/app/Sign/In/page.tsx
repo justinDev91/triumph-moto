@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, Fragment, useEffect, useState } from "react";
+import { FormEvent, Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Field,
@@ -10,10 +10,8 @@ import {
   Button,
 } from "@headlessui/react";
 import MessageModal from "@/components/MessageModal";
-import login from "@/app/actions/login";
 import Link from "next/link";
-import createSessionUser from "@/hooks/user/createSessionUser";
-import getSessionUser from "@/hooks/user/getSessionUser";
+import login, { getSession } from "@/lib/session";
 
 export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
@@ -21,31 +19,22 @@ export default function SignIn() {
 
   useEffect(() => {
     async function checkSession() {
-      const getSessionResponse = await getSessionUser();
-      if (getSessionResponse.ok && getSessionResponse.email) {
+      const sessionData = await getSession();
+      if (sessionData !== null) {
         router.push("/Profil");
       }
     }
     checkSession();
   }, [router]);
-
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const actionResponse = await login(formData);
-    if ("email" in actionResponse) {
-      const createSessionResponse = await createSessionUser(actionResponse);
-      if (createSessionResponse.ok) {
-        console.log("Session created successfully");
-        router.push("/Profil");
-      } else {
-        setError("Oui");
-      }
-    } else {
-      setError(actionResponse.name);
+    await login(formData);
+    const sessionData = await getSession();
+    if (sessionData !== null) {
+      router.push("/Profil");
     }
   }
-
   return (
     <Fragment>
       <form className="text-black" onSubmit={handleSubmit}>

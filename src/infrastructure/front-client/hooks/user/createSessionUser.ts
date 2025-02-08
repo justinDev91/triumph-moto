@@ -8,6 +8,5 @@ export default async function createSessionUser(profil: Profil) {
     },
     body: JSON.stringify(profil),
   });
-  console.log(response.json());
   return response;
 }

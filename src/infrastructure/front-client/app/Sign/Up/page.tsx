@@ -1,7 +1,7 @@
 "use client";
 import signup from "@/app/actions/signup";
 
-import { FormEvent, Fragment, useState } from "react";
+import { FormEvent, Fragment, useEffect, useState } from "react";
 import {
   Field,
   Fieldset,
@@ -12,10 +12,23 @@ import {
 } from "@headlessui/react";
 import MessageModal from "@/components/MessageModal";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getSession } from "@/lib/session";
 
 export default function SignUp() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkSession() {
+      const sessionData = await getSession();
+      if (sessionData !== null) {
+        router.push("/Profil");
+      }
+    }
+    checkSession();
+  }, [router]);
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);

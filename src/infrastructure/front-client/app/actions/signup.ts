@@ -1,4 +1,4 @@
-import activateEmail from "@/hooks/activateEmail";
+import activateEmail from "@/hooks/email/activateEmail";
 import registerUser from "@/hooks/user/registerUser";
 import deleteUser from "@/hooks/user/deleteUser";
 

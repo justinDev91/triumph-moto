@@ -1,12 +1,12 @@
 export default function getError(name: string): string {
-  let errorMessage = 'Une erreur est survenue.';
+  let errorMessage;
 
   switch (name) {
-    case 'PasswordTooShortError':
-      errorMessage = 'Le mot de passe est trop court.';
+    case "PasswordTooShortError":
+      errorMessage = "Le mot de passe est trop court.";
       break;
     default:
-      errorMessage = 'Une erreur inattendue est survenue.';
+      errorMessage = "Une erreur inattendue est survenue.";
   }
 
   return errorMessage;
