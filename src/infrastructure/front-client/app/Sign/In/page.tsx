@@ -21,7 +21,7 @@ export default function SignIn() {
     async function checkSession() {
       const sessionData = await getSession();
       if (sessionData !== null) {
-        router.push("/Profil");
+        router.push("/dashboard");
       }
     }
     checkSession();
@@ -32,7 +32,7 @@ export default function SignIn() {
     await login(formData);
     const sessionData = await getSession();
     if (sessionData !== null) {
-      router.push("/Profil");
+      router.push("/dashboard");
     }
   }
   return (

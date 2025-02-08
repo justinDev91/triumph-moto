@@ -1,5 +1,6 @@
+"use client";
+
 import "@triumph-motorcycles/css";
-import Header from "@/components/Header";
 
 export default function RootLayout({
   children,
@@ -7,11 +8,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body>
-        <Header />
-        <main className="bg-white">
-          <div className="relative isolate pt-14">{children}</div>
+    <html className="h-full bg-white">
+      <body className="h-full">
+        <main>
+          <div>{children}</div>
         </main>
       </body>
     </html>
