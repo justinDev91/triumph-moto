@@ -28,4 +28,7 @@ export class Order {
   @ApiProperty({ description: "Total cost of the order" })
   @Column({ type: "decimal", precision: 12, scale: 2, default: 0 })
   totalCost: number;
+
+  //Todo: Add user
+
 }

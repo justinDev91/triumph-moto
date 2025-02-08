@@ -4,8 +4,8 @@ import { Order } from './order.model';
 export interface OrderItem {
   id: string;
   sparePart: SparePart;
-  quantityOrdered: number;
-  costPerUnit: number;
-  deliveredQuantity: number;
+  quantityOrdered: {value: number};
+  costPerUnit:{value: number};
+  deliveredQuantity: {value: number};
   order?: Order;
 }

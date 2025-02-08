@@ -2,8 +2,8 @@ import { OrderItem } from "./order-item.model";
 
 export interface Order {
   id: string;
-  orderDate: Date;
-  estimatedDeliveryDate: Date;
+  orderDate: {value: Date};
+  estimatedDeliveryDate: {value: Date};
   items: OrderItem[];
   totalCost: number;
 }

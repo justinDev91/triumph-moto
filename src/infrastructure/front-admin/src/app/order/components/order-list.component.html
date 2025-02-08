@@ -1,0 +1,73 @@
+<div class="text-center my-6">
+  <h1 class="text-3xl font-semibold text-gray-800">Liste des Commandes</h1>
+</div>
+
+<div class="overflow-x-auto bg-white rounded-lg shadow-md mx-24">
+  <table class="min-w-full table-auto text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-3 py-2 text-left">Order Date</th>
+        <th class="px-3 py-2 text-left">Estimated Delivery Date</th>
+        <th class="px-3 py-2 text-left">Total Cost</th>
+        <th class="px-3 py-2 text-left">Items</th>
+        <th class="px-3 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td class="px-3 py-2">
+          <a [routerLink]="['/orders', order.id]" class="text-blue-500 hover:underline">
+            {{ order.orderDate.value | date: 'shortDate' }}
+          </a>
+        </td>
+        <td class="px-3 py-2">
+          {{ order.estimatedDeliveryDate.value | date: 'shortDate' }}
+        </td>
+        <td class="px-3 py-2">{{ order.totalCost | currency }}</td>
+        <td class="px-3 py-2">
+          <ul>
+            <li *ngFor="let item of order.items">{{ item.sparePart.name.value }} ({{ item.quantityOrdered.value }} x {{ item.costPerUnit.value | currency }})</li>
+          </ul>
+        </td>
+        <td class="px-3 py-2 space-x-2">
+          <button
+            class="w-24 p-2 mb-4 rounded-lg text-white text-sm transition duration-300 text-center bg-red-500 hover:bg-blue-700"
+            (click)="deleteOrder(order)"
+          >
+            Delete
+          </button>
+          <button
+            class="w-24 p-2 rounded-lg text-white text-sm transition duration-300 text-center bg-blue-500 hover:bg-blue-700"
+            (click)="updateOrder(order)"
+          >
+            Update
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p *ngIf="orders.length === 0" class="text-center mt-4 text-sm text-gray-500">No orders found.</p>
+
+<div class="flex justify-between items-center mt-6 mx-24">
+  <span class="text-sm text-gray-600">Page {{ currentPage }} of {{ totalPages }}</span>
+  <div class="space-x-2">
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
+<router-outlet />

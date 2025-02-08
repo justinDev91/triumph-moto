@@ -11,6 +11,7 @@ export class OrderEntity {
   private totalCost: number = 0;
 
   private constructor(
+    //Todo: Add user
     public readonly id: string,
     private readonly orderDate: OrderDate,
     private readonly estimatedDeliveryDate: EstimatedDeliveryDate,
