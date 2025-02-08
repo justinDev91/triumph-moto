@@ -1,29 +1,31 @@
-import { DriverRepositoryImplem } from '@adapters/driver.repository.implem';
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserRepositoryImplem } from '@api/adapters/user.repository.implem';
-import { UserEntity } from '@domain/entities/user/UserEntity';
-import { DriverEntity } from '@domain/entities/driver/DriverEntity';
-import { CreateUserUseCase } from '@application/usecases/user/CreateUserUseCase';
-import { GetAllUsersUseCase } from '@application/usecases/user/GetAllUsersUseCase';
-import { GetUserByIdUseCase } from '@application/usecases/user/GetUserByIdUseCase';
-import { DeleteUserUseCase } from '@application/usecases/user/DeleteUserUseCase';
-import { CheckUserIsAdminUsecase } from '@application/usecases/user/CheckUserIsAdminUsecase';
-import { GetUserRoleUsecase } from '@application/usecases/user/GetUserRoleUsecase';
-import { UserActivateUseCase } from '@application/usecases/user/UserActivateUseCase';
-import { UserDeactivateUseCase } from '@application/usecases/user/UserDeactivateUseCase';
-import { AddDriverToUserUsecase } from '@application/usecases/user/AddDriverToUserUsecase';
-import { GetDriversForUserUsecase } from '@application/usecases/user/GetDriversForUserUsecase';
-import { RemoveDriverFromUserUsecase } from '@application/usecases/user/RemoveDriverFromUserUsecase';
-import { SearchUserByFirstOrLastNameUseCase } from '@application/usecases/user/SearchUserByFirstOrLastNameUseCase';
-import { FilterByActiveOrInactiveUserUseCase } from '@application/usecases/user/FilterByActiveOrInactiveUserUsecase';
-import { ToggleUserStatusUseCase } from '@application/usecases/user/ToggleUserStatusUsecase';
+import { DriverRepositoryImplem } from "@adapters/driver.repository.implem";
+import { Injectable } from "@nestjs/common";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UserRepositoryImplem } from "@api/adapters/user.repository.implem";
+import { UserEntity } from "@domain/entities/user/UserEntity";
+import { DriverEntity } from "@domain/entities/driver/DriverEntity";
+import { CreateUserUseCase } from "@application/usecases/user/CreateUserUseCase";
+import { GetAllUsersUseCase } from "@application/usecases/user/GetAllUsersUseCase";
+import { GetUserByIdUseCase } from "@application/usecases/user/GetUserByIdUseCase";
+import { GetUserByEmailUseCase } from "@application/usecases/user/GetUserByEmailUseCase";
+import { DeleteUserUseCase } from "@application/usecases/user/DeleteUserUseCase";
+import { CheckUserIsAdminUsecase } from "@application/usecases/user/CheckUserIsAdminUsecase";
+import { GetUserRoleUsecase } from "@application/usecases/user/GetUserRoleUsecase";
+import { UserActivateUseCase } from "@application/usecases/user/UserActivateUseCase";
+import { UserDeactivateUseCase } from "@application/usecases/user/UserDeactivateUseCase";
+import { AddDriverToUserUsecase } from "@application/usecases/user/AddDriverToUserUsecase";
+import { GetDriversForUserUsecase } from "@application/usecases/user/GetDriversForUserUsecase";
+import { RemoveDriverFromUserUsecase } from "@application/usecases/user/RemoveDriverFromUserUsecase";
+import { SearchUserByFirstOrLastNameUseCase } from "@application/usecases/user/SearchUserByFirstOrLastNameUseCase";
+import { FilterByActiveOrInactiveUserUseCase } from "@application/usecases/user/FilterByActiveOrInactiveUserUsecase";
+import { ToggleUserStatusUseCase } from "@application/usecases/user/ToggleUserStatusUsecase";
 
 @Injectable()
 export class UsersService {
   private readonly createUserUseCase: CreateUserUseCase;
   private readonly getAllUsersUseCase: GetAllUsersUseCase;
   private readonly getUserByIdUseCase: GetUserByIdUseCase;
+  private readonly getUserByEmailUseCase: GetUserByEmailUseCase;
   private readonly deleteUserUseCase: DeleteUserUseCase;
   private readonly checkUserIsAdminUsecase: CheckUserIsAdminUsecase;
   private readonly getUserRoleUsecase: GetUserRoleUsecase;
@@ -43,32 +45,39 @@ export class UsersService {
     this.createUserUseCase = new CreateUserUseCase(userRepository);
     this.getAllUsersUseCase = new GetAllUsersUseCase(userRepository);
     this.getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
+    this.getUserByEmailUseCase = new GetUserByEmailUseCase(userRepository);
     this.deleteUserUseCase = new DeleteUserUseCase(userRepository);
     this.checkUserIsAdminUsecase = new CheckUserIsAdminUsecase(userRepository);
     this.getUserRoleUsecase = new GetUserRoleUsecase(userRepository);
     this.userActivateUseCase = new UserActivateUseCase(userRepository);
     this.userDeactivateUseCase = new UserDeactivateUseCase(userRepository);
-    this.addDriverToUserUsecase = new AddDriverToUserUsecase(userRepository, driverRepository);
-    this.getDriversForUserUsecase = new GetDriversForUserUsecase(userRepository, driverRepository);
-    this.removeDriverFromUserUsecase = new RemoveDriverFromUserUsecase(userRepository, driverRepository);
-    this.searchUserByFirstOrLastNameUseCase = new SearchUserByFirstOrLastNameUseCase(userRepository);
-    this.filterByActiveOrInactiveUserUseCase = new FilterByActiveOrInactiveUserUseCase(userRepository);
+    this.addDriverToUserUsecase = new AddDriverToUserUsecase(
+      userRepository,
+      driverRepository
+    );
+    this.getDriversForUserUsecase = new GetDriversForUserUsecase(
+      userRepository,
+      driverRepository
+    );
+    this.removeDriverFromUserUsecase = new RemoveDriverFromUserUsecase(
+      userRepository,
+      driverRepository
+    );
+    this.searchUserByFirstOrLastNameUseCase =
+      new SearchUserByFirstOrLastNameUseCase(userRepository);
+    this.filterByActiveOrInactiveUserUseCase =
+      new FilterByActiveOrInactiveUserUseCase(userRepository);
     this.toggleUserStatusUseCase = new ToggleUserStatusUseCase(userRepository);
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity | Error> {
-    const { 
-      firstName, 
-      lastName,
-      email, 
-      password, 
-    } = createUserDto;
-  
+    const { firstName, lastName, email, password } = createUserDto;
+
     return await this.createUserUseCase.execute(
-      firstName, 
-      lastName, 
-      password,    
-      email,      
+      firstName,
+      lastName,
+      password,
+      email
     );
   }
 
@@ -80,6 +89,9 @@ export class UsersService {
     return this.getUserByIdUseCase.execute(id);
   }
 
+  async findOneByEmail(email: string): Promise<UserEntity | Error> {
+    return this.getUserByEmailUseCase.execute(email);
+  }
   async remove(id: string): Promise<void> {
     return this.deleteUserUseCase.execute(id);
   }
@@ -100,7 +112,10 @@ export class UsersService {
     return this.userDeactivateUseCase.execute(userId);
   }
 
-  async addDriverToUser(userId: string, driverId: string): Promise<void | Error> {
+  async addDriverToUser(
+    userId: string,
+    driverId: string
+  ): Promise<void | Error> {
     return this.addDriverToUserUsecase.execute(userId, driverId);
   }
 
@@ -108,16 +123,23 @@ export class UsersService {
     return this.getDriversForUserUsecase.execute(userId);
   }
 
-  async removeDriverFromUser(userId: string, driverId: string): Promise<void | Error> {
+  async removeDriverFromUser(
+    userId: string,
+    driverId: string
+  ): Promise<void | Error> {
     return this.removeDriverFromUserUsecase.execute(userId, driverId);
   }
 
-  async searchUsersByFirstOrLastName(query: string): Promise<UserEntity[] | Error> {
+  async searchUsersByFirstOrLastName(
+    query: string
+  ): Promise<UserEntity[] | Error> {
     return this.searchUserByFirstOrLastNameUseCase.execute(query);
   }
 
-  async filterUsersByStatus(status: 'active' | 'inactive'): Promise<UserEntity[] | Error> {
-    return this.filterByActiveOrInactiveUserUseCase.execute(status);  
+  async filterUsersByStatus(
+    status: "active" | "inactive"
+  ): Promise<UserEntity[] | Error> {
+    return this.filterByActiveOrInactiveUserUseCase.execute(status);
   }
 
   async toggleUserStatus(userId: string): Promise<void> {
