@@ -90,7 +90,6 @@ export class UserListComponent implements OnInit {
   }
 
   addUser(): void {
-    console.log('Redirecting to add user page...');
   }
 
   goToNextPage(): void {
@@ -108,7 +107,6 @@ export class UserListComponent implements OnInit {
   }
 
   onChange(): void {
-    console.log('onChange', this.filterStatus);
     this.fetchUsers();
   }
 }

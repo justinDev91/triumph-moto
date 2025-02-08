@@ -2,54 +2,24 @@
   <h2 class="text-3xl font-semibold text-gray-800 mb-6">Create New Warranty</h2>
 
   <form (ngSubmit)="createWarranty()" #createWarrantyForm="ngForm">
-    <!-- Motorcycle Model -->
+    <!-- Motorcycle Selection Dropdown -->
     <div class="mb-4">
-      <label for="motorcycleModel" class="block text-sm font-medium text-gray-700">Motorcycle Model</label>
-      <input
-        type="text"
-        id="motorcycleModel"
+      <label for="motorcycleId" class="block text-sm font-medium text-gray-700">Select Motorcycle</label>
+      <select
+        id="motorcycleId"
         class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        [(ngModel)]="warranty.motorcycleModel"
-        name="motorcycleModel"
+        [(ngModel)]="warranty.motorcycleId"
+        name="motorcycleId"
         required
-        #motorcycleModel="ngModel"
-      />
-      <div *ngIf="motorcycleModel.invalid && motorcycleModel.touched" class="text-red-500 text-xs mt-1">
-        Motorcycle Model is required
-      </div>
-    </div>
+        #motorcycleId="ngModel"
+      >
+      <option *ngFor="let motorcycle of motorcycles" [value]="motorcycle.id">
+        {{ motorcycle.brand.value }}
+      </option>
 
-    <!-- Motorcycle VIN -->
-    <div class="mb-4">
-      <label for="motorcycleVin" class="block text-sm font-medium text-gray-700">Motorcycle VIN</label>
-      <input
-        type="text"
-        id="motorcycleVin"
-        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        [(ngModel)]="warranty.motorcycleVin"
-        name="motorcycleVin"
-        required
-        #motorcycleVin="ngModel"
-      />
-      <div *ngIf="motorcycleVin.invalid && motorcycleVin.touched" class="text-red-500 text-xs mt-1">
-        Motorcycle VIN is required
-      </div>
-    </div>
-
-    <!-- Motorcycle Year -->
-    <div class="mb-4">
-      <label for="motorcycleYear" class="block text-sm font-medium text-gray-700">Motorcycle Year</label>
-      <input
-        type="number"
-        id="motorcycleYear"
-        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        [(ngModel)]="warranty.motorcycleYear"
-        name="motorcycleYear"
-        required
-        #motorcycleYear="ngModel"
-      />
-      <div *ngIf="motorcycleYear.invalid && motorcycleYear.touched" class="text-red-500 text-xs mt-1">
-        Motorcycle Year is required
+      </select>
+      <div *ngIf="motorcycleId.invalid && motorcycleId.touched" class="text-red-500 text-xs mt-1">
+        Please select a motorcycle.
       </div>
     </div>
 
@@ -66,7 +36,7 @@
         #startDate="ngModel"
       />
       <div *ngIf="startDate.invalid && startDate.touched" class="text-red-500 text-xs mt-1">
-        Start Date is required
+        Start Date is required.
       </div>
     </div>
 
@@ -83,8 +53,37 @@
         #endDate="ngModel"
       />
       <div *ngIf="endDate.invalid && endDate.touched" class="text-red-500 text-xs mt-1">
-        End Date is required
+        End Date is required.
       </div>
+    </div>
+
+    <!-- Coverage Details -->
+    <div class="mb-4">
+      <label for="coverageDetails" class="block text-sm font-medium text-gray-700">Coverage Details</label>
+      <textarea
+        id="coverageDetails"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="warranty.coverageDetails"
+        name="coverageDetails"
+        required
+        #coverageDetails="ngModel"
+      ></textarea>
+      <div *ngIf="coverageDetails.invalid && coverageDetails.touched" class="text-red-500 text-xs mt-1">
+        Coverage details are required.
+      </div>
+    </div>
+
+    <!-- Is Active Checkbox -->
+    <div class="mb-4 flex items-center">
+      <input
+        type="checkbox"
+        id="isActive"
+        class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+        [(ngModel)]="warranty.isActive"
+        name="isActive"
+        #isActive="ngModel"
+      />
+      <label for="isActive" class="ml-2 text-sm font-medium text-gray-700">Active Warranty</label>
     </div>
 
     <!-- Submit Button -->

@@ -77,16 +77,13 @@ export class WarrantyListComponent implements OnInit {
           this.currentPage = 1;
           this.warranties = warranties.slice(0, this.warrantiesPerPage);
           this.cdRef.detectChanges();
-          console.log("warranties", warranties);
         } else {
-          console.error("API response is not an array:", warranties);
           this.warranties = [];
           this.filteredWarranties = [];
           this.totalWarranties = 0;
           this.totalPages = 1;
         }
       }, error => {
-        console.error("Error searching warranties:", error);
         this.warranties = [];
         this.filteredWarranties = [];
         this.totalWarranties = 0;
