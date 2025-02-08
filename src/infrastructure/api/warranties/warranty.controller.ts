@@ -1,11 +1,11 @@
-import { Controller, Post, Get, Param, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Put, Delete, Query } from '@nestjs/common';
 import { WarrantyService } from './warranty.service';
 import { CreateWarrantyDto } from './dto/create.warranty.dto';
 import { UpdateWarrantyDto } from './dto/update.warranty.dto';
 import { WarrantyEntity } from '@domain/entities/warranty/WarrantyEntity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('warranties') 
+@ApiTags('warranties')
 @Controller('warranties')
 export class WarrantyController {
   constructor(private readonly warrantyService: WarrantyService) {}
@@ -22,6 +22,12 @@ export class WarrantyController {
     return await this.warrantyService.findAll();
   }
 
+  @Get('search')
+  @ApiResponse({ status: 200, description: 'Search warranties by motorcycle brand', type: [WarrantyEntity] })
+  async searchByMotorcycleBrand(@Query('query') query: string): Promise<WarrantyEntity[] | Error> {
+    return await this.warrantyService.searchByMotorcycleBrand(query);
+  }
+  
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Get warranty by ID', type: WarrantyEntity })
   async getById(@Param('id') id: string): Promise<WarrantyEntity | Error> {

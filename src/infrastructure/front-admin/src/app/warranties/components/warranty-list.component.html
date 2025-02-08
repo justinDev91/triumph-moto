@@ -8,10 +8,10 @@
   <div class="flex space-x-2">
     <input
       type="text"
+      [(ngModel)]="searchQuery"
       placeholder="Search warranties..."
-      #filter
       class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-      (input)="searchWarranties(filter.value)"
+      (input)="onSearchChange(searchQuery)"
     />
     <select
       [(ngModel)]="filterStatus"
@@ -46,34 +46,26 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let warranty of warranties">
+      <tr *ngFor="let warranty of filteredWarranties">
         <td class="px-3 py-2">
           <a [routerLink]="['/warranties', warranty.id]" class="text-blue-500 hover:text-blue-700">
-            {{ warranty.motorcycleModel }}
+            {{ warranty.motorcycle?.brand?.value }} {{ warranty.motorcycle?.model?.value }} ({{ warranty.motorcycle?.year?.value }})
           </a>
         </td>
-        <td class="px-3 py-2">{{ warranty.startDate | date }}</td>
-        <td class="px-3 py-2">{{ warranty.endDate | date }}</td>
+        <td class="px-3 py-2">{{ warranty.startDate.value | date: 'shortDate' }}</td>
+        <td class="px-3 py-2">{{ warranty.endDate.value | date: 'shortDate' }}</td>
         <td class="px-3 py-2">
-          <span
-            [ngClass]="{
-              'text-green-500': new Date(warranty.endDate) > new Date(),
-              'text-red-500': new Date(warranty.endDate) <= new Date()
-            }"
-          >
-            {{ new Date(warranty.endDate) > new Date() ? 'Active' : 'Inactive' }}
+          <span [ngClass]="warranty.isActive ? 'text-green-500' : 'text-red-500'">
+            {{ warranty.isActive ? 'Active' : 'Inactive' }}
           </span>
         </td>
         <td class="px-3 py-2 space-x-2">
           <button
             class="w-24 p-2 rounded-lg text-white text-sm transition duration-300 text-center"
-            [ngClass]="{
-              'bg-yellow-500 hover:bg-yellow-600': new Date(warranty.endDate) > new Date(),
-              'bg-green-500 hover:bg-green-700': new Date(warranty.endDate) <= new Date()
-            }"
+            [ngClass]="warranty.isActive ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-700'"
             (click)="toggleWarrantyStatus(warranty)"
           >
-            {{ new Date(warranty.endDate) > new Date() ? 'Deactivate' : 'Activate' }}
+            {{ warranty.isActive ? 'Deactivate' : 'Activate' }}
           </button>
 
           <button
@@ -89,7 +81,7 @@
 </div>
 
 <!-- No warranties found message -->
-<p *ngIf="warranties.length === 0" class="text-center mt-4 text-sm text-gray-500">No warranties found.</p>
+<p *ngIf="filteredWarranties.length === 0" class="text-center mt-4 text-sm text-gray-500">No warranties found.</p>
 
 <!-- Pagination Section -->
 <div class="flex justify-between items-center mt-6 mx-24">

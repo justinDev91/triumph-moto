@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { WarrantyRepositoryInterface } from '@application/repositories/WarrantyRepositoryInterface';
 import { Warranty } from '@api/warranties/warranty.entity';
 import { WarrantyEntity } from '@domain/entities/warranty/WarrantyEntity';
@@ -20,6 +20,26 @@ export class WarrantyRepositoryImplem implements WarrantyRepositoryInterface {
     @InjectRepository(Motorcycle)
     private readonly motorcycleRepository: Repository<Motorcycle>, 
   ) {}
+  
+  async searchByMotorcycleBrand(query: string): Promise<WarrantyEntity[]> {
+    const motorcycles = await this.motorcycleRepository.find({
+      where: {
+        brand: Like(`%${query}%`),
+      },
+    });
+  
+    const warranties: Warranty[] = [];
+    for (const motorcycleExisting of motorcycles) {
+      const motorcycleWarranties = await this.warrantyRepository.createQueryBuilder('warranty')
+        .innerJoinAndSelect('warranty.motorcycle', 'motorcycle')  
+        .where('motorcycle.id = :motorcycleId', { motorcycleId: motorcycleExisting.id })  
+        .getMany();  
+      warranties.push(...motorcycleWarranties);
+    }
+  
+    return warranties.map(toDomainWarranty) as WarrantyEntity[];
+  }
+
 
   async findAll(): Promise<WarrantyEntity[] | Error> {
     const allWarranties = await this.warrantyRepository.find(

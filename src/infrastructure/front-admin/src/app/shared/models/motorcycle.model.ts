@@ -11,9 +11,15 @@ export enum MotorStatusEnum {
 
 export interface Motorcycle {
   id: string;
-  brand: string;
-  model: string;
-  year: number;
+  brand: {
+    value: string;
+  };
+  model: {
+    value: string;
+  };
+  year: {
+    value: number;
+  };
   mileage: number;
   status: MotorStatusEnum;
   purchaseDate: Date;

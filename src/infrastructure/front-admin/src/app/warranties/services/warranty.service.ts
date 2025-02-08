@@ -40,4 +40,9 @@ export class WarrantyService {
   deleteWarranty(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  searchWarrantiesByMotorcycleBrand(query: string): Observable<Warranty[]> {
+    return this.http.get<Warranty[]>(`${this.apiUrl}/search?query=${query}`);
+
+  }
 }

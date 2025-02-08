@@ -8,7 +8,7 @@ import { WarrantyRoutingModule } from './warranty-routing.module';
     WarrantyRoutingModule
   ],
 })
-export class UsersModule {
+export class WarrantiesModule {
   constructor() {
     console.log('✅ Warranties Module Loaded!');
   }

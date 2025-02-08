@@ -11,6 +11,7 @@ import { CreateWarrantyDto } from './dto/create.warranty.dto';
 import { UpdateWarrantyDto } from './dto/update.warranty.dto';
 import { GetAllWarrantiesUseCase } from '@application/usecases/warranty/GetAllWarrantiesUseCase';
 import { MotorcycleRepositoryImplem } from '@adapters/motorcycle.repository.implem';
+import { SearchWarrantyByMotorcycleBrandUseCase } from '@application/usecases/warranty/SearchWarrantyByMotorcycleBrandUsecase';
 
 @Injectable()
 export class WarrantyService {
@@ -21,11 +22,11 @@ export class WarrantyService {
   private readonly getWarrantyDetailsUsecase: GetWarrantyDetailsUsecase;
   private readonly updateWarrantyUsecase: UpdateWarrantyUsecase;
   private readonly getAllWarrantiesUseCase: GetAllWarrantiesUseCase;
+  private readonly searchWarrantyByMotorcycleBrandUseCase: SearchWarrantyByMotorcycleBrandUseCase;
 
   constructor(
     private readonly warrantyRepository: WarrantyRepositoryImplem,
     private readonly motorcycleRepository: MotorcycleRepositoryImplem,
-
   ) {
     this.createWarrantyUsecase = new CreateWarrantyUsecase(warrantyRepository, motorcycleRepository);
     this.deleteWarrantyUsecase = new DeleteWarrantyUsecase(warrantyRepository);
@@ -34,10 +35,11 @@ export class WarrantyService {
     this.getWarrantyDetailsUsecase = new GetWarrantyDetailsUsecase(warrantyRepository);
     this.updateWarrantyUsecase = new UpdateWarrantyUsecase(warrantyRepository);
     this.getAllWarrantiesUseCase = new GetAllWarrantiesUseCase(warrantyRepository);
+    this.searchWarrantyByMotorcycleBrandUseCase = new SearchWarrantyByMotorcycleBrandUseCase(warrantyRepository);
   }
 
-  async create(createWarrantyDto : CreateWarrantyDto): Promise<WarrantyEntity | Error> {
-    const {motorcycleId, startDate, endDate, coverageDetails, isActive} = createWarrantyDto;
+  async create(createWarrantyDto: CreateWarrantyDto): Promise<WarrantyEntity | Error> {
+    const { motorcycleId, startDate, endDate, coverageDetails, isActive } = createWarrantyDto;
     return await this.createWarrantyUsecase.execute(motorcycleId, startDate, endDate, coverageDetails, isActive);
   }
 
@@ -46,7 +48,7 @@ export class WarrantyService {
   }
 
   async findAll(): Promise<WarrantyEntity[] | Error> {
-      return this.getAllWarrantiesUseCase.execute();
+    return this.getAllWarrantiesUseCase.execute();
   }
 
   async getById(id: string): Promise<WarrantyEntity | Error> {
@@ -61,8 +63,12 @@ export class WarrantyService {
     return await this.getWarrantyDetailsUsecase.execute(id);
   }
 
-  async update(id :string, updateWarrantyDto: UpdateWarrantyDto): Promise<void | Error> {
-    const {coverageDetails, isActive} = updateWarrantyDto;
+  async update(id: string, updateWarrantyDto: UpdateWarrantyDto): Promise<void | Error> {
+    const { coverageDetails, isActive } = updateWarrantyDto;
     await this.updateWarrantyUsecase.execute(id, coverageDetails, isActive);
+  }
+
+  async searchByMotorcycleBrand(query: string): Promise<WarrantyEntity[] | Error> {
+    return this.searchWarrantyByMotorcycleBrandUseCase.execute(query);
   }
 }

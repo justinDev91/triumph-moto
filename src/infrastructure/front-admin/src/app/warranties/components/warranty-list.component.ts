@@ -4,16 +4,12 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { WarrantyService } from '../services/warranty.service';
 import { Warranty } from '../../shared/models/warranty.model';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-warranty-list',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    CommonModule,
-    FormsModule,
-    RouterModule
-  ],
+  imports: [RouterOutlet, CommonModule, FormsModule, RouterModule],
   templateUrl: './warranty-list.component.html',
 })
 export class WarrantyListComponent implements OnInit {
@@ -24,6 +20,8 @@ export class WarrantyListComponent implements OnInit {
   totalWarranties: number = 0;
   totalPages: number = 1;
   filterStatus: string = '';
+  searchQuery: string = '';
+  private readonly searchSubject: Subject<string> = new Subject<string>();
 
   constructor(
     private readonly warrantyService: WarrantyService,
@@ -32,62 +30,93 @@ export class WarrantyListComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchWarranties();
+
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(query => this.searchWarranties(query));
   }
 
   fetchWarranties(): void {
     this.warrantyService.getAllWarranties().subscribe((warranties: Warranty[]) => {
-      if (this.filterStatus) {
-        warranties = this.filterWarrantiesByStatus(warranties, this.filterStatus);
-      }
+      if (Array.isArray(warranties)) {
+        warranties.forEach(warranty => {
+          warranty.isActive = new Date(warranty.endDate.value) > new Date();
+        });
 
-      this.totalWarranties = warranties.length;
-      this.totalPages = Math.ceil(this.totalWarranties / this.warrantiesPerPage);
-      const startIndex = (this.currentPage - 1) * this.warrantiesPerPage;
-      const endIndex = startIndex + this.warrantiesPerPage;
-      this.warranties = warranties.slice(startIndex, endIndex);
-      this.filteredWarranties = warranties;
-      this.cdRef.detectChanges();
+        this.totalWarranties = warranties.length;
+        this.totalPages = Math.ceil(this.totalWarranties / this.warrantiesPerPage);
+        const startIndex = (this.currentPage - 1) * this.warrantiesPerPage;
+        const endIndex = startIndex + this.warrantiesPerPage;
+
+        this.warranties = this.filterWarrantiesByStatus(warranties.slice(startIndex, endIndex), this.filterStatus);
+        this.filteredWarranties = this.warranties;
+        this.cdRef.detectChanges();
+      } else {
+        console.error("API response is not an array:", warranties);
+        this.warranties = [];
+        this.filteredWarranties = [];
+        this.totalWarranties = 0;
+        this.totalPages = 1;
+      }
+    }, error => {
+      console.error("Error fetching warranties:", error);
+      this.warranties = [];
+      this.filteredWarranties = [];
+      this.totalWarranties = 0;
+      this.totalPages = 1;
     });
   }
 
-  // searchWarranties(query: string): void {
-  //   this.warrantyService.searchWarranties(query).subscribe((warranties: Warranty[]) => {
-  //     this.filteredWarranties = warranties;
-  //     this.totalWarranties = warranties.length;
-  //     this.totalPages = Math.ceil(this.totalWarranties / this.warrantiesPerPage);
-  //     this.currentPage = 1;
-  //     this.warranties = warranties.slice(0, this.warrantiesPerPage);
-  //     this.cdRef.detectChanges();
-
-  //     if (this.filteredWarranties.length === 0) {
-  //       this.fetchWarranties();
-  //     }
-  //   });
-  // }
+  searchWarranties(query: string): void {
+    if (query.trim()) {
+      this.warrantyService.searchWarrantiesByMotorcycleBrand(query).subscribe((warranties: Warranty[]) => {
+        if (Array.isArray(warranties)) {
+          this.filteredWarranties = warranties;
+          this.totalWarranties = warranties.length;
+          this.totalPages = Math.ceil(this.totalWarranties / this.warrantiesPerPage);
+          this.currentPage = 1;
+          this.warranties = warranties.slice(0, this.warrantiesPerPage);
+          this.cdRef.detectChanges();
+          console.log("warranties", warranties);
+        } else {
+          console.error("API response is not an array:", warranties);
+          this.warranties = [];
+          this.filteredWarranties = [];
+          this.totalWarranties = 0;
+          this.totalPages = 1;
+        }
+      }, error => {
+        console.error("Error searching warranties:", error);
+        this.warranties = [];
+        this.filteredWarranties = [];
+        this.totalWarranties = 0;
+        this.totalPages = 1;
+      });
+    } else {
+      this.fetchWarranties();
+    }
+  }
 
   filterWarrantiesByStatus(warranties: Warranty[], status: string): Warranty[] {
-    return warranties.filter(warranty => {
-      if (status === 'active') {
-        return new Date(warranty.endDate) > new Date();
-      } else if (status === 'inactive') {
-        return new Date(warranty.endDate) <= new Date();
-      }
-      return true;
-    });
+    if (status === 'active') {
+      return warranties.filter(warranty => warranty.isActive);
+    } else if (status === 'inactive') {
+      return warranties.filter(warranty => !warranty.isActive);
+    }
+    return warranties;
   }
 
-  updateWarranty(warranty: Warranty): void {
-    console.log('Redirecting to update warranty page...');
+  toggleWarrantyStatus(warranty: Warranty): void {
+    warranty.isActive = !warranty.isActive;
+    this.filteredWarranties = this.filterWarrantiesByStatus(this.warranties, this.filterStatus);
+    this.cdRef.detectChanges();
   }
 
   deleteWarranty(warranty: Warranty): void {
     this.warrantyService.deleteWarranty(warranty.id).subscribe(() => {
       this.warranties = this.warranties.filter(w => w.id !== warranty.id);
+      this.filteredWarranties = this.filterWarrantiesByStatus(this.warranties, this.filterStatus);
     });
-  }
-
-  addWarranty(): void {
-    console.log('Redirecting to add warranty page...');
   }
 
   goToNextPage(): void {
@@ -105,7 +134,10 @@ export class WarrantyListComponent implements OnInit {
   }
 
   onChange(): void {
-    console.log('onChange', this.filterStatus);
     this.fetchWarranties();
+  }
+
+  onSearchChange(query: string): void {
+    this.searchSubject.next(query);
   }
 }

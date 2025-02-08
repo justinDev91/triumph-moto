@@ -7,4 +7,5 @@ export interface WarrantyRepositoryInterface {
   findByMotorcycleId(motorcycleId: string): Promise<WarrantyEntity | Error>;
   update(id: string, coverageDetails: string, isActive: boolean): Promise<void>;
   remove(id: string): Promise<void>;
+  searchByMotorcycleBrand(query: string): Promise<WarrantyEntity[]>;
 }
