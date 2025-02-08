@@ -13,6 +13,10 @@ export const routes: Routes = [
     path: 'spareparts',
     loadChildren: () => import('./spare-part/spare.part.module').then(m => m.SparePartModule),
   },
+  {
+    path: 'repairs',
+    loadChildren: () => import('./repairs/repair.module').then(m => m.RepairsModule),
+  },
 
 
 ];

@@ -1,0 +1,82 @@
+<div class="max-w-lg mx-auto mt-10">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Create New Repair</h2>
+
+  <form (ngSubmit)="createRepair()" #createRepairForm="ngForm">
+    <div class="mb-4">
+      <label for="breakdownId" class="block text-sm font-medium text-gray-700">Select Breakdown</label>
+      <select
+        id="breakdownId"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="repair.breakdownId"
+        name="breakdownId"
+        required
+        #breakdownId="ngModel"
+      >
+        <option *ngFor="let breakdown of breakdowns" [value]="breakdown.id">
+          {{ breakdown.description.value }}
+        </option>
+      </select>
+      <div *ngIf="breakdownId.invalid && breakdownId.touched" class="text-red-500 text-xs mt-1">
+        Please select a breakdown.
+      </div>
+    </div>
+
+    <!-- Repair Date -->
+    <div class="mb-4">
+      <label for="repairDate" class="block text-sm font-medium text-gray-700">Repair Date</label>
+      <input
+        type="date"
+        id="repairDate"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="repair.repairDate"
+        name="repairDate"
+        required
+        #repairDate="ngModel"
+      />
+      <div *ngIf="repairDate.invalid && repairDate.touched" class="text-red-500 text-xs mt-1">
+        Repair Date is required.
+      </div>
+    </div>
+
+    <!-- Actions Selection -->
+    <div class="mb-4">
+      <label for="actions" class="block text-sm font-medium text-gray-700">Select Actions</label>
+      <div *ngFor="let action of actions">
+        <input
+          type="checkbox"
+          [id]="action"
+          [(ngModel)]="selectedActions[action]"
+          [value]="action"
+          name="actions"
+        />
+        <label for="actions" class="ml-2 text-sm font-medium text-gray-700">{{ action }}</label>
+      </div>
+    </div>
+
+    <!-- Cost -->
+    <div class="mb-4">
+      <label for="cost" class="block text-sm font-medium text-gray-700">Cost</label>
+      <input
+        type="number"
+        id="cost"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="repair.cost"
+        name="cost"
+        required
+        #cost="ngModel"
+      />
+      <div *ngIf="cost.invalid && cost.touched" class="text-red-500 text-xs mt-1">
+        Cost is required.
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+      [disabled]="createRepairForm.invalid"
+    >
+      Create Repair
+    </button>
+  </form>
+</div>

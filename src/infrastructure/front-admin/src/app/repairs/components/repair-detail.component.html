@@ -1,0 +1,78 @@
+<div class="repair-detail p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-8">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Repair Detail</h2>
+
+  <div *ngIf="isLoading" class="text-center text-gray-500">
+    <p>Loading repair data...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="text-center text-red-500">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="repair">
+    <div class="repair-info space-y-4 mb-6">
+      <p class="text-lg text-gray-700">
+        <strong>Repair Date:</strong> {{ repair.repairDate.value | date }}
+      </p>
+
+      <div class="text-lg text-gray-700">
+        <strong>Actions:</strong>
+        <ul class="list-disc pl-6">
+          <li *ngFor="let action of repair.actions">{{ action }}</li>
+        </ul>
+      </div>
+
+      <p class="text-lg text-gray-700">
+        <strong>Cost:</strong> ${{ repair.cost.value }}
+      </p>
+    </div>
+
+    <div class="mt-6" *ngIf="repair.breakdown">
+      <h3 class="text-xl font-medium text-gray-800 mb-4">Breakdown Details</h3>
+
+      <p class="text-lg text-gray-700">
+        <strong>Motorcycle:</strong>
+        <span *ngIf="repair.breakdown.motorcycle">
+          {{ repair.breakdown.motorcycle.brand.value }} - {{ repair.breakdown.motorcycle.model.value }} ({{ repair.breakdown.motorcycle.year.value }})
+        </span>
+        <span *ngIf="!repair.breakdown.motorcycle">No motorcycle details available</span>
+      </p>
+
+      <p class="text-lg text-gray-700">
+        <strong>Breakdown Description:</strong> {{ repair.breakdown.description.value }}
+      </p>
+
+      <p class="text-lg text-gray-700" *ngIf="repair.breakdown.reportedDate?.value">
+        <strong>Reported Date:</strong> {{ repair.breakdown.reportedDate.value | date }}
+      </p>
+
+      <div *ngIf="repair.breakdown.warranty">
+        <h4 class="text-xl font-medium text-gray-800 mb-4">Warranty Details</h4>
+
+        <p class="text-lg text-gray-700" *ngIf="repair.breakdown.warranty.startDate?.value">
+          <strong>Start Date:</strong> {{ repair.breakdown.warranty.startDate.value | date }}
+        </p>
+
+        <p class="text-lg text-gray-700" *ngIf="repair.breakdown.warranty.endDate?.value">
+          <strong>End Date:</strong> {{ repair.breakdown.warranty.endDate.value | date }}
+        </p>
+
+        <p class="text-lg text-gray-700" *ngIf="repair.breakdown.warranty.isActive !== undefined">
+          <strong>Status:</strong>
+          <span [ngClass]="{
+            'text-green-500': repair.breakdown.warranty.isActive,
+            'text-red-500': !repair.breakdown.warranty.isActive
+          }">
+            {{ repair.breakdown.warranty.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </p>
+
+        <p class="text-lg text-gray-700" *ngIf="repair.breakdown.warranty.coverageDetails?.value">
+          <strong>Coverage Details:</strong> {{ repair.breakdown.warranty.coverageDetails.value }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet />

@@ -10,6 +10,7 @@ export class RepairEntity {
     public readonly repairDate: RepairDate,
     public actions: CommonRepairAction[],
     public readonly cost: RepairCost,
+    // public status: 'pending' | 'completed' 
   ) {}
 
   public static create(

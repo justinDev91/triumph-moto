@@ -5,8 +5,8 @@ import { Warranty } from './warranty.model';
 export interface Breakdown {
   id: string;
   motorcycle: Motorcycle;
-  description: string;
-  reportedDate: Date;
+  description: { value: string };
+  reportedDate: { value: Date };
   warranty?: Warranty | null;
   repairs: Repair[];
 }

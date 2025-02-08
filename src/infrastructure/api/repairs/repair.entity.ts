@@ -29,5 +29,6 @@ export class Repair {
   actions: CommonRepairActionEnum[];  
 
   @ApiProperty({ description: "The cost associated with the repair" })
+  @Column({ type: "decimal", default: 0 })
   cost: number;
 }
