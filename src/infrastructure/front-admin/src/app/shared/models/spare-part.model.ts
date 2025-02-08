@@ -1,9 +1,17 @@
 export interface SparePart {
   id: string;
-  name: string;
-  quantityInStock: number;
-  criticalLevel: number;
-  cost: number;
+  name: {
+    value: string;
+  };
+  quantityInStock: {
+    value: number;
+  };
+  criticalLevel: {
+    value: number;
+  };
+  cost: {
+    value: string;
+  };
   totalUsage: number;
   reservedStock: number;
 }

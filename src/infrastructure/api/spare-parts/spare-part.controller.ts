@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, Query } from '@nestjs/common';
 import { SparePartEntity } from '@domain/entities/order/SparePartEntity';
 import { SparePartService } from './spare-part.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -21,6 +21,17 @@ export class SparePartController {
   ): Promise<void | Error> {
     return this.sparePartService.createSparePart(createSparePartDto);
   }
+
+  @Get('search')
+  @ApiResponse({ status: 200, description: 'Search spare parts by name', type: [SparePartEntity] })
+  async searchSpareParts(
+    @Query('query') query: string
+  ): Promise<ResponseSparePartDto[] | Error> {
+    const spareParts = await this.sparePartService.searchSparePartsByName(query);
+    if (spareParts instanceof Error) return spareParts;
+    return spareParts.map(sparePart => toSparePartResponse(sparePart));  
+  }
+
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Get spare part by ID', type: SparePartEntity })

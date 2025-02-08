@@ -9,6 +9,7 @@ import { SparePartRepositoryImplem } from "@adapters/spare.part.repository.imple
 import { CreateSparePartDto } from "./dto/create-spare-part.dto";
 import { GetAllSparePartsUsecase } from "@application/usecases/sparePart/GetAllSparePartsUsecase";
 import { DeleteSparePartUsecase } from "@application/usecases/sparePart/DeleteSparePartUsecase";
+import { SearchByNameUseCase } from "@application/usecases/sparePart/SearchByNameUseCase";
 
 @Injectable()
 export class SparePartService {
@@ -19,6 +20,7 @@ export class SparePartService {
   private readonly useSparePartUsecase: UseSparePartUsecase;
   private readonly getAllSparePartsUsecase: GetAllSparePartsUsecase;
   private readonly removeSparePartUsecase: DeleteSparePartUsecase;
+  private readonly searchByNameUseCase: SearchByNameUseCase; 
 
   constructor(private readonly sparePartRepository: SparePartRepositoryImplem) {
     this.createSparePartUsecase = new CreateSparePartUsecase(sparePartRepository);
@@ -28,6 +30,8 @@ export class SparePartService {
     this.useSparePartUsecase = new UseSparePartUsecase(sparePartRepository);
     this.getAllSparePartsUsecase = new GetAllSparePartsUsecase(sparePartRepository);
     this.removeSparePartUsecase = new DeleteSparePartUsecase(sparePartRepository);
+    this.searchByNameUseCase = new SearchByNameUseCase(sparePartRepository); 
+
   }
 
   async createSparePart(createSparePartDto: CreateSparePartDto): Promise<void | Error> {
@@ -57,5 +61,9 @@ export class SparePartService {
 
   async removeSparePart(id: string): Promise<void | Error> {
     return this.removeSparePartUsecase.execute(id);
+  }
+  
+  async searchSparePartsByName(query: string): Promise<SparePartEntity[] | Error> {
+    return this.searchByNameUseCase.execute(query);
   }
 }

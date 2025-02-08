@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 import { SparePartRepositoryInterface } from "@application/repositories/SparePartRepositoryInterface";
 import { SparePartEntity } from "@domain/entities/order/SparePartEntity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -12,6 +12,17 @@ export class SparePartRepositoryImplem implements SparePartRepositoryInterface {
     @InjectRepository(SparePart)
     private readonly sparePartRepository: Repository<SparePart>
   ) {}
+
+  async searchByName(query: string): Promise<SparePartEntity[]> {
+
+    const spareParts = await this.sparePartRepository.find({
+      where: [
+        { name: Like(`%${query}%`) },
+      ],
+    });
+
+    return spareParts.map(toDomainSparePart) as SparePartEntity[];  
+  }
 
   async use(
     id: string, 

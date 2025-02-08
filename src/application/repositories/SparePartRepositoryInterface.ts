@@ -7,4 +7,6 @@ export interface SparePartRepositoryInterface {
   restock(id, quantity: number):  Promise<void>;
   reserve(id, quantity: number):  Promise<void>;
   use(id, quantityInStock, totalUsage, reservedStock): Promise<void>;
+  searchByName(query: string): Promise<SparePartEntity[]>;
+  
 }

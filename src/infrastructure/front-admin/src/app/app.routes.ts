@@ -9,6 +9,10 @@ export const routes: Routes = [
     path: 'warranties',
     loadChildren: () => import('./warranties/warranty.module').then(m => m.WarrantiesModule),
   },
+  {
+    path: 'spareparts',
+    loadChildren: () => import('./spare-part/spare.part.module').then(m => m.SparePartModule),
+  },
 
 
 ];
