@@ -24,7 +24,7 @@ export default function SignUp() {
     async function checkSession() {
       const sessionData = await getSession();
       if (sessionData !== null) {
-        router.push("/Profil");
+        router.push("/dashboard");
       }
     }
     checkSession();
