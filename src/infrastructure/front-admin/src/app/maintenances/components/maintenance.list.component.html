@@ -1,0 +1,71 @@
+<div class="text-center my-6">
+  <h1 class="text-3xl font-semibold text-gray-800">Liste des Entretiens</h1>
+</div>
+
+<div class="flex justify-between items-center mb-6 px-24">
+  <div class="flex space-x-2">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Rechercher par moto..."
+      class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      (input)="onSearchChange(searchQuery)"
+    />
+  </div>
+</div>
+
+<div class="overflow-x-auto bg-white rounded-lg shadow-md mx-24">
+  <table class="min-w-full table-auto text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-3 py-2 text-left">Moto</th>
+        <th class="px-3 py-2 text-left">Type d'Entretien</th>
+        <th class="px-3 py-2 text-left">Date</th>
+        <th class="px-3 py-2 text-left">Coût</th>
+        <th class="px-3 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let maintenance of filteredMaintenances">
+        <td class="px-3 py-2">
+          {{ maintenance.motorcycle?.brand?.value }} {{ maintenance.motorcycle?.model?.value }} ({{ maintenance.motorcycle?.year?.value }})
+        </td>
+        <td class="px-3 py-2">{{ maintenance.maintenanceType }}</td>
+        <td class="px-3 py-2">{{ maintenance.date | date: 'shortDate' }}</td>
+        <td class="px-3 py-2">{{ maintenance.cost | currency }}</td>
+        <td class="px-3 py-2 space-x-2">
+          <button
+            class="w-24 p-2 text-white bg-red-600 hover:bg-red-800 rounded-lg text-sm transition duration-300 text-center"
+            (click)="deleteMaintenance(maintenance.id)"
+          >
+            Supprimer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p *ngIf="filteredMaintenances.length === 0" class="text-center mt-4 text-sm text-gray-500">Aucun entretien trouvé.</p>
+
+<div class="flex justify-between items-center mt-6 mx-24">
+  <span class="text-sm text-gray-600">Page {{ currentPage }} de {{ totalPages }}</span>
+  <div class="space-x-2">
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 1"
+    >
+      Précédent
+    </button>
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Suivant
+    </button>
+  </div>
+</div>
+
+<router-outlet />

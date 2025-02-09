@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Motorcycle, MotorStatus } from '../../shared/models/motorcycle.model';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -9,7 +9,7 @@ import { MotorcycleService } from '../service/motorcycle.service';
 @Component({
   selector: 'app-motorcycle-list',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './motorcycle-list.component.html',
 })
 export class MotorcycleListComponent implements OnInit {

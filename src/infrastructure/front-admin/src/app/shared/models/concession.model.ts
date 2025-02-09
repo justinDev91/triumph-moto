@@ -4,7 +4,7 @@ import { Motorcycle } from './motorcycle.model';
 
 export interface Concession {
   id: string;
-  name: string;
+  name: {value : string};
   user: User;
   motorcycles?: Motorcycle[];
   company?: Company | null;

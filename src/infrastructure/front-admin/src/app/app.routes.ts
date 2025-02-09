@@ -30,6 +30,10 @@ export const routes: Routes = [
     path: 'motorcycles-trial',
     loadChildren: () => import('./motorcycle-trial/motorcycle-trial.module').then(m => m.MotorcycleTrialsModule),
   },
+  {
+    path: 'maintenances',
+    loadChildren: () => import('./maintenances/maintenance.module').then(m => m.MaintenancesModule),
+  },
 
 
 ];
