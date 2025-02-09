@@ -2,7 +2,6 @@ import { Controller, Post, Body, Get, Param, Delete, Put } from '@nestjs/common'
 import { MotorcycleService } from './motorcycle.service';
 import { CreateMotorcycleDto } from './dto/create-motorcycle.dto';
 import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
-import { MotorStatus } from '@domain/types/motorcycle';
 import { UpdateMotorcycleMileageDto } from './dto/update-motorcycle-mileage.dto';
 import { UpdateMotorcycleStatusDto } from './dto/update-motorcycle-status.dto';
 import { UpdateMotorcycleServiceDetailsDto } from './dto/update-motorcycle-service-details.dto';

@@ -2,12 +2,8 @@ import { Company } from './company.model';
 import { Concession } from './concession.model';
 import { Maintenance } from './maintenance.model';
 
-export enum MotorStatusEnum {
-  Available = 'Available',
-  InService = 'InService',
-  Sold = 'Sold',
-  Maintenance = 'Maintenance',
-}
+
+export type MotorStatus = 'Available' | 'InMaintenance' | 'OnTest' | 'Sold';
 
 export interface Motorcycle {
   id: string;
@@ -21,7 +17,7 @@ export interface Motorcycle {
     value: number;
   };
   mileage: number;
-  status: MotorStatusEnum;
+  status: MotorStatus;
   purchaseDate: Date;
   lastServiceDate?: Date | null;
   nextServiceMileage: number;

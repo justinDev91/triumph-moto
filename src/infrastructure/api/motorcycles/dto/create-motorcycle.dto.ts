@@ -53,12 +53,9 @@ export class CreateMotorcycleDto {
   nextServiceMileage: number;
 
   @ApiProperty({ 
-    description: 'Company assigned to the motorcycle', 
+    description: 'CompanyId assigned to the motorcycle', 
     required: false, 
-    example: { 
-      name: 'SpeedRiders Ltd.', 
-      createdAt: '2023-01-01T12:00:00.000Z' 
-    } 
+    example: "7ssjo7s"
   })
-  company?: CompanyEntity | null;
+  companyId?: string | null;
 }

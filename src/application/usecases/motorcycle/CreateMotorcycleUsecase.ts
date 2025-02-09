@@ -1,10 +1,13 @@
 import { MotorcycleRepositoryInterface } from "@application/repositories/MotorcycleRepositoryInterface";
-import { CompanyEntity } from "@domain/entities/company/CompanyEntity";
+import { CompanyRepositoryInterface } from "@application/repositories/CompanyRepositoryInterface";
 import { MotorcycleEntity } from "@domain/entities/motorcycle/MotorcycleEntity";
 import { MotorStatus } from "@domain/types/motorcycle";
 
 export class CreateMotorcycleUsecase {
-  constructor(private readonly motorcycleRepository: MotorcycleRepositoryInterface) {}
+  constructor(
+    private readonly motorcycleRepository: MotorcycleRepositoryInterface,
+    private readonly companyRepository: CompanyRepositoryInterface 
+  ) {}
 
   public async execute(
     brand: string,
@@ -15,9 +18,12 @@ export class CreateMotorcycleUsecase {
     purchaseDate: Date,
     lastServiceDate: Date | null,
     nextServiceMileage: number,
-    company: CompanyEntity | null = null,
+    companyId: string | null = null
   ): Promise<void | Error> {
 
+   const company = await this.companyRepository.findById(companyId);
+      if (company instanceof Error) return company;
+  
     const motorcycle = MotorcycleEntity.create(
       null,
       brand,
@@ -30,10 +36,10 @@ export class CreateMotorcycleUsecase {
       nextServiceMileage,
       null,
       null,
-      company,
+      company
     );
 
-    if(motorcycle instanceof Error) return motorcycle
+    if (motorcycle instanceof Error) return motorcycle;
 
     await this.motorcycleRepository.save(motorcycle);
   }

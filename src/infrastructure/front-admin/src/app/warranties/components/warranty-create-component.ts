@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router} from '@angular/router';
 import { Motorcycle } from '../../shared/models/motorcycle.model';
-import { MotorcycleService } from '../../motorcycles/motorcycle.service';
+import { MotorcycleService } from '../../motorcycles/service/motorcycle.service';
 
 @Component({
   selector: 'app-warranty-create',

@@ -9,7 +9,6 @@ import { AssignMotorcycleToCompanyUsecase } from '@application/usecases/motorcyc
 import { RemoveMotorcycleFromCompanyUsecase } from '@application/usecases/motorcycle/RemoveMotorcycleFromCompanyUsecase';
 import { RemoveMotorcycleFromConcessionUsecase } from '@application/usecases/motorcycle/RemoveMotorcycleFromConcessionUsecase';
 import { CheckServiceStatusUsecase } from '@application/usecases/motorcycle/CheckServiceStatusUsecase';
-import { MotorStatus } from '@domain/types/motorcycle';
 import { MotorcycleRepositoryImplem } from '@adapters/motorcycle.repository.implem';
 import { CompanyRepositoryImplem } from '@adapters/company.repository.implem';
 import { CreateMotorcycleDto } from './dto/create-motorcycle.dto';
@@ -39,7 +38,7 @@ export class MotorcycleService {
     private readonly companyRepository: CompanyRepositoryImplem,
     private readonly concessionRepository: ConcessionRepositoryImplem,
   ) {
-    this.createMotorcycleUsecase = new CreateMotorcycleUsecase(motorcycleRepository);
+    this.createMotorcycleUsecase = new CreateMotorcycleUsecase(motorcycleRepository, companyRepository);
     this.updateMileageUsecase = new UpdateMileageUsecase(motorcycleRepository);
     this.updateMotorcycleStatusUsecase = new UpdateMotorcycleStatusUsecase(motorcycleRepository);
     this.updateServiceDetailsUsecase = new UpdateServiceDetailsUsecase(motorcycleRepository);
@@ -63,7 +62,7 @@ export class MotorcycleService {
       purchaseDate,
       lastServiceDate,
       nextServiceMileage,
-      company
+      companyId
     } = createMotorcycleDto;
 
     return await this.createMotorcycleUsecase.execute(
@@ -75,7 +74,7 @@ export class MotorcycleService {
       purchaseDate,
       lastServiceDate,
       nextServiceMileage,
-      company
+      companyId
     );
   }
 

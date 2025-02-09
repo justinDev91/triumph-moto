@@ -1,0 +1,93 @@
+<!-- Title Section -->
+<div class="text-center my-6">
+  <h1 class="text-3xl font-semibold text-gray-800">Liste des Motos</h1>
+</div>
+
+<!-- Search, Filter, and Add Motorcycle Button -->
+<div class="flex justify-between items-center mb-6 px-24">
+  <div class="flex space-x-2">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search motorcycles..."
+      class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      (input)="onSearchChange(searchQuery)"
+    />
+    <select
+      [(ngModel)]="filterStatus"
+      (change)="onChange()"
+      class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+    >
+      <option value="">Filter by Status</option>
+      <option value="Available">Available</option>
+      <option value="InService">In Service</option>
+      <option value="Sold">Sold</option>
+      <option value="Maintenance">Maintenance</option>
+    </select>
+  </div>
+
+  <!-- Link to Create Motorcycle Page -->
+  <button
+    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+    [routerLink]="'/motorcycles/create'"
+  >
+    Ajouter
+  </button>
+</div>
+
+<!-- Motorcycles Table -->
+<div class="overflow-x-auto bg-white rounded-lg shadow-md mx-24">
+  <table class="min-w-full table-auto text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-3 py-2 text-left">Brand</th>
+        <th class="px-3 py-2 text-left">Model</th>
+        <th class="px-3 py-2 text-left">Year</th>
+        <th class="px-3 py-2 text-left">Mileage</th>
+        <th class="px-3 py-2 text-left">Status</th>
+        <th class="px-3 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let motorcycle of filteredMotorcycles">
+
+        <td class="px-3 py-2">{{ motorcycle.brand.value }}</td>
+        <td class="px-3 py-2">{{ motorcycle.model.value }}</td>
+        <td class="px-3 py-2">{{ motorcycle.year.value }}</td>
+        <td class="px-3 py-2">{{ motorcycle.mileage }}</td>
+        <td class="px-3 py-2">{{ motorcycle.status }}</td>
+        <td class="px-3 py-2 space-x-2">
+          <button
+            class="w-24 p-2 text-white bg-red-600 hover:bg-red-800 rounded-lg text-sm transition duration-300 text-center"
+            (click)="deleteMotorcycle(motorcycle)"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Section -->
+<div class="flex justify-between items-center mt-6 mx-24">
+  <span class="text-sm text-gray-600">Page {{ currentPage }} of {{ totalPages }}</span>
+  <div class="space-x-2">
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
+<router-outlet />

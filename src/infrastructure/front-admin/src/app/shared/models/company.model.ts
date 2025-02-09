@@ -5,7 +5,7 @@ import { User } from "./user.model";
 
 export interface Company {
   id: string;
-  name: string;
+  name: {value: string};
   user: User;
   drivers?: Driver[];
   motorcycles?: Motorcycle[];
