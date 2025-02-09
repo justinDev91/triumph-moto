@@ -6,7 +6,6 @@ export const toResponseUserDto = (user: UserEntity): ResponseUserDto => ({
   firstName: user.firstName?.value,
   lastName: user.lastName?.value,
   email: user.email?.value,
-  password: user.password?.value,
   isActive: user.isActive,
   administrator: user.administrator,
   createdAt: user.createdAt,

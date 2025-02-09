@@ -58,6 +58,10 @@ export const routes: Routes = [
     path: 'appointments',
     loadChildren: () => import('./appointment/appointment.module').then(m => m.AppointmentsModule),
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+  },
 
 
 ];
