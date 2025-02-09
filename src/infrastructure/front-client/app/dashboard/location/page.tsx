@@ -14,7 +14,7 @@ export default async function LocationPage() {
   }
 
   return (
-    <div className="flex-col text-white">
+    <div className="flex-col text-black">
       <Link
         href="/dashboard/location/create"
         className="bg-gray-800 text-white group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"

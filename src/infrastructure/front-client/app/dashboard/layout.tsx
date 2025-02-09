@@ -14,11 +14,7 @@ import {
 import {
   Bars3Icon,
   CalendarIcon,
-  ChartPieIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
   HomeIcon,
-  UsersIcon,
   XMarkIcon,
   MoonIcon,
 } from "@heroicons/react/24/outline";
@@ -30,32 +26,20 @@ interface NavigationItem {
   current: boolean;
 }
 
-interface Team {
-  id: number;
-  name: string;
-  href: string;
-  initial: string;
-  current: boolean;
-}
-
 const navigation: NavigationItem[] = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
+  { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
   {
-    name: "Documents",
-    href: "#",
-    icon: DocumentDuplicateIcon,
+    name: "Appointment",
+    href: "dashboard/appointment",
+    icon: CalendarIcon,
     current: false,
   },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
-  { name: "Location", href: "dashboard/location", icon: MoonIcon, current: false },
-];
-const teams: Team[] = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
+  {
+    name: "Location",
+    href: "dashboard/location",
+    icon: MoonIcon,
+    current: false,
+  },
 ];
 
 export default function RootLayout({
@@ -147,31 +131,6 @@ export default function RootLayout({
                       </li>
                     </ul>
                   </li>
-                  <li>
-                    <div className="text-xs/6 font-semibold text-gray-400">
-                      Your teams
-                    </div>
-                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                      {teams.map((team) => (
-                        <li key={team.id}>
-                          <a
-                            href={team.href}
-                            className={classNames(
-                              team.current
-                                ? "bg-gray-800 text-white"
-                                : "text-gray-400 hover:bg-gray-800 hover:text-white",
-                              "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"
-                            )}
-                          >
-                            <span className="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                              {team.initial}
-                            </span>
-                            <span className="truncate">{team.name}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
                 </ul>
               </nav>
             </div>
@@ -216,31 +175,6 @@ export default function RootLayout({
                   <li>
                     <LogoutButton />
                   </li>
-                </ul>
-              </li>
-              <li>
-                <div className="text-xs/6 font-semibold text-gray-400">
-                  Your teams
-                </div>
-                <ul role="list" className="-mx-2 mt-2 space-y-1">
-                  {teams.map((team) => (
-                    <li key={team.id}>
-                      <a
-                        href={team.href}
-                        className={classNames(
-                          team.current
-                            ? "bg-gray-800 text-white"
-                            : "text-gray-400 hover:bg-gray-800 hover:text-white",
-                          "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"
-                        )}
-                      >
-                        <span className="flex size-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                          {team.initial}
-                        </span>
-                        <span className="truncate">{team.name}</span>
-                      </a>
-                    </li>
-                  ))}
                 </ul>
               </li>
               <li className="-mx-6 mt-auto">
