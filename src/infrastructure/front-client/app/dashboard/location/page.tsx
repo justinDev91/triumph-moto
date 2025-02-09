@@ -3,6 +3,7 @@ import getUser from "@/hooks/user/getUser";
 import { redirect } from "next/navigation";
 import getUserLocation from "@/hooks/user/getUserLocation";
 import Link from "next/link";
+import CardLocation from "@/components/CardLocation";
 
 export default async function LocationPage() {
   const userData = await getUser();
@@ -22,9 +23,10 @@ export default async function LocationPage() {
       </Link>
       {locationData !== null ? (
         <div>
-          {/* Affichez les informations de location ici */}
-          <h1 className="text-3xl font-bold mb-4">Votre Location</h1>
-          <p>{JSON.stringify(locationData)}</p>
+          <h1 className="text-3xl font-bold mb-4">Vos locations</h1>
+          {locationData.map((location) => (
+            <CardLocation key={location.id} location={location} />
+          ))}
         </div>
       ) : (
         <h1 className="text-xl font-semibold mb-4 self-center">
