@@ -15,11 +15,18 @@ export default async function LocationCreatePage() {
   const availableMotorcycles: Motorcycle[] = motorcyclesData.filter(
     (moto: Motorcycle) => moto.status === "Available"
   );
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-white text-black">
       <div className="bg-gray-100 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4">Louer une moto</h1>
-        <LocationForm availableMotorcycles={availableMotorcycles} />
+        {availableMotorcycles.length > 0 ? (
+          <LocationForm availableMotorcycles={availableMotorcycles} />
+        ) : (
+          <p className="text-center text-red-500">
+            Aucunes motos n&apos;est disponible pour le moment
+          </p>
+        )}
       </div>
     </div>
   );
