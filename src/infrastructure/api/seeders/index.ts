@@ -48,7 +48,7 @@ export const runSeeders = async () => {
  // await motorcycleSeeder.seedMotorcycles(20);
 //   await motorcycleTrialSeeder.seedMotorcycleTrials(10);
 //   await concessionSeeder.seedConcessions(20);
-// //await companySeeder.seedCompanies(2);
+// await companySeeder.seedCompanies(20);
 //  await breakdownSeeder.seedBreakdowns(10);
 //  await appointmentSeeder.seedAppointments(10);
 };

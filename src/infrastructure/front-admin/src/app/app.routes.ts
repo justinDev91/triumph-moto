@@ -46,6 +46,10 @@ export const routes: Routes = [
     path: 'concessions',
     loadChildren: () => import('./concessions/concession.module').then(m => m.DriversModule),
   },
+  {
+    path: 'companies',
+    loadChildren: () => import('./companies/company.module').then(m => m.CompaniesModule),
+  },
 
 
 ];
