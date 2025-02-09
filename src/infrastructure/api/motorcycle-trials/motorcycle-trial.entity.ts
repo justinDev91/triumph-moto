@@ -7,7 +7,9 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
+import { Appointment } from "../appointment/appointment.entity";
 
 @Entity()
 export class MotorcycleTrial {
@@ -32,4 +34,8 @@ export class MotorcycleTrial {
   @Column({ type: "date", nullable: true })
   @ApiProperty({ description: "The end date of the motorcycle trial", nullable: true })
   endDate: Date | null;
+  
+  @OneToMany(() => Appointment, appointment => appointment.motorcycleTrial,  { nullable: true })
+  @ApiProperty({ description: "Appointments related to this motorcycle trial" })
+  appointments: Appointment[];
 }

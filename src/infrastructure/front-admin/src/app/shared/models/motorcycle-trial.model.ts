@@ -5,6 +5,6 @@ export interface MotorcycleTrial {
   id: string;
   motorcycle: Motorcycle;
   driver: Driver;
-  startDate: Date;
-  endDate?: Date | null;
+  startDate: {value: Date};
+  endDate: {value : Date};
 }

@@ -7,6 +7,8 @@ import { Driver } from '@api/drivers/driver.entity';
 import { faker } from '@faker-js/faker';
 import { StartDate } from '@domain/values/motorcycle/MotorcycleTrialStartDate';
 import { EndDate } from '@domain/values/motorcycle/MotorcycleTrialEndDate';
+import { MotorStatusEnum } from '@api/types/MotorStatusEnum';
+import { LicenseTypeEnum } from '@api/types/LicenseTypeEnum';
 
 @Injectable()
 export class MotorcycleTrialSeeder {
@@ -22,30 +24,46 @@ export class MotorcycleTrialSeeder {
   ) {}
 
   async seedMotorcycleTrials(count: number = 10): Promise<void> {
-    const motorcycles = await this.motorcycleRepository.find();
-    const drivers = await this.driverRepository.find();
+    const motorcycles: Motorcycle[] = [];
+    const drivers: Driver[] = [];
 
-    if (motorcycles.length === 0 || drivers.length === 0) {
-      console.log('No motorcycles or drivers found in the database!');
-      return;
+    for (let i = 0; i < 10; i++) {
+      const motorcycle = this.motorcycleRepository.create({
+        brand: faker.vehicle.manufacturer(),
+        model: faker.vehicle.model(),
+        year: faker.date.past({ years: 20 }).getFullYear(),
+        mileage: faker.number.int({ min: 1000, max: 100000 }),
+        status: faker.helpers.arrayElement([
+          MotorStatusEnum.Available,
+          MotorStatusEnum.InMaintenance,
+          MotorStatusEnum.OnTest,
+          MotorStatusEnum.Sold,
+        ]),
+        purchaseDate: faker.date.past({ years: 5 }),
+        lastServiceDate: faker.date.past({ years: 1 }),
+        nextServiceMileage: faker.number.int({ min: 1000, max: 10000 }),
+      });
+      motorcycles.push(motorcycle);
     }
+    await this.motorcycleRepository.save(motorcycles);
+
+    for (let i = 0; i < 10; i++) {
+      const driver = this.driverRepository.create({
+        name: faker.person.fullName(),
+        license: faker.string.alphanumeric(10).toUpperCase(),
+        licenseType: faker.helpers.arrayElement(Object.values(LicenseTypeEnum)),
+        yearsOfExperience: faker.number.int({ min: 1, max: 30 }),
+        email: faker.internet.email(),
+        phone: faker.phone.number(),
+      });
+      drivers.push(driver);
+    }
+    await this.driverRepository.save(drivers);
 
     const motorcycleTrials: MotorcycleTrial[] = [];
-
     for (let i = 0; i < count; i++) {
       const motorcycle = faker.helpers.arrayElement(motorcycles);
       const driver = faker.helpers.arrayElement(drivers);
-
-      const existingTrial = await this.motorcycleTrialRepository.findOne({
-        where: {
-          motorcycle: { id: motorcycle.id },
-        },
-      });
-
-      if (existingTrial) {
-        console.log(`Motorcycle ${motorcycle.id} already has an active trial. Skipping...`);
-        continue;
-      }
 
       const startDateValue = faker.date.future();
       const startDateOrError = StartDate.from(startDateValue);

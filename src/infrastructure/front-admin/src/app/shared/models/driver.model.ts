@@ -2,20 +2,16 @@ import { Company } from './company.model';
 import { DrivingRecord } from './driving-record.model';
 import { User } from './user.model';
 
-export enum LicenseTypeEnum {
-  A = 'A',
-  B = 'B',
-  C = 'C',
-}
+export type LicenseType = 'A' | 'B' | 'C';
 
 export interface Driver {
   id: string;
-  name: string;
-  license: string;
-  licenseType: LicenseTypeEnum;
+  name: {value: string};
+  license: {value: string};
+  licenseType: LicenseType;
   yearsOfExperience: number;
-  email: string;
-  phone: string;
+  email: {value: string};
+  phone: {value: string};
   company: Company;
   user: User;
   createdAt: Date;

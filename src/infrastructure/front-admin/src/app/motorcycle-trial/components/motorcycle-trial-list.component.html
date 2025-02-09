@@ -1,0 +1,73 @@
+<!-- Title Section -->
+<div class="text-center my-6">
+  <h1 class="text-3xl font-semibold text-gray-800">Liste des Essais Moto</h1>
+</div>
+
+<!-- Search Input -->
+<div class="flex justify-between items-center mb-6 px-24">
+  <div class="flex space-x-2">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Rechercher une moto..."
+      class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      (input)="onSearchChange(searchQuery)"
+    />
+  </div>
+</div>
+
+<!-- Trials Table -->
+<div class="overflow-x-auto bg-white rounded-lg shadow-md mx-24">
+  <table class="min-w-full table-auto text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-3 py-2 text-left">Marque</th>
+        <th class="px-3 py-2 text-left">Modèle</th>
+        <th class="px-3 py-2 text-left">Conducteur</th>
+        <th class="px-3 py-2 text-left">Date de début</th>
+        <th class="px-3 py-2 text-left">Date de fin</th>
+        <th class="px-3 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let trial of filteredTrials">
+        <td class="px-3 py-2">{{ trial.motorcycle.brand.value }}</td>
+        <td class="px-3 py-2">{{ trial.motorcycle.model.value }}</td>
+        <td class="px-3 py-2">{{ trial.driver.name.value }}</td>
+        <td class="px-3 py-2">{{ trial.startDate.value | date:'dd/MM/yyyy' }}</td>
+        <td class="px-3 py-2">{{ trial.endDate.value | date:'dd/MM/yyyy' }}</td>
+        <td class="px-3 py-2 space-x-2">
+          <button
+            class="w-24 p-2 text-white bg-red-600 hover:bg-red-800 rounded-lg text-sm transition duration-300 text-center"
+            (click)="deleteTrial(trial)"
+          >
+            Supprimer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Section -->
+<div class="flex justify-between items-center mt-6 mx-24">
+  <span class="text-sm text-gray-600">Page {{ currentPage }} sur {{ totalPages }}</span>
+  <div class="space-x-2">
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 1"
+    >
+      Précédent
+    </button>
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Suivant
+    </button>
+  </div>
+</div>
+
+<router-outlet />
