@@ -34,6 +34,18 @@ export const routes: Routes = [
     path: 'maintenances',
     loadChildren: () => import('./maintenances/maintenance.module').then(m => m.MaintenancesModule),
   },
+  {
+    path: 'locations',
+    loadChildren: () => import('./locations/location.module').then(m => m.LocationsModule),
+  },
+  {
+    path: 'drivers',
+    loadChildren: () => import('./drivers/driver.module').then(m => m.DriversModule),
+  },
+  {
+    path: 'concessions',
+    loadChildren: () => import('./concessions/concession.module').then(m => m.DriversModule),
+  },
 
 
 ];

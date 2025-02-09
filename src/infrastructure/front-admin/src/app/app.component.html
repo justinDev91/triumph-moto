@@ -2,6 +2,7 @@
   <h1 class="text-4xl font-bold text-center text-gray-800 mb-12">{{ title }}</h1>
 
   <div class="card-container flex flex-wrap justify-center gap-8">
+    <!-- Users Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/users">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-users text-4xl text-gray-800"></i>
@@ -10,6 +11,25 @@
       <p class="text-center text-gray-600">Gérer et consulter les informations des utilisateurs</p>
     </div>
 
+    <!-- Driver Section (Newly Added) -->
+    <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/drivers">
+      <div class="flex justify-center items-center mb-4">
+        <i class="fas fa-user-tie text-4xl text-gray-800"></i>
+      </div>
+      <h2 class="text-2xl font-semibold text-center text-blue-400">Conducteurs</h2>
+      <p class="text-center text-gray-600">Gérer et consulter les informations des conducteurs</p>
+    </div>
+
+    <!-- Concessions Section (Newly Added) -->
+    <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/concessions">
+      <div class="flex justify-center items-center mb-4">
+        <i class="fas fa-store text-4xl text-gray-800"></i>
+      </div>
+      <h2 class="text-2xl font-semibold text-center text-blue-400">Concessions</h2>
+      <p class="text-center text-gray-600">Gérer et consulter les informations des concessions</p>
+    </div>
+
+    <!-- Warranties Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/warranties">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-shield-alt text-4xl text-gray-800"></i>
@@ -18,6 +38,7 @@
       <p class="text-center text-gray-600">Gérer les informations de garantie</p>
     </div>
 
+    <!-- Maintenance Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/maintenances">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-cogs text-4xl text-gray-800"></i>
@@ -26,6 +47,7 @@
       <p class="text-center text-gray-600">Gérer et suivre les maintenances des motos</p>
     </div>
 
+    <!-- Spare Parts Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/spareparts">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-cogs text-4xl text-gray-800"></i>
@@ -34,6 +56,7 @@
       <p class="text-center text-gray-600">Gérer l'inventaire des pièces de rechange</p>
     </div>
 
+    <!-- Repairs Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/repairs">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-wrench text-4xl text-gray-800"></i>
@@ -42,6 +65,7 @@
       <p class="text-center text-gray-600">Suivre les commandes de réparation et leur statut</p>
     </div>
 
+    <!-- Orders Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/orders">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-box text-4xl text-gray-800"></i>
@@ -50,6 +74,7 @@
       <p class="text-center text-gray-600">Gérer et consulter les commandes des clients</p>
     </div>
 
+    <!-- Motorcycles Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/motorcycles">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-motorcycle text-4xl text-gray-800"></i>
@@ -58,6 +83,7 @@
       <p class="text-center text-gray-600">Voir et gérer les motos</p>
     </div>
 
+    <!-- Motorcycles Trial Section -->
     <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/motorcycles-trial">
       <div class="flex justify-center items-center mb-4">
         <i class="fas fa-flag-checkered text-4xl text-gray-800"></i>
@@ -65,6 +91,16 @@
       <h2 class="text-2xl font-semibold text-center text-blue-400">Essais de Motos</h2>
       <p class="text-center text-gray-600">Gérer et suivre les essais de motos</p>
     </div>
+
+    <!-- Locations Section (Newly Added) -->
+    <div class="card w-64 h-48 p-6 bg-white shadow-lg rounded-lg hover:scale-105 transform transition-all" routerLink="/locations">
+      <div class="flex justify-center items-center mb-4">
+        <i class="fas fa-map-marker-alt text-4xl text-gray-800"></i>
+      </div>
+      <h2 class="text-2xl font-semibold text-center text-blue-400">Locations</h2>
+      <p class="text-center text-gray-600">Gérer et consulter les informations des locations</p>
+    </div>
+
   </div>
 </div>
 

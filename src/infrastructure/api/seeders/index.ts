@@ -34,6 +34,9 @@ export const runSeeders = async () => {
   const breakdownSeeder = app.get(BreakdownSeeder);
   const appointmentSeeder = app.get(AppointmentSeeder);
 
+
+  
+ //await maintenanceSeeder.seedMaintenances(2); 
 //   await userSeeder.seedUsers(10); 
 //   await driverSeeder.seedDrivers(10);
 //   await warrantySeeder.seedWarranties(10);
@@ -42,10 +45,10 @@ export const runSeeders = async () => {
 //   await orderItemSeeder.seedOrderItems(10);
 //   await orderSeeder.seedOrders(10);
 //   await locationSeeder.seedLocations(10);
-//   await motorcycleSeeder.seedMotorcycles(10);
+ // await motorcycleSeeder.seedMotorcycles(20);
 //   await motorcycleTrialSeeder.seedMotorcycleTrials(10);
-//   await concessionSeeder.seedConcessions(10);
-//   await companySeeder.seedCompanies(10);
+//   await concessionSeeder.seedConcessions(20);
+// //await companySeeder.seedCompanies(2);
 //  await breakdownSeeder.seedBreakdowns(10);
 //  await appointmentSeeder.seedAppointments(10);
 };

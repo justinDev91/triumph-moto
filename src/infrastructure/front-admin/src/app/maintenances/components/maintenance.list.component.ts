@@ -2,15 +2,15 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Maintenance } from '../../shared/models/maintenance.model';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MaintenanceService } from '../service/maintenance.service';
-import { RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-maintenance-list',
-  imports: [RouterOutlet, CommonModule, FormsModule, RouterModule],
-  templateUrl: './maintenance-list.component.html',
-  styleUrls: ['./maintenance-list.component.css']
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './maintenance.list.component.html'
 })
 export class MaintenanceListComponent implements OnInit {
   maintenances: Maintenance[] = [];
@@ -39,6 +39,8 @@ export class MaintenanceListComponent implements OnInit {
   fetchMaintenances(): void {
     this.maintenanceService.getAllMaintenanceRecords().subscribe((maintenances: Maintenance[]) => {
       if (Array.isArray(maintenances)) {
+        console.log('Fetched Maintenances:', maintenances);
+
         this.totalMaintenances = maintenances.length;
         this.totalPages = Math.ceil(this.totalMaintenances / this.maintenancesPerPage);
         const startIndex = (this.currentPage - 1) * this.maintenancesPerPage;
@@ -48,6 +50,8 @@ export class MaintenanceListComponent implements OnInit {
         this.filteredMaintenances = this.maintenances;
         this.cdRef.detectChanges();
       } else {
+        console.error('Error fetching maintenances:');
+
         this.maintenances = [];
         this.filteredMaintenances = [];
         this.totalMaintenances = 0;
