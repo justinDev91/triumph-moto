@@ -4,6 +4,7 @@ import "@triumph-motorcycles/css";
 import { useState, useEffect } from "react";
 import getUser from "@/hooks/user/getUser";
 import Profil from "@/interfaces/user/profil";
+import LogoutButton from "@/components/LogoutButton";
 import {
   Dialog,
   DialogBackdrop,
@@ -19,6 +20,7 @@ import {
   HomeIcon,
   UsersIcon,
   XMarkIcon,
+  MoonIcon,
 } from "@heroicons/react/24/outline";
 
 interface NavigationItem {
@@ -48,6 +50,7 @@ const navigation: NavigationItem[] = [
     current: false,
   },
   { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Location", href: "dashboard/location", icon: MoonIcon, current: false },
 ];
 const teams: Team[] = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
@@ -139,6 +142,9 @@ export default function RootLayout({
                           </a>
                         </li>
                       ))}
+                      <li>
+                        <LogoutButton />
+                      </li>
                     </ul>
                   </li>
                   <li>
@@ -207,6 +213,9 @@ export default function RootLayout({
                       </a>
                     </li>
                   ))}
+                  <li>
+                    <LogoutButton />
+                  </li>
                 </ul>
               </li>
               <li>
