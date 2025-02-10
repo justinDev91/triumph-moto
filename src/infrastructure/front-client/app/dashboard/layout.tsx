@@ -19,6 +19,7 @@ import {
   MoonIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Link from "next/link";
 
 interface NavigationItem {
   name: string;
@@ -31,13 +32,13 @@ const navigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
   {
     name: "Appointment",
-    href: "dashboard/appointment",
+    href: "/dashboard/appointment",
     icon: CalendarIcon,
     current: false,
   },
   {
     name: "Location",
-    href: "dashboard/location",
+    href: "/dashboard/location",
     icon: MoonIcon,
     current: false,
   },
@@ -112,7 +113,7 @@ export default function RootLayout({
                     <ul role="list" className="-mx-2 space-y-1">
                       {navigation.map((item) => (
                         <li key={item.name}>
-                          <a
+                          <Link
                             href={item.href}
                             className={classNames(
                               item.current
@@ -126,7 +127,7 @@ export default function RootLayout({
                               className="size-6 shrink-0"
                             />
                             {item.name}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                       <li>
@@ -158,7 +159,7 @@ export default function RootLayout({
                 <ul role="list" className="-mx-2 space-y-1">
                   {navigation.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className={classNames(
                           item.current
@@ -172,7 +173,7 @@ export default function RootLayout({
                           className="size-6 shrink-0"
                         />
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                   <li>
@@ -181,13 +182,13 @@ export default function RootLayout({
                 </ul>
               </li>
               <li className="-mx-6 mt-auto">
-                <a
+                <Link
                   href="#"
                   className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-white hover:bg-gray-800"
                 >
                   <span className="sr-only">Your profile</span>
                   <span aria-hidden="true">{user?.email}</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>
@@ -206,9 +207,9 @@ export default function RootLayout({
         <div className="flex-1 text-sm/6 font-semibold text-white">
           Dashboard
         </div>
-        <a href="#">
+        <Link href="#">
           <span className="sr-only">Your profile</span>
-        </a>
+        </Link>
       </div>
 
       <main className="py-10 lg:pl-72">
