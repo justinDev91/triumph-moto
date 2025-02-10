@@ -1,29 +1,24 @@
-"use server";
+import { createAppointment } from "@/hooks/appointment/appointment.service";
+import { CreateAppointmentDto } from "@/hooks/appointment/dto/create-appointment.tdo";
 
-import axios from "axios";
-import { getSession } from "@/lib/session";
-import { redirect } from "next/navigation";
+export const handleAppointmentSubmit = async (formData: any) => {
+  const appointmentData: CreateAppointmentDto = {
+    userId: formData.userId,
+    startTime: new Date(formData.startTime),
+    endTime: new Date(formData.endTime),
+    status: "Scheduled", 
+    reason: formData.reason,
+    companyId: formData.companyId,
+    locationId: formData.locationId ? formData.locationId : undefined,
+    maintenanceId: formData.maintenanceId ? formData.maintenanceId : undefined,
+    repairId: formData.repairId ? formData.repairId : undefined,
+    motorcycleTrialId: formData.motorcycleTrialId ? formData.motorcycleTrialId : undefined,
+  };
 
-export async function handleAppointmentSubmit(formData: FormData) {
-  const startTime = formData.get("startTime");
-  const endTime = formData.get("endTime");
-  const reason = formData.get("reason");
-  const companyId = formData.get("companyId");
-  const locationId = formData.get("locationId");
-  const repairId = formData.get("repairId") || null;
-
-  const sessionUser = await getSession();
-
-  await axios.post("http://localhost:3000/appointments", {
-    userId: sessionUser.sessionUser.id,
-    startTime,
-    endTime,
-    reason,
-    companyId,
-    locationId,
-    repairId,
-    status: "Scheduled",
-  });
-
-  redirect("/dashboard/appointment");
-}
+  try {
+    const appointment = await createAppointment(appointmentData);
+    console.log("Appointment Created: ", appointment);
+  } catch (error) {
+    console.error("Error creating appointment: ", error);
+  }
+};

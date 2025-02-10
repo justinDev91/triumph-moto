@@ -9,12 +9,17 @@ import { toDomainAppointment } from "@helpers/appointment/to-domain-appointment"
 import { toOrmAppointmentCreate } from "@helpers/appointment/to-orm-appointment";
 import { Appointment } from "@api/appointment/appointment.entity";
 import { AppointmentStatusEnum } from "@api/types/AppointmentStatusEnum";
+import { Maintenance } from "../maintenances/maintenance.entity";
+import { MaintenanceTypeEnum } from "../types/MaintenanceTypeEnum";
 
 @Injectable()
 export class AppointmentRepositoryImplem implements AppointmentRepositoryInterface {
   constructor(
     @InjectRepository(Appointment)
-    private readonly appointmentRepository: Repository<Appointment>
+    private readonly appointmentRepository: Repository<Appointment>,
+
+    @InjectRepository(Maintenance)
+    private readonly maintenanceRepository: Repository<Maintenance>
   ) {}
 
  
@@ -126,12 +131,29 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
   async save(appointment: AppointmentEntity): Promise<void> {
     try {
       const appointmentToSave = toOrmAppointmentCreate(appointment);
-
-      await this.appointmentRepository.save(appointmentToSave);
+  
+      const existingMaintenance = await this.maintenanceRepository.findOne({
+        where: { id: appointment.maintenance.id },
+      });
+  
+      if (existingMaintenance) {
+        console.log("update maintenance...", )
+        await this.maintenanceRepository.update(existingMaintenance.id, {
+          maintenanceType: MaintenanceTypeEnum[appointment.maintenance.maintenanceType],
+          date: appointmentToSave.maintenance.date,
+          cost: appointmentToSave.maintenance.cost,
+          mileageAtService: appointmentToSave.maintenance.mileageAtService,
+          maintenanceIntervalMileage: appointmentToSave.maintenance.maintenanceIntervalMileage,
+          maintenanceIntervalTime: appointmentToSave.maintenance.maintenanceIntervalTime,
+        });
+      } else {
+        await this.appointmentRepository.save(appointmentToSave);
+      }
     } catch (error) {
+      console.error("Error saving appointment", error);
       throw new Error("Failed to save appointment");
     }
-  }
+  }  
 
   async update(appointment: AppointmentEntity): Promise<void> {
     try {

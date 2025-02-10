@@ -83,6 +83,7 @@ export class AppointmentCreateUseCase {
     );
 
     if (appointment instanceof Error) return appointment;
+
     await this.repository.save(appointment);
   }
 }

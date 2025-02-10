@@ -10,9 +10,10 @@ import { LocationModule } from '@api/locations/location.module';
 import { MaintenanceModule } from '@api/maintenances/maintenance.module';
 import { RepairModule } from '@api/repairs/repair.module';
 import { MotorcycleTrialModule } from '@api/motorcycle-trials/motorcycle-trial.module';
+import { Maintenance } from '../maintenances/maintenance.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Appointment]),
+    TypeOrmModule.forFeature([Appointment, Maintenance]),
     UsersModule,
     CompanyModule,
     LocationModule,

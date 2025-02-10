@@ -15,10 +15,25 @@ interface CardAppointmentProps {
     company: {
       name: { value: string };
     };
+    repair?: {
+      description: string;
+    };
+    maintenance?: {
+      description: string;
+    };
+    motorcycleTrial?: {
+      model: string;
+    };
   };
 }
 
 const CardAppointment: React.FC<CardAppointmentProps> = ({ appointment }) => {
+  console.log("appointment", appointment)
+  // Helper function to format date
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleString();
+  };
+
   return (
     <div className="bg-white text-black p-4 rounded-lg shadow-md mb-4">
       <h2 className="text-xl font-bold mb-2">{appointment.reason}</h2>
@@ -33,9 +48,27 @@ const CardAppointment: React.FC<CardAppointmentProps> = ({ appointment }) => {
         Statut : {appointment.appointmentStatus}
       </p>
       <p className="text-sm text-gray-600">
-        Du {new Date(appointment.startTime).toLocaleString()} au{" "}
-        {new Date(appointment.endTime).toLocaleString()}
+        Du {formatDate(appointment.startTime)} au {formatDate(appointment.endTime)}
       </p>
+
+      {appointment.reason === "Repair" && appointment.repair && (
+        <div className="mt-2 text-sm text-gray-600">
+          <strong>Réparation :</strong> {appointment.repair.description}
+        </div>
+      )}
+
+      {appointment.reason === "Maintenance" && appointment.maintenance && (
+        <div className="mt-2 text-sm text-gray-600">
+          <strong>Maintenance :</strong> {appointment.maintenance.description}
+        </div>
+      )}
+
+      {appointment.reason === "MotorcycleTrial" && appointment.motorcycleTrial && (
+        <div className="mt-2 text-sm text-gray-600">
+          <strong>Essai de moto :</strong> {appointment.motorcycleTrial.model}
+        </div>
+      )}
+
     </div>
   );
 };

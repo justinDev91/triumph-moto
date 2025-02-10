@@ -96,13 +96,10 @@ export default function RootLayout({
               </div>
             </TransitionChild>
             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10">
-              <div className="flex h-16 shrink-0 items-center">
-                <img
-                  alt="Your Company"
-                  src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                  className="h-8 w-auto"
-                />
-              </div>
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center justify-center">
+              <i className="fas fa-motorcycle text-indigo-600 text-6xl mb-4"></i>
+              <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Login</h2>
+            </div>
               <nav className="flex flex-1 flex-col">
                 <ul role="list" className="flex flex-1 flex-col gap-y-7">
                   <li>
@@ -196,7 +193,10 @@ export default function RootLayout({
           className="-m-2.5 p-2.5 text-gray-400 lg:hidden"
         >
           <span className="sr-only">Open sidebar</span>
-          <Bars3Icon aria-hidden="true" className="size-6" />
+          <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center justify-center">
+            <i className="fas fa-motorcycle text-indigo-600 text-6xl mb-4"></i>
+            <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">Login</h2>
+          </div>
         </button>
         <div className="flex-1 text-sm/6 font-semibold text-white">
           Dashboard

@@ -6,8 +6,8 @@ import { toOrmDriver } from "../driver/to-orm-driver";
 export const toOrmMotorcycleTrial = (motorcycleTrial: MotorcycleTrialEntity): MotorcycleTrial => {
   const ormMotorcycleTrial = new MotorcycleTrial();
 
-  ormMotorcycleTrial.motorcycle = toOrmMotorcycle(motorcycleTrial.motorcycle);
-  ormMotorcycleTrial.driver = toOrmDriver(motorcycleTrial.driver);
+  ormMotorcycleTrial.motorcycle =  ormMotorcycleTrial.motorcycle? toOrmMotorcycle(motorcycleTrial.motorcycle) : null;
+  ormMotorcycleTrial.driver = ormMotorcycleTrial.driver ? toOrmDriver(motorcycleTrial.driver) : null;
   ormMotorcycleTrial.startDate = motorcycleTrial.startDate.value;
   ormMotorcycleTrial.endDate = motorcycleTrial.endDate ? motorcycleTrial.endDate.value : null;
   return ormMotorcycleTrial;

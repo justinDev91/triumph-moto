@@ -3,7 +3,7 @@ import { User } from "@api/users/user.entity";
 import { toOrmDriver } from "../driver/to-orm-driver";
 
 export const toOrmUserCreate = (user: UserEntity): User => {
-    const ormDrivers = user.getDrivers ? user.getDrivers().map(toOrmDriver) : null;
+    const ormDrivers = user?.getDrivers ? user.getDrivers().map(toOrmDriver) : null;
 
     const userOrm = new User();
     userOrm.id = user.id;
