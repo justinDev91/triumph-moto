@@ -30,11 +30,11 @@ export class CompanySeeder {
 
   async seedCompanies(count: number = 10): Promise<void> {
     const users = await this.userRepository.find();
-    const drivers = await this.driverRepository.find();
-    const motorcycles = await this.motorcycleRepository.find();
-    const concessions = await this.concessionRepository.find();
+    // const drivers = await this.driverRepository.find();
+    // const motorcycles = await this.motorcycleRepository.find();
+    // const concessions = await this.concessionRepository.find();
 
-    if (users.length === 0 || drivers.length === 0 || motorcycles.length === 0 || concessions.length === 0) {
+    if (users.length === 0) {
       console.log('No users, drivers, motorcycles or concessions found in the database!');
       return;
     }
@@ -43,9 +43,9 @@ export class CompanySeeder {
 
     for (let i = 0; i < count; i++) {
       const user = faker.helpers.arrayElement(users);
-      const companyDrivers = faker.helpers.shuffle(drivers);
-      const companyMotorcycles = faker.helpers.shuffle(motorcycles);
-      const companyConcessions = faker.helpers.shuffle(concessions);
+      // const companyDrivers = faker.helpers.shuffle(drivers);
+      // const companyMotorcycles = faker.helpers.shuffle(motorcycles);
+      // const companyConcessions = faker.helpers.shuffle(concessions);
 
       const nameValue = faker.company.name();
       const nameOrError = Name.from(nameValue);
@@ -57,9 +57,9 @@ export class CompanySeeder {
       const company = this.companyRepository.create({
         user,
         name: nameOrError.value,
-        drivers: companyDrivers,
-        motorcycles: companyMotorcycles,
-        concessions: companyConcessions,
+        // drivers: companyDrivers,
+        // motorcycles: companyMotorcycles,
+        // concessions: companyConcessions,
         createdAt: faker.date.past(),
         updatedAt: faker.date.recent(),
       });

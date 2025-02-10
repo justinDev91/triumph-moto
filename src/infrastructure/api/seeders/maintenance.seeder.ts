@@ -68,7 +68,7 @@ export class MaintenanceSeeder {
 
       const maintenance = this.maintenanceRepository.create({
         motorcycle,
-        // concession,
+        concession,
         maintenanceType,
         date,
         cost: parseFloat(faker.commerce.price({ min: 50, max: 500 })),

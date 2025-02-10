@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { MotorcycleTrial } from '@api/motorcycle-trials/motorcycle-trial.entity';
 import { Motorcycle } from '@api/motorcycles/motorcycle.entity';
 import { Driver } from '@api/drivers/driver.entity';
+import { Company } from '@api/companies/company.entity';
+import { Concession } from '@api/concessions/concession.entity';
 import { faker } from '@faker-js/faker';
 import { StartDate } from '@domain/values/motorcycle/MotorcycleTrialStartDate';
 import { EndDate } from '@domain/values/motorcycle/MotorcycleTrialEndDate';
@@ -21,46 +23,25 @@ export class MotorcycleTrialSeeder {
 
     @InjectRepository(Driver)
     private readonly driverRepository: Repository<Driver>,
+
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
+
+    @InjectRepository(Concession)
+    private readonly concessionRepository: Repository<Concession>,
   ) {}
 
   async seedMotorcycleTrials(count: number = 10): Promise<void> {
-    const motorcycles: Motorcycle[] = [];
-    const drivers: Driver[] = [];
+    const motorcycles = await this.motorcycleRepository.find();
+    const drivers = await this.driverRepository.find();
 
-    for (let i = 0; i < 10; i++) {
-      const motorcycle = this.motorcycleRepository.create({
-        brand: faker.vehicle.manufacturer(),
-        model: faker.vehicle.model(),
-        year: faker.date.past({ years: 20 }).getFullYear(),
-        mileage: faker.number.int({ min: 1000, max: 100000 }),
-        status: faker.helpers.arrayElement([
-          MotorStatusEnum.Available,
-          MotorStatusEnum.InMaintenance,
-          MotorStatusEnum.OnTest,
-          MotorStatusEnum.Sold,
-        ]),
-        purchaseDate: faker.date.past({ years: 5 }),
-        lastServiceDate: faker.date.past({ years: 1 }),
-        nextServiceMileage: faker.number.int({ min: 1000, max: 10000 }),
-      });
-      motorcycles.push(motorcycle);
+    if (motorcycles.length === 0 || drivers.length === 0) {
+      console.log('No motorcycles, drivers, companies, or concessions found in the database!');
+      return;
     }
-    await this.motorcycleRepository.save(motorcycles);
-
-    for (let i = 0; i < 10; i++) {
-      const driver = this.driverRepository.create({
-        name: faker.person.fullName(),
-        license: faker.string.alphanumeric(10).toUpperCase(),
-        licenseType: faker.helpers.arrayElement(Object.values(LicenseTypeEnum)),
-        yearsOfExperience: faker.number.int({ min: 1, max: 30 }),
-        email: faker.internet.email(),
-        phone: faker.phone.number(),
-      });
-      drivers.push(driver);
-    }
-    await this.driverRepository.save(drivers);
 
     const motorcycleTrials: MotorcycleTrial[] = [];
+
     for (let i = 0; i < count; i++) {
       const motorcycle = faker.helpers.arrayElement(motorcycles);
       const driver = faker.helpers.arrayElement(drivers);

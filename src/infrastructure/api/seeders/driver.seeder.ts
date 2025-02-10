@@ -23,11 +23,6 @@ export class DriverSeeder {
   async seedDrivers(count: number = 5): Promise<void> {
     const drivers: Driver[] = [];
 
-    const companies = await this.companyRepository
-      .createQueryBuilder()
-      .limit(3)
-      .getMany();
-
     const users = await this.userRepository
       .createQueryBuilder()
       .limit(3)
@@ -41,7 +36,6 @@ export class DriverSeeder {
         yearsOfExperience: faker.number.int({ min: 1, max: 30 }),
         email: faker.internet.email(),
         phone: faker.phone.number(),
-        company: faker.helpers.arrayElement(companies),
         user: faker.helpers.arrayElement(users),
       });
 

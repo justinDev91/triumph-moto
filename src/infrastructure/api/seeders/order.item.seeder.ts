@@ -23,8 +23,8 @@ export class OrderItemSeeder {
   ) {}
 
   async seedOrderItems(count: number = 10): Promise<void> {
-    const spareParts = await this.sparePartRepository.find({ take: 20 });
-    const orders = await this.orderRepository.find({ take: 20 });
+    const spareParts = await this.sparePartRepository.find();
+    const orders = await this.orderRepository.find();
 
     if (spareParts.length === 0 || orders.length === 0) {
       console.log('No spare parts or orders found in the database!');

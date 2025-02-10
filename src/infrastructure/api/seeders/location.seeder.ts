@@ -21,8 +21,8 @@ export class LocationSeeder {
   ) {}
 
   async seedLocations(count: number = 10): Promise<void> {
-    const motorcycles = await this.motorcycleRepository.find({ take: 20 });
-    const users = await this.userRepository.find({ take: 20 });
+    const motorcycles = await this.motorcycleRepository.find();
+    const users = await this.userRepository.find();
     const locationStatusValues = [
       LocationStatusEnum.IN_PROGRESS,
       LocationStatusEnum.COMPLETED,

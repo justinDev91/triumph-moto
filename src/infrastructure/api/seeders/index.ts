@@ -36,19 +36,24 @@ export const runSeeders = async () => {
 
 
   
- //await maintenanceSeeder.seedMaintenances(2); 
-//   await userSeeder.seedUsers(10); 
-//   await driverSeeder.seedDrivers(10);
-//   await warrantySeeder.seedWarranties(10);
-//   await sparePartSeeder.seedSpareParts(10);
+// await userSeeder.seedUsers(50); 
+// await driverSeeder.seedDrivers(50);
+//await warrantySeeder.seedWarranties(75); 
+// await sparePartSeeder.seedSpareParts(20);
 //   await repairSeeder.seedRepairs(10);
-//   await orderItemSeeder.seedOrderItems(10);
-//   await orderSeeder.seedOrders(10);
-//   await locationSeeder.seedLocations(10);
- // await motorcycleSeeder.seedMotorcycles(20);
-//   await motorcycleTrialSeeder.seedMotorcycleTrials(10);
-//   await concessionSeeder.seedConcessions(20);
-// await companySeeder.seedCompanies(20);
-//  await breakdownSeeder.seedBreakdowns(10);
-//  await appointmentSeeder.seedAppointments(10);
+//await orderItemSeeder.seedOrderItems(10);
+// await orderSeeder.seedOrders(15);
+//await companySeeder.seedCompanies(50); 
+//await concessionSeeder.seedConcessions(50);
+//await motorcycleSeeder.seedMotorcycles(80);
+//await motorcycleTrialSeeder.seedMotorcycleTrials(4);
+
+//await breakdownSeeder.seedBreakdowns(50);
+
+//await maintenanceSeeder.seedMaintenances(2); 
+
+//await locationSeeder.seedLocations(80);
+//await appointmentSeeder.seedAppointments(100);
+
+
 };

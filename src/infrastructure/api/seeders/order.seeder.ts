@@ -42,7 +42,7 @@ export class OrderSeeder {
       const order = this.orderRepository.create({
         orderDate,
         estimatedDeliveryDate: estimatedDeliveryDateOrError.value,
-        items: selectedItems,
+        // items: selectedItems,
         totalCost,
       });
       orders.push(order);

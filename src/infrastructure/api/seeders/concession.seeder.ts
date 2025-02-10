@@ -24,8 +24,8 @@ export class ConcessionSeeder {
     const users = await this.userRepository.find();
     const companies = await this.companyRepository.find();
 
-    if (users.length === 0 || companies.length === 0) {
-      console.log('No users or companies found in the database!');
+    if (users.length === 0) {
+      console.log('No users found in the database!');
       return;
     }
 

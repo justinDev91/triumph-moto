@@ -24,8 +24,8 @@ export class MotorcycleSeeder {
   ) {}
 
   async seedMotorcycles(count: number = 10): Promise<void> {
-    const companies = await this.companyRepository.find({ take: 20 });
-    const concessions = await this.concessionRepository.find({ take: 20 });
+    const companies = await this.companyRepository.find();
+    const concessions = await this.concessionRepository.find();
 
     if (companies.length === 0 || concessions.length === 0) {
       console.log('No companies or concessions found in the database!');
