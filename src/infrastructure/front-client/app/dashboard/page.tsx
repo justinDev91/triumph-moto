@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getSession } from "@/lib/session";
+import { useRouter } from "next/navigation";
 
 
 export default function MotorcycleShowcase() {
