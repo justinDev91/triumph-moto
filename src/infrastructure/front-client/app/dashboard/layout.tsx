@@ -1,7 +1,7 @@
 "use client";
 
 import "@triumph-motorcycles/css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import getUser from "@/hooks/user/getUser";
 import Profil from "@/interfaces/user/profil";
 import LogoutButton from "@/components/LogoutButton";
@@ -53,15 +53,16 @@ export default function RootLayout({
 
   const [user, setUser] = useState<Profil | null>(null);
 
-  useEffect(() => {
-    async function getuserInformation() {
-      const userInformation = await getUser();
-      if (userInformation !== null) {
-        setUser(userInformation);
-      }
+  const fetchUserInformation = useCallback(async () => {
+    const userInformation = await getUser();
+    if (userInformation) {
+      setUser(userInformation);
     }
-    getuserInformation();
-  });
+  }, []);
+
+  useEffect(() => {
+    fetchUserInformation();
+  }, [fetchUserInformation]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -94,7 +95,6 @@ export default function RootLayout({
                 </button>
               </div>
             </TransitionChild>
-            {/* Sidebar component, swap this element with another sidebar if you like */}
             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10">
               <div className="flex h-16 shrink-0 items-center">
                 <img
@@ -138,9 +138,7 @@ export default function RootLayout({
         </div>
       </Dialog>
 
-      {/* Static sidebar for desktop */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6">
           <div className="flex h-16 shrink-0 items-center">
             <img

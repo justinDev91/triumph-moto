@@ -1,4 +1,5 @@
 "use client";
+
 import { FormEvent, Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -18,23 +19,38 @@ export default function SignIn() {
   const router = useRouter();
 
   useEffect(() => {
-    async function checkSession() {
-      const sessionData = await getSession();
-      if (sessionData !== null) {
-        router.push("/dashboard");
+    const checkSession = async () => {
+      try {
+        const sessionData = await getSession();
+        if (sessionData !== null) {
+          router.replace("/dashboard");
+        }
+      } catch (err) {
+        console.error("Session check failed:", err);
       }
-    }
+    };
+
     checkSession();
-  }, [router]);
+  }, []);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    await login(formData);
-    const sessionData = await getSession();
-    if (sessionData !== null) {
-      router.push("/dashboard");
+
+    try {
+      await login(formData);
+      const sessionData = await getSession();
+      if (sessionData !== null) {
+        router.replace("/dashboard");
+      } else {
+        setError("Invalid credentials. Please try again.");
+      }
+    } catch (err) {
+      console.error("Login failed:", err);
+      setError("An error occurred. Please try again later.");
     }
   }
+
   return (
     <Fragment>
       <form className="text-black" onSubmit={handleSubmit}>
