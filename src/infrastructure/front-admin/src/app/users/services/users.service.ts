@@ -40,4 +40,10 @@ export class UsersService {
     return this.http.patch<void>(`${this.apiUrl}/${id}/toggle-status`, {});
   }
 
+  getUserByEmail(email: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/email/${email}`);
+  }
+
 }
+
+

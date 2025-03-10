@@ -81,7 +81,8 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
       if (!appointments.length) {
         return new AppointmentNotFoundError("No appointments found");
       }
-  
+      console.log("appointments", appointments.length)
+
       return appointments.map(toDomainAppointment);
     } catch (error) {
       throw new Error("Failed to retrieve all appointments");
@@ -131,14 +132,18 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
   async save(appointment: AppointmentEntity): Promise<void> {
     try {
       const appointmentToSave = toOrmAppointmentCreate(appointment);
-  
+      console.log("appointmentToSave1", appointmentToSave)
+
       const existingMaintenance = await this.maintenanceRepository.findOne({
         where: { id: appointment.maintenance.id },
       });
-  
+      console.log("existingMaintenance1", existingMaintenance)
+
       if (existingMaintenance) {
-        console.log("update maintenance...", )
-        await this.maintenanceRepository.update(existingMaintenance.id, {
+        console.log("existingMaintenance condition", existingMaintenance)
+
+        const maintenanceSaved = await this.maintenanceRepository.save({
+          ...existingMaintenance,
           maintenanceType: MaintenanceTypeEnum[appointment.maintenance.maintenanceType],
           date: appointmentToSave.maintenance.date,
           cost: appointmentToSave.maintenance.cost,
@@ -146,14 +151,24 @@ export class AppointmentRepositoryImplem implements AppointmentRepositoryInterfa
           maintenanceIntervalMileage: appointmentToSave.maintenance.maintenanceIntervalMileage,
           maintenanceIntervalTime: appointmentToSave.maintenance.maintenanceIntervalTime,
         });
+        
+        const newAppointment = {
+          ...appointmentToSave,
+          maintenance: maintenanceSaved,
+        };
+        console.log("newAppointment", newAppointment)
+        await this.appointmentRepository.save(newAppointment);
       } else {
+        console.log("appointmentToSave", appointmentToSave)
+
         await this.appointmentRepository.save(appointmentToSave);
       }
     } catch (error) {
       console.error("Error saving appointment", error);
       throw new Error("Failed to save appointment");
     }
-  }  
+  }
+
 
   async update(appointment: AppointmentEntity): Promise<void> {
     try {

@@ -12,7 +12,7 @@ import getUser from "@/hooks/user/getUser";
 import Profil from "@/interfaces/user/profil";
 import { getAllMaintenanceRecords } from "@/hooks/maintenance/maintenance.service";
 import { getAllMotorcycleTrials } from "@/hooks/motorcycleTrial/motorcycle.trial.service";
-import { useRouter } from "next/navigation";
+import {useRouter } from "next/navigation";
 
 export default function AppointmentForm() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -65,7 +65,6 @@ export default function AppointmentForm() {
         setError(`An unexpected error occurred. ${error}`);
       }
     };
-
     fetchData();
   }, []);
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getSession } from "@/lib/session";
-import Appointment from "@/interfaces/appointment/appointment";
+import { Appointment } from "@/app/shared/models/appointment.model";
 
 export default async function getUserAppointments(): Promise<
   Appointment[] | null
@@ -13,9 +13,9 @@ export default async function getUserAppointments(): Promise<
 
     const userAppointments = response.data.filter(
       (appointment: Appointment) =>
-        appointment.user.id === sessionUser.sessionUser.id
+        appointment?.user?.id === sessionUser.sessionUser.id
     );
-
+    console.log("")
     return userAppointments;
   } catch (error) {
     console.error("Erreur lors de la récupération des rendez-vous :", error);

@@ -50,7 +50,7 @@ export const runSeeders = async () => {
 
 //await breakdownSeeder.seedBreakdowns(50);
 
-//await maintenanceSeeder.seedMaintenances(2); 
+//await maintenanceSeeder.seedMaintenances(4); 
 
 //await locationSeeder.seedLocations(80);
 //await appointmentSeeder.seedAppointments(100);

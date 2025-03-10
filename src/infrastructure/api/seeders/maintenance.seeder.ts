@@ -31,6 +31,7 @@ export class MaintenanceSeeder {
       return;
     }
 
+    //for each add maintenance find by if motorcycle.id exite before to add it if it's existe create new motorcycle make the same for concession
     const maintenances: Maintenance[] = [];
 
     for (let i = 0; i < count; i++) {

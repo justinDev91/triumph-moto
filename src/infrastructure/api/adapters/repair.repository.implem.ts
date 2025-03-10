@@ -48,7 +48,6 @@ export class RepairRepositoryImplem implements RepairRepositoryInterface {
       });
   
       if (repairsOrm.length === 0) return []; 
-      console.log("repairsOrm", repairsOrm)
       
       return repairsOrm.map((repairOrm) => toDomainRepair(repairOrm)) as RepairEntity[]; 
 

@@ -1,9 +1,12 @@
 import { createAppointment } from "@/hooks/appointment/appointment.service";
 import { CreateAppointmentDto } from "@/hooks/appointment/dto/create-appointment.tdo";
+import { getSession } from "@/lib/session";
+const sessionUser = await getSession();
+
 
 export const handleAppointmentSubmit = async (formData: any) => {
   const appointmentData: CreateAppointmentDto = {
-    userId: formData.userId,
+    userId: sessionUser.sessionUser.id,
     startTime: new Date(formData.startTime),
     endTime: new Date(formData.endTime),
     status: "Scheduled", 

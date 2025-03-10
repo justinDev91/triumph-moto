@@ -1,12 +1,14 @@
 import { AppointmentReasonEnum } from '@api/types/AppointmentReasonEnum';
 import { AppointmentStatusEnum } from '@api/types/AppointmentStatusEnum';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateAppointmentDto {
   @ApiProperty({
     description: 'The ID of the user creating the appointment',
     example: 'user12345',
   })
+  @IsNotEmpty()
   userId: string;
 
   @ApiProperty({

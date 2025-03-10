@@ -23,10 +23,10 @@ export class AuthComponent {
       password: this.loginData.password
     };
 
-    this.userService.getUserById(loginDto.email).subscribe(
+    this.userService.getUserByEmail(loginDto.email).subscribe(
       (user) => {
         if (user) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         } else {
           alert('Invalid credentials!');
         }

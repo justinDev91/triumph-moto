@@ -1,9 +1,12 @@
+import React from "react";
 import getUserAppointments from "@/hooks/user/getUserAppointments";
 import CardAppointment from "@/components/CardAppointment";
 import Link from "next/link";
+import { Appointment } from "@/app/shared/models/appointment.model";
 
 export default async function AppointmentPage() {
-  const appointments = await getUserAppointments();
+  const appointments: Appointment[] | null = await getUserAppointments();
+  console.log("appointments", appointments, appointments?.length);
 
   return (
     <div className="flex-col text-black">
