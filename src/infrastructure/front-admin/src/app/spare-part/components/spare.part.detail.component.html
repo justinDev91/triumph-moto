@@ -1,0 +1,26 @@
+<div class="spare-part-detail p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-8">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Spare Part Detail</h2>
+
+  <div *ngIf="!sparePart" class="text-center text-gray-500">
+    <p>Loading spare part data...</p>
+  </div>
+
+  <div *ngIf="sparePart">
+    <div class="spare-part-info space-y-4 mb-6">
+      <p class="text-lg text-gray-700"><strong>Name:</strong> {{ sparePart.name }}</p>
+      <p class="text-lg text-gray-700"><strong>Quantity in Stock:</strong> {{ sparePart.quantityInStock }}</p>
+      <p class="text-lg text-gray-700"><strong>Critical Level:</strong> {{ sparePart.criticalLevel }}</p>
+      <p class="text-lg text-gray-700"><strong>Cost:</strong> {{ sparePart.cost }} €</p>
+      <p class="text-lg text-gray-700"><strong>Status:</strong>
+        <span [ngClass]="{
+          'text-green-500': sparePart.quantityInStock > sparePart.criticalLevel,
+          'text-red-500': sparePart.quantityInStock <= sparePart.criticalLevel
+        }">
+          {{ sparePart.quantityInStock > sparePart.criticalLevel ? 'Available' : 'Critical' }}
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<router-outlet />

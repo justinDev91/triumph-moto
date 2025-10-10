@@ -1,0 +1,166 @@
+<div class="max-w-lg mx-auto mt-10">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Create New Motorcycle</h2>
+
+  <form (ngSubmit)="createMotorcycle()" #createMotorcycleForm="ngForm">
+    <!-- Brand -->
+    <div class="mb-4">
+      <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+      <input
+        type="text"
+        id="brand"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.brand"
+        name="brand"
+        required
+        #brand="ngModel"
+      />
+      <div *ngIf="brand.invalid && brand.touched" class="text-red-500 text-xs mt-1">
+        Brand is required.
+      </div>
+    </div>
+
+    <!-- Model -->
+    <div class="mb-4">
+      <label for="model" class="block text-sm font-medium text-gray-700">Model</label>
+      <input
+        type="text"
+        id="model"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.model"
+        name="model"
+        required
+        #model="ngModel"
+      />
+      <div *ngIf="model.invalid && model.touched" class="text-red-500 text-xs mt-1">
+        Model is required.
+      </div>
+    </div>
+
+    <!-- Year -->
+    <div class="mb-4">
+      <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+      <input
+        type="number"
+        id="year"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.year"
+        name="year"
+        required
+        #year="ngModel"
+      />
+      <div *ngIf="year.invalid && year.touched" class="text-red-500 text-xs mt-1">
+        Year is required.
+      </div>
+    </div>
+
+    <!-- Mileage -->
+    <div class="mb-4">
+      <label for="mileage" class="block text-sm font-medium text-gray-700">Mileage</label>
+      <input
+        type="number"
+        id="mileage"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.mileage"
+        name="mileage"
+        required
+        #mileage="ngModel"
+      />
+      <div *ngIf="mileage.invalid && mileage.touched" class="text-red-500 text-xs mt-1">
+        Mileage is required.
+      </div>
+    </div>
+
+    <!-- Status Selection -->
+    <div class="mb-4">
+      <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+      <select
+        id="status"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.status"
+        name="status"
+        required
+      >
+        <option *ngFor="let status of statuses" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Company Selection -->
+    <div class="mb-4">
+      <label for="companyId" class="block text-sm font-medium text-gray-700">Select Company</label>
+      <select
+        id="companyId"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.companyId"
+        name="companyId"
+        required
+      >
+        <option *ngFor="let company of companies" [value]="company.id">
+          {{ company.name.value }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Purchase Date -->
+    <div class="mb-4">
+      <label for="purchaseDate" class="block text-sm font-medium text-gray-700">Purchase Date</label>
+      <input
+        type="date"
+        id="purchaseDate"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.purchaseDate"
+        name="purchaseDate"
+        required
+        #purchaseDate="ngModel"
+      />
+      <div *ngIf="purchaseDate.invalid && purchaseDate.touched" class="text-red-500 text-xs mt-1">
+        Purchase Date is required.
+      </div>
+    </div>
+
+    <!-- Last Service Date -->
+    <div class="mb-4">
+      <label for="lastServiceDate" class="block text-sm font-medium text-gray-700">Last Service Date</label>
+      <input
+        type="date"
+        id="lastServiceDate"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.lastServiceDate"
+        name="lastServiceDate"
+        required
+        #lastServiceDate="ngModel"
+      />
+      <div *ngIf="lastServiceDate.invalid && lastServiceDate.touched" class="text-red-500 text-xs mt-1">
+        Last Service Date is required.
+      </div>
+    </div>
+
+    <!-- Next Service Mileage -->
+    <div class="mb-4">
+      <label for="nextServiceMileage" class="block text-sm font-medium text-gray-700">Next Service Mileage</label>
+      <input
+        type="number"
+        id="nextServiceMileage"
+        class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="motorcycle.nextServiceMileage"
+        name="nextServiceMileage"
+        required
+        #nextServiceMileage="ngModel"
+      />
+      <div *ngIf="nextServiceMileage.invalid && nextServiceMileage.touched" class="text-red-500 text-xs mt-1">
+        Next Service Mileage is required.
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+      [disabled]="createMotorcycleForm.invalid"
+    >
+      Create Motorcycle
+    </button>
+  </form>
+</div>
+<router-outlet />

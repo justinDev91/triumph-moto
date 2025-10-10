@@ -1,0 +1,42 @@
+<div class="order-detail p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-8">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Order Detail</h2>
+
+  <div *ngIf="isLoading" class="text-center text-gray-500">
+    <p>Loading order data...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="text-center text-red-500">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="order" class="space-y-6">
+    <!-- Order Info Card -->
+    <div class="p-6 bg-gray-100 rounded-lg shadow-md">
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">Order Information</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="flex flex-col">
+          <p class="text-lg text-gray-700"><strong>Order Date:</strong> {{ order.orderDate.value | date }}</p>
+          <p class="text-lg text-gray-700"><strong>Estimated Delivery Date:</strong> {{ order.estimatedDeliveryDate.value | date }}</p>
+          <p class="text-lg text-gray-700"><strong>Total Cost:</strong> {{ order.totalCost | currency }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items Card -->
+    <div *ngIf="order.items.length > 0" class="p-6 bg-gray-100 rounded-lg shadow-md">
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">Order Items</h3>
+      <div class="space-y-4">
+        <div *ngFor="let item of order.items" class="p-4 bg-white rounded-lg shadow-md">
+          <div class="flex flex-col space-y-3">
+            <p class="text-lg text-gray-700"><strong>Item Name:</strong> {{ item.sparePart.name.value }}</p>
+            <p class="text-lg text-gray-700"><strong>Quantity Ordered:</strong> {{ item.quantityOrdered.value }}</p>
+            <p class="text-lg text-gray-700"><strong>Cost per Unit:</strong> {{ item.costPerUnit.value | currency }}</p>
+            <p class="text-lg text-gray-700"><strong>Delivered Quantity:</strong> {{ item.deliveredQuantity.value }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet />

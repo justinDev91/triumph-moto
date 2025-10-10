@@ -1,0 +1,94 @@
+<div class="text-center my-6">
+  <h1 class="text-3xl font-semibold text-gray-800">Liste des Réparations</h1>
+</div>
+
+<div class="flex justify-between items-center mb-6 px-24">
+  <div class="flex space-x-2">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search repairs..."
+      class="p-2 w-64 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      (input)="onSearchChange(searchQuery)"
+    />
+    <select
+      [(ngModel)]="filterActions"
+      (change)="onChange()"
+      class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+    >
+      <option value="">Filter by Actions</option>
+      <option *ngFor="let action of uniqueActions" [value]="action">{{ action }}</option>
+    </select>
+  </div>
+
+  <button
+    class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+    [routerLink]="'/repairs/create'"
+  >
+    Ajouter
+  </button>
+</div>
+
+<div class="overflow-x-auto bg-white rounded-lg shadow-md mx-24">
+  <table class="min-w-full table-auto text-sm">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-3 py-2 text-left">Repair Date</th>
+        <th class="px-3 py-2 text-left">Actions</th>
+        <th class="px-3 py-2 text-left">Cost</th>
+        <th class="px-3 py-2 text-left">Breakdown Description</th>
+        <th class="px-3 py-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let repair of filteredRepairs">
+        <td class="px-3 py-2">
+          <a [routerLink]="['/repairs', repair.id]" class="text-blue-500 hover:underline">
+            {{ repair.repairDate.value | date: 'shortDate' }}
+          </a>
+        </td>
+        <td class="px-3 py-2">{{ repair.actions.join(', ') }}</td>
+        <td class="px-3 py-2">{{ repair.cost.value | currency }}</td>
+        <td class="px-3 py-2">{{ repair.breakdown.description.value }}</td>
+        <td class="px-3 py-2 space-x-2">
+          <button
+            class="w-24 p-2 mb-4 rounded-lg text-white text-sm transition duration-300 text-center bg-red-500 hover:bg-blue-700"
+            (click)="deleteRepair(repair)"
+          >
+            Delete
+          </button>
+          <button
+            class="w-24 p-2 rounded-lg text-white text-sm transition duration-300 text-center bg-blue-500 hover:bg-blue-700"
+            (click)="updateRepair(repair)"
+          >
+            Update
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p *ngIf="filteredRepairs.length === 0" class="text-center mt-4 text-sm text-gray-500">No repairs found.</p>
+
+<div class="flex justify-between items-center mt-6 mx-24">
+  <span class="text-sm text-gray-600">Page {{ currentPage }} of {{ totalPages }}</span>
+  <div class="space-x-2">
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToPreviousPage()"
+      [disabled]="currentPage === 1"
+    >
+      Previous
+    </button>
+    <button
+      class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-700 text-sm"
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
+<router-outlet />
